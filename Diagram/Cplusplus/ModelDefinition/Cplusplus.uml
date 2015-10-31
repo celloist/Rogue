@@ -1,0 +1,1593 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<modelStoreModel xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" xmlns:dm1="http://schemas.microsoft.com/dsltools/Kernel" xmlns:dm2="http://schemas.microsoft.com/dsltools/Component" xmlns:dm3="http://schemas.microsoft.com/dsltools/UseCase" xmlns:dm4="http://schemas.microsoft.com/dsltools/Activity" xmlns:dm5="http://schemas.microsoft.com/dsltools/Interaction" xmlns:dm6="http://schemas.microsoft.com/dsltools/UmlModelLibrary" xmlns:dm7="http://schemas.microsoft.com/dsltools/UmlDiagrams" xmlns:dm8="http://schemas.microsoft.com/dsltools/LogicalClassDesigner" xmlns:dm9="http://schemas.microsoft.com/VisualStudio/TeamArchitect/SequenceDesigner"
+  dslVersion="1.0.0.0"
+  Id="204d74b3-f0be-426f-98b0-33cbb03210dd"
+  name="Cplusplus" xmlns="http://schemas.microsoft.com/dsltools/ModelStore">
+  <profileInstances>
+    <packageHasProfileInstances
+      Id="0caec977-1f8c-4ba3-a7db-8cc9ad9cc73b">
+      <profileInstance
+        Id="e34d544e-0fea-4ed6-ac5e-1b74119ac791"
+        name="StandardProfileL2" />
+    </packageHasProfileInstances>
+    <packageHasProfileInstances
+      Id="29349502-908c-4fda-9054-c48619c59ed0">
+      <profileInstance
+        Id="532ea607-fb19-44b8-8502-3351b05452be"
+        name="StandardProfileL3" />
+    </packageHasProfileInstances>
+  </profileInstances>
+  <packagedElements>
+    <packageHasNamedElement>
+      <class
+        Id="029b4447-e5a9-465d-9372-9bdcce31a025"
+        name="Room"
+        isAbstract="false"
+        isLeaf="false"
+        isActiveClass="false">
+        <generalsInternal>
+          <generalization
+            Id="df1fa71d-44f2-40b9-85e6-537002d497ca"
+            isSubstitutable="false">
+            <classMoniker
+              Id="18298658-bccb-4156-a684-af2bdee9cc26"
+              LastKnownName="ExitRoom"
+              LastKnownLocation="Cplusplus.uml" />
+          </generalization>
+        </generalsInternal>
+        <targetEnds>
+          <association
+            Id="779d6093-5c9a-46b4-ab90-13257bf51edc"
+            isDerived="false"
+            sourceEndRoleName="Room"
+            targetEndRoleName="Level"
+            isLeaf="false"
+            isAbstract="false">
+            <classMoniker
+              Id="e1cc345e-ce3c-47c7-98d5-c1e3932f8c91"
+              LastKnownName="Level"
+              LastKnownLocation="Cplusplus.uml" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd
+                  Id="c23c7474-cbb2-4f36-ad03-05782c82ec3e"
+                  name="Room"
+                  isLeaf="false"
+                  isStatic="false"
+                  isReadOnly="false"
+                  isDerived="false"
+                  isDerivedUnion="false"
+                  aggregation="None"
+                  isComposite="false"
+                  isNavigableOwned="false" />
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd
+                  Id="3c55046c-5588-40cd-9523-27b3644ec967"
+                  name="Level"
+                  isLeaf="false"
+                  isStatic="false"
+                  isReadOnly="false"
+                  isDerived="false"
+                  isDerivedUnion="false"
+                  aggregation="None"
+                  isComposite="false" />
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+          </association>
+          <association
+            Id="25bd4b37-9a08-4e91-b539-5f82fb5bf31f"
+            isDerived="false"
+            sourceEndRoleName="Room"
+            targetEndRoleName="AbstractItem"
+            isLeaf="false"
+            isAbstract="false">
+            <classMoniker
+              Id="9fe9552d-468e-4b00-811b-f0354c6101b7"
+              LastKnownName="AbstractItem"
+              LastKnownLocation="Cplusplus.uml" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd
+                  Id="3d588ec4-d2aa-405d-b223-71a277a7ba41"
+                  name="Room"
+                  isLeaf="false"
+                  isStatic="false"
+                  isReadOnly="false"
+                  isDerived="false"
+                  isDerivedUnion="false"
+                  aggregation="None"
+                  isComposite="false"
+                  isNavigableOwned="false" />
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd
+                  Id="bba4ec63-3f02-4b8f-8dd2-7aab9e14d410"
+                  name="AbstractItem"
+                  isLeaf="false"
+                  isStatic="false"
+                  isReadOnly="false"
+                  isDerived="false"
+                  isDerivedUnion="false"
+                  aggregation="None"
+                  isComposite="false" />
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+          </association>
+        </targetEnds>
+      </class>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <class
+        Id="18298658-bccb-4156-a684-af2bdee9cc26"
+        name="ExitRoom"
+        isAbstract="false"
+        isLeaf="false"
+        isActiveClass="false" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <class
+        Id="e1cc345e-ce3c-47c7-98d5-c1e3932f8c91"
+        name="Level"
+        isAbstract="false"
+        isLeaf="false"
+        isActiveClass="false">
+        <targetEnds>
+          <association
+            Id="0a822ea3-9328-456f-8464-1ffbb7360d7b"
+            isDerived="false"
+            sourceEndRoleName="Level"
+            targetEndRoleName="Game"
+            isLeaf="false"
+            isAbstract="false">
+            <classMoniker
+              Id="c2a8d282-2c7f-4621-8051-d7c4bfe653c9"
+              LastKnownName="Game"
+              LastKnownLocation="Cplusplus.uml" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd
+                  Id="26b2a427-06ca-4109-8c34-606b4b16f983"
+                  name="Level"
+                  isLeaf="false"
+                  isStatic="false"
+                  isReadOnly="false"
+                  isDerived="false"
+                  isDerivedUnion="false"
+                  aggregation="None"
+                  isComposite="false"
+                  isNavigableOwned="false" />
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd
+                  Id="1fd44a74-bee9-4e22-ae88-6357072a6176"
+                  name="Game"
+                  isLeaf="false"
+                  isStatic="false"
+                  isReadOnly="false"
+                  isDerived="false"
+                  isDerivedUnion="false"
+                  aggregation="None"
+                  isComposite="false" />
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+          </association>
+          <association
+            Id="0615cdb5-bdb9-4b4e-b366-514d7a44d56d"
+            isDerived="false"
+            sourceEndRoleName="Level"
+            targetEndRoleName="Room"
+            isLeaf="false"
+            isAbstract="false">
+            <classMoniker
+              Id="029b4447-e5a9-465d-9372-9bdcce31a025"
+              LastKnownName="Room"
+              LastKnownLocation="Cplusplus.uml" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd
+                  Id="80b152bd-8d3a-4c9c-9248-a4f8a4dcad5d"
+                  name="Level"
+                  isLeaf="false"
+                  isStatic="false"
+                  isReadOnly="false"
+                  isDerived="false"
+                  isDerivedUnion="false"
+                  aggregation="None"
+                  isComposite="false"
+                  isNavigableOwned="false" />
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd
+                  Id="e7faed77-b4cc-4092-8fff-556359655162"
+                  name="Room"
+                  isLeaf="false"
+                  isStatic="false"
+                  isReadOnly="false"
+                  isDerived="false"
+                  isDerivedUnion="false"
+                  aggregation="None"
+                  isComposite="false">
+                  <lowerValueInternal>
+                    <literalString
+                      Id="d81a5cbd-7c0c-4d48-a7e1-f003e80429f5"
+                      name="Lower"
+                      value="0" />
+                  </lowerValueInternal>
+                  <upperValueInternal>
+                    <literalString
+                      Id="4add3dc6-fffe-464f-ad98-a9a67c647ce4"
+                      name="Upper"
+                      value="*" />
+                  </upperValueInternal>
+                </memberEnd>
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+          </association>
+        </targetEnds>
+      </class>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <class
+        Id="9fe9552d-468e-4b00-811b-f0354c6101b7"
+        name="AbstractItem"
+        isAbstract="false"
+        isLeaf="false"
+        isActiveClass="false">
+        <targetEnds>
+          <association
+            Id="5b78a025-fa00-498f-a573-d5c317c9bfbe"
+            isDerived="false"
+            sourceEndRoleName="AbstractItem"
+            targetEndRoleName="Room"
+            isLeaf="false"
+            isAbstract="false">
+            <classMoniker
+              Id="029b4447-e5a9-465d-9372-9bdcce31a025"
+              LastKnownName="Room"
+              LastKnownLocation="Cplusplus.uml" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd
+                  Id="e6da788a-1731-4c64-92e1-ae77f1b84a96"
+                  name="AbstractItem"
+                  isLeaf="false"
+                  isStatic="false"
+                  isReadOnly="false"
+                  isDerived="false"
+                  isDerivedUnion="false"
+                  aggregation="None"
+                  isComposite="false"
+                  isNavigableOwned="false" />
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd
+                  Id="aafdc1e9-8173-4d7c-84d9-a994cf96ca06"
+                  name="Room"
+                  isLeaf="false"
+                  isStatic="false"
+                  isReadOnly="false"
+                  isDerived="false"
+                  isDerivedUnion="false"
+                  aggregation="None"
+                  isComposite="false" />
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+          </association>
+          <association
+            Id="cf46a4c7-128d-4810-a4b7-bc64c4562449"
+            isDerived="false"
+            sourceEndRoleName="AbstractItem"
+            targetEndRoleName="AbstractCharacter"
+            isLeaf="false"
+            isAbstract="false">
+            <classMoniker
+              Id="ed4eb53e-a32f-4242-9adf-01cac786a73d"
+              LastKnownName="AbstractCharacter"
+              LastKnownLocation="Cplusplus.uml" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd
+                  Id="a6caa199-d260-4f35-a6cc-6946d5035c90"
+                  name="AbstractItem"
+                  isLeaf="false"
+                  isStatic="false"
+                  isReadOnly="false"
+                  isDerived="false"
+                  isDerivedUnion="false"
+                  aggregation="None"
+                  isComposite="false"
+                  isNavigableOwned="false" />
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd
+                  Id="e38606df-3e78-42c4-9122-871333430d8f"
+                  name="AbstractCharacter"
+                  isLeaf="false"
+                  isStatic="false"
+                  isReadOnly="false"
+                  isDerived="false"
+                  isDerivedUnion="false"
+                  aggregation="None"
+                  isComposite="false" />
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+          </association>
+        </targetEnds>
+      </class>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <class
+        Id="ed4eb53e-a32f-4242-9adf-01cac786a73d"
+        name="AbstractCharacter"
+        isAbstract="false"
+        isLeaf="false"
+        isActiveClass="false">
+        <generalsInternal>
+          <generalization
+            Id="10a0cc63-0175-4ef5-8276-c33fc9f0005d"
+            isSubstitutable="false">
+            <classMoniker
+              Id="a7b96bc5-16a8-43b1-a936-85f3c693c06e"
+              LastKnownName="Hero"
+              LastKnownLocation="Cplusplus.uml" />
+          </generalization>
+          <generalization
+            Id="301b032d-33e4-4919-8ea7-bfd90d65b18a"
+            isSubstitutable="false">
+            <classMoniker
+              Id="abb7ab20-7516-468d-9640-3531bf301366"
+              LastKnownName="Enemy"
+              LastKnownLocation="Cplusplus.uml" />
+          </generalization>
+        </generalsInternal>
+        <targetEnds>
+          <association
+            Id="5ebc4aba-f589-41a0-8f0a-62dac35943b3"
+            isDerived="false"
+            sourceEndRoleName="AbstractCharacter"
+            targetEndRoleName="AbstractItem"
+            isLeaf="false"
+            isAbstract="false">
+            <classMoniker
+              Id="9fe9552d-468e-4b00-811b-f0354c6101b7"
+              LastKnownName="AbstractItem"
+              LastKnownLocation="Cplusplus.uml" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd
+                  Id="9c2c76c8-6ea1-4cd2-9117-d98c699dfb15"
+                  name="AbstractCharacter"
+                  isLeaf="false"
+                  isStatic="false"
+                  isReadOnly="false"
+                  isDerived="false"
+                  isDerivedUnion="false"
+                  aggregation="None"
+                  isComposite="false"
+                  isNavigableOwned="false" />
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd
+                  Id="a443c121-6911-49c6-ac1a-c8b44631af77"
+                  name="AbstractItem"
+                  isLeaf="false"
+                  isStatic="false"
+                  isReadOnly="false"
+                  isDerived="false"
+                  isDerivedUnion="false"
+                  aggregation="None"
+                  isComposite="false" />
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+          </association>
+        </targetEnds>
+      </class>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <class
+        Id="a7b96bc5-16a8-43b1-a936-85f3c693c06e"
+        name="Hero"
+        isAbstract="false"
+        isLeaf="false"
+        isActiveClass="false" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <class
+        Id="abb7ab20-7516-468d-9640-3531bf301366"
+        name="Enemy"
+        isAbstract="false"
+        isLeaf="false"
+        isActiveClass="false" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <class
+        Id="c2a8d282-2c7f-4621-8051-d7c4bfe653c9"
+        name="Game"
+        isAbstract="false"
+        isLeaf="false"
+        isActiveClass="false">
+        <targetEnds>
+          <association
+            Id="378c54ca-6c06-4d40-a61e-935780d841fc"
+            isDerived="false"
+            sourceEndRoleName="Game"
+            targetEndRoleName="Level"
+            isLeaf="false"
+            isAbstract="false">
+            <classMoniker
+              Id="e1cc345e-ce3c-47c7-98d5-c1e3932f8c91"
+              LastKnownName="Level"
+              LastKnownLocation="Cplusplus.uml" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd
+                  Id="b6a5bc1f-d8bd-4fa6-a4af-07815d074387"
+                  name="Game"
+                  isLeaf="false"
+                  isStatic="false"
+                  isReadOnly="false"
+                  isDerived="false"
+                  isDerivedUnion="false"
+                  aggregation="None"
+                  isComposite="false"
+                  isNavigableOwned="false" />
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd
+                  Id="76ba2d19-7b91-4241-bc05-5f9d5a8349ec"
+                  name="Level"
+                  isLeaf="false"
+                  isStatic="false"
+                  isReadOnly="false"
+                  isDerived="false"
+                  isDerivedUnion="false"
+                  aggregation="None"
+                  isComposite="false">
+                  <lowerValueInternal>
+                    <literalString
+                      Id="11eebbc4-238e-4eca-8154-9126c2c5c1e4"
+                      name="Lower"
+                      value="0" />
+                  </lowerValueInternal>
+                  <upperValueInternal>
+                    <literalString
+                      Id="ff3bdc49-6fab-4c80-b829-406c3b0ffec6"
+                      name="Upper"
+                      value="*" />
+                  </upperValueInternal>
+                </memberEnd>
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+          </association>
+          <association
+            Id="04984026-5beb-4866-b328-7260f2342a00"
+            isDerived="false"
+            sourceEndRoleName="Game"
+            targetEndRoleName="AbstractCharacter"
+            isLeaf="false"
+            isAbstract="false">
+            <classMoniker
+              Id="ed4eb53e-a32f-4242-9adf-01cac786a73d"
+              LastKnownName="AbstractCharacter"
+              LastKnownLocation="Cplusplus.uml" />
+            <relationshipOwnedElementsInternal>
+              <associationHasOwnedEnds>
+                <memberEnd
+                  Id="9807bcb2-5d80-4979-8cce-dd3f2d731de5"
+                  name="Game"
+                  isLeaf="false"
+                  isStatic="false"
+                  isReadOnly="false"
+                  isDerived="false"
+                  isDerivedUnion="false"
+                  aggregation="None"
+                  isComposite="false"
+                  isNavigableOwned="false" />
+              </associationHasOwnedEnds>
+              <associationHasOwnedEnds>
+                <memberEnd
+                  Id="05b494fc-871e-4b40-8e1d-f55de3a5d501"
+                  name="AbstractCharacter"
+                  isLeaf="false"
+                  isStatic="false"
+                  isReadOnly="false"
+                  isDerived="false"
+                  isDerivedUnion="false"
+                  aggregation="None"
+                  isComposite="false">
+                  <lowerValueInternal>
+                    <literalString
+                      Id="ce84495b-17b0-4bda-be29-65a75c4c47fe"
+                      name="Lower"
+                      value="0" />
+                  </lowerValueInternal>
+                  <upperValueInternal>
+                    <literalString
+                      Id="431f0cde-49a5-4d62-b9db-ec1d272e3af4"
+                      name="Upper"
+                      value="*" />
+                  </upperValueInternal>
+                </memberEnd>
+              </associationHasOwnedEnds>
+            </relationshipOwnedElementsInternal>
+          </association>
+        </targetEnds>
+      </class>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <interaction
+        Id="5541ec51-be79-4ffa-a316-d7192851c82d"
+        name="Sequence1"
+        collapseFragmentsFlag="false"
+        isActiveClass="false"
+        isAbstract="false"
+        isLeaf="false"
+        isReentrant="false">
+        <ownedCommentsInternal>
+          <comment
+            Id="4c37666b-1ac9-4531-a384-5af6b365b60d">
+            <body>Loop x * y</body>
+          </comment>
+          <comment
+            Id="a95c6e0e-7da0-4753-a870-62b958837944">
+            <body>start: createLevels(int l, int x, int y)</body>
+          </comment>
+        </ownedCommentsInternal>
+        <fragments>
+          <behaviorExecutionSpecification
+            Id="85f2e1d7-65fb-4451-8bf0-e6ab7a9bbb8d"
+            name="BehaviorExecutionSpecification4">
+            <coveredLifelines>
+              <lifelineMoniker
+                Id="95ede694-ddf3-4491-a99c-26bae56c1fd8"
+                LastKnownName="Level"
+                LastKnownLocation="Cplusplus.uml" />
+            </coveredLifelines>
+            <finish>
+              <executionOccurrenceSpecificationMoniker
+                Id="cc0b7f04-e7b1-485b-819e-10a647df2c44"
+                LastKnownName="ExecutionOccurrenceSpecification8"
+                LastKnownLocation="Cplusplus.uml" />
+            </finish>
+            <start>
+              <executionOccurrenceSpecificationMoniker
+                Id="ce6d63e1-7dea-4422-bd21-e7c59f1f6217"
+                LastKnownName="ExecutionOccurrenceSpecification7"
+                LastKnownLocation="Cplusplus.uml" />
+            </start>
+            <nestedOccurrences>
+              <messageOccurrenceSpecificationMoniker
+                Id="cd85d779-7edb-40ae-a77e-ccf325a51594"
+                LastKnownName="MessageOccurrenceSpecification14"
+                LastKnownLocation="Cplusplus.uml" />
+              <messageOccurrenceSpecificationMoniker
+                Id="87f9e64e-3470-402d-9ef0-b15880e560b3"
+                LastKnownName="MessageOccurrenceSpecification15"
+                LastKnownLocation="Cplusplus.uml" />
+            </nestedOccurrences>
+          </behaviorExecutionSpecification>
+          <executionOccurrenceSpecification
+            Id="ce6d63e1-7dea-4422-bd21-e7c59f1f6217"
+            name="ExecutionOccurrenceSpecification7">
+            <event>
+              <executionOccurrenceSpecificationReferencesEvent>
+                <executionEventMoniker
+                  Id="40ec6fa2-482b-4ca5-8f4f-4338102066a5"
+                  LastKnownName="ExecutionEvent"
+                  LastKnownLocation="Cplusplus.uml" />
+              </executionOccurrenceSpecificationReferencesEvent>
+            </event>
+            <covered>
+              <lifelineMoniker
+                Id="95ede694-ddf3-4491-a99c-26bae56c1fd8"
+                LastKnownName="Level"
+                LastKnownLocation="Cplusplus.uml" />
+            </covered>
+          </executionOccurrenceSpecification>
+          <messageOccurrenceSpecification
+            Id="cd85d779-7edb-40ae-a77e-ccf325a51594"
+            name="MessageOccurrenceSpecification14">
+            <covered>
+              <lifelineMoniker
+                Id="95ede694-ddf3-4491-a99c-26bae56c1fd8"
+                LastKnownName="Level"
+                LastKnownLocation="Cplusplus.uml" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <messageOccurrenceSpecification
+            Id="ed3452e2-3e32-4dab-9f9e-08158e1a26f6"
+            name="MessageOccurrenceSpecification13">
+            <covered>
+              <lifelineMoniker
+                Id="9f7275f8-9927-4f77-a96a-e925ee18872e"
+                LastKnownName="Game"
+                LastKnownLocation="Cplusplus.uml" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <messageOccurrenceSpecification
+            Id="c1e4435b-5c62-4c2d-a6c7-3fecef1df94c"
+            name="MessageOccurrenceSpecification16">
+            <covered>
+              <lifelineMoniker
+                Id="9f7275f8-9927-4f77-a96a-e925ee18872e"
+                LastKnownName="Game"
+                LastKnownLocation="Cplusplus.uml" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <messageOccurrenceSpecification
+            Id="87f9e64e-3470-402d-9ef0-b15880e560b3"
+            name="MessageOccurrenceSpecification15">
+            <covered>
+              <lifelineMoniker
+                Id="95ede694-ddf3-4491-a99c-26bae56c1fd8"
+                LastKnownName="Level"
+                LastKnownLocation="Cplusplus.uml" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <executionOccurrenceSpecification
+            Id="cc0b7f04-e7b1-485b-819e-10a647df2c44"
+            name="ExecutionOccurrenceSpecification8">
+            <event>
+              <executionOccurrenceSpecificationReferencesEvent>
+                <executionEventMoniker
+                  Id="be48c9ac-0e38-4052-a4e7-2a8378487904"
+                  LastKnownName="ExecutionEvent"
+                  LastKnownLocation="Cplusplus.uml" />
+              </executionOccurrenceSpecificationReferencesEvent>
+            </event>
+            <covered>
+              <lifelineMoniker
+                Id="95ede694-ddf3-4491-a99c-26bae56c1fd8"
+                LastKnownName="Level"
+                LastKnownLocation="Cplusplus.uml" />
+            </covered>
+          </executionOccurrenceSpecification>
+          <behaviorExecutionSpecification
+            Id="47174cdf-df38-4428-bd5f-d18cc860eb36"
+            name="BehaviorExecutionSpecification1">
+            <coveredLifelines>
+              <lifelineMoniker
+                Id="95ede694-ddf3-4491-a99c-26bae56c1fd8"
+                LastKnownName="Level"
+                LastKnownLocation="Cplusplus.uml" />
+            </coveredLifelines>
+            <finish>
+              <executionOccurrenceSpecificationMoniker
+                Id="d208e158-f384-4921-a1a7-ce8f5334f3a3"
+                LastKnownName="ExecutionOccurrenceSpecification2"
+                LastKnownLocation="Cplusplus.uml" />
+            </finish>
+            <start>
+              <executionOccurrenceSpecificationMoniker
+                Id="b3d42845-d0c6-4f5d-bb04-184474ac7a11"
+                LastKnownName="ExecutionOccurrenceSpecification1"
+                LastKnownLocation="Cplusplus.uml" />
+            </start>
+            <nestedOccurrences>
+              <messageOccurrenceSpecificationMoniker
+                Id="e5b2da0a-c6bf-4a48-86a5-22bb8939125e"
+                LastKnownName="MessageOccurrenceSpecification2"
+                LastKnownLocation="Cplusplus.uml" />
+              <messageOccurrenceSpecificationMoniker
+                Id="7b1936e4-af37-4d2b-a6c1-2b49585fff5d"
+                LastKnownName="MessageOccurrenceSpecification19"
+                LastKnownLocation="Cplusplus.uml" />
+              <executionOccurrenceSpecificationMoniker
+                Id="ef2f19a2-fb5a-4ce7-98a7-0d5345497956"
+                LastKnownName="ExecutionOccurrenceSpecification11"
+                LastKnownLocation="Cplusplus.uml" />
+              <executionOccurrenceSpecificationMoniker
+                Id="86f8502f-fc62-4d6e-b350-1925d237f999"
+                LastKnownName="ExecutionOccurrenceSpecification12"
+                LastKnownLocation="Cplusplus.uml" />
+              <messageOccurrenceSpecificationMoniker
+                Id="12d89a91-5eb0-40b9-a496-80a9e0ca7920"
+                LastKnownName="MessageOccurrenceSpecification3"
+                LastKnownLocation="Cplusplus.uml" />
+            </nestedOccurrences>
+          </behaviorExecutionSpecification>
+          <executionOccurrenceSpecification
+            Id="b3d42845-d0c6-4f5d-bb04-184474ac7a11"
+            name="ExecutionOccurrenceSpecification1">
+            <event>
+              <executionOccurrenceSpecificationReferencesEvent>
+                <executionEventMoniker
+                  Id="ad6d4ed8-1a31-4099-9d1c-281685ab4eeb"
+                  LastKnownName="ExecutionEvent"
+                  LastKnownLocation="Cplusplus.uml" />
+              </executionOccurrenceSpecificationReferencesEvent>
+            </event>
+            <covered>
+              <lifelineMoniker
+                Id="95ede694-ddf3-4491-a99c-26bae56c1fd8"
+                LastKnownName="Level"
+                LastKnownLocation="Cplusplus.uml" />
+            </covered>
+          </executionOccurrenceSpecification>
+          <messageOccurrenceSpecification
+            Id="e4fda1c5-1d59-4639-8e58-a467c7bf9292"
+            name="MessageOccurrenceSpecification1">
+            <covered>
+              <lifelineMoniker
+                Id="9f7275f8-9927-4f77-a96a-e925ee18872e"
+                LastKnownName="Game"
+                LastKnownLocation="Cplusplus.uml" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <messageOccurrenceSpecification
+            Id="e5b2da0a-c6bf-4a48-86a5-22bb8939125e"
+            name="MessageOccurrenceSpecification2">
+            <covered>
+              <lifelineMoniker
+                Id="95ede694-ddf3-4491-a99c-26bae56c1fd8"
+                LastKnownName="Level"
+                LastKnownLocation="Cplusplus.uml" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <messageOccurrenceSpecification
+            Id="7b1936e4-af37-4d2b-a6c1-2b49585fff5d"
+            name="MessageOccurrenceSpecification19">
+            <covered>
+              <lifelineMoniker
+                Id="95ede694-ddf3-4491-a99c-26bae56c1fd8"
+                LastKnownName="Level"
+                LastKnownLocation="Cplusplus.uml" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <behaviorExecutionSpecification
+            Id="2581f8c9-de77-409a-a9b9-d78162fa8e59"
+            name="BehaviorExecutionSpecification6">
+            <coveredLifelines>
+              <lifelineMoniker
+                Id="95ede694-ddf3-4491-a99c-26bae56c1fd8"
+                LastKnownName="Level"
+                LastKnownLocation="Cplusplus.uml" />
+            </coveredLifelines>
+            <finish>
+              <executionOccurrenceSpecificationMoniker
+                Id="86f8502f-fc62-4d6e-b350-1925d237f999"
+                LastKnownName="ExecutionOccurrenceSpecification12"
+                LastKnownLocation="Cplusplus.uml" />
+            </finish>
+            <start>
+              <executionOccurrenceSpecificationMoniker
+                Id="ef2f19a2-fb5a-4ce7-98a7-0d5345497956"
+                LastKnownName="ExecutionOccurrenceSpecification11"
+                LastKnownLocation="Cplusplus.uml" />
+            </start>
+            <nestedOccurrences>
+              <messageOccurrenceSpecificationMoniker
+                Id="fa6b9c04-35e5-4999-ad5c-6a4326172f51"
+                LastKnownName="MessageOccurrenceSpecification20"
+                LastKnownLocation="Cplusplus.uml" />
+              <messageOccurrenceSpecificationMoniker
+                Id="8c79b730-3f8a-450b-8f0a-4e78cbceda4b"
+                LastKnownName="MessageOccurrenceSpecification21"
+                LastKnownLocation="Cplusplus.uml" />
+              <messageOccurrenceSpecificationMoniker
+                Id="05d0e84c-759c-4bc8-807f-dfdfd63ea88f"
+                LastKnownName="MessageOccurrenceSpecification24"
+                LastKnownLocation="Cplusplus.uml" />
+              <messageOccurrenceSpecificationMoniker
+                Id="b0eb4409-c54d-47dc-8b18-6e9ef1c4cd5b"
+                LastKnownName="MessageOccurrenceSpecification25"
+                LastKnownLocation="Cplusplus.uml" />
+              <messageOccurrenceSpecificationMoniker
+                Id="c542a489-0a4d-4e3f-9bd0-392b4ff30f73"
+                LastKnownName="MessageOccurrenceSpecification28"
+                LastKnownLocation="Cplusplus.uml" />
+            </nestedOccurrences>
+          </behaviorExecutionSpecification>
+          <executionOccurrenceSpecification
+            Id="ef2f19a2-fb5a-4ce7-98a7-0d5345497956"
+            name="ExecutionOccurrenceSpecification11">
+            <event>
+              <executionOccurrenceSpecificationReferencesEvent>
+                <executionEventMoniker
+                  Id="b5c502b0-e1ce-438a-8152-791618b46f7e"
+                  LastKnownName="ExecutionEvent"
+                  LastKnownLocation="Cplusplus.uml" />
+              </executionOccurrenceSpecificationReferencesEvent>
+            </event>
+            <covered>
+              <lifelineMoniker
+                Id="95ede694-ddf3-4491-a99c-26bae56c1fd8"
+                LastKnownName="Level"
+                LastKnownLocation="Cplusplus.uml" />
+            </covered>
+          </executionOccurrenceSpecification>
+          <messageOccurrenceSpecification
+            Id="fa6b9c04-35e5-4999-ad5c-6a4326172f51"
+            name="MessageOccurrenceSpecification20">
+            <covered>
+              <lifelineMoniker
+                Id="95ede694-ddf3-4491-a99c-26bae56c1fd8"
+                LastKnownName="Level"
+                LastKnownLocation="Cplusplus.uml" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <behaviorExecutionSpecification
+            Id="772709af-e649-4221-86c6-e5dc0c18c17a"
+            name="BehaviorExecutionSpecification7">
+            <coveredLifelines>
+              <lifelineMoniker
+                Id="5973f8a8-9650-443d-873f-0d4626353e33"
+                LastKnownName="Room"
+                LastKnownLocation="Cplusplus.uml" />
+            </coveredLifelines>
+            <finish>
+              <executionOccurrenceSpecificationMoniker
+                Id="872eeda0-4758-4ce3-a915-2f37b59c80d1"
+                LastKnownName="ExecutionOccurrenceSpecification14"
+                LastKnownLocation="Cplusplus.uml" />
+            </finish>
+            <start>
+              <executionOccurrenceSpecificationMoniker
+                Id="57c10109-567d-4059-997d-bdbb3745cbfc"
+                LastKnownName="ExecutionOccurrenceSpecification13"
+                LastKnownLocation="Cplusplus.uml" />
+            </start>
+            <nestedOccurrences>
+              <messageOccurrenceSpecificationMoniker
+                Id="73a036f6-6c7d-40e8-b6ed-58250e591a99"
+                LastKnownName="MessageOccurrenceSpecification22"
+                LastKnownLocation="Cplusplus.uml" />
+              <messageOccurrenceSpecificationMoniker
+                Id="12f64424-ffe6-4c67-b034-9b103ee506f4"
+                LastKnownName="MessageOccurrenceSpecification23"
+                LastKnownLocation="Cplusplus.uml" />
+            </nestedOccurrences>
+          </behaviorExecutionSpecification>
+          <executionOccurrenceSpecification
+            Id="57c10109-567d-4059-997d-bdbb3745cbfc"
+            name="ExecutionOccurrenceSpecification13">
+            <event>
+              <executionOccurrenceSpecificationReferencesEvent>
+                <executionEventMoniker
+                  Id="aaf0277a-5d04-40ac-8890-a13e0bf9419d"
+                  LastKnownName="ExecutionEvent"
+                  LastKnownLocation="Cplusplus.uml" />
+              </executionOccurrenceSpecificationReferencesEvent>
+            </event>
+            <covered>
+              <lifelineMoniker
+                Id="5973f8a8-9650-443d-873f-0d4626353e33"
+                LastKnownName="Room"
+                LastKnownLocation="Cplusplus.uml" />
+            </covered>
+          </executionOccurrenceSpecification>
+          <messageOccurrenceSpecification
+            Id="73a036f6-6c7d-40e8-b6ed-58250e591a99"
+            name="MessageOccurrenceSpecification22">
+            <covered>
+              <lifelineMoniker
+                Id="5973f8a8-9650-443d-873f-0d4626353e33"
+                LastKnownName="Room"
+                LastKnownLocation="Cplusplus.uml" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <messageOccurrenceSpecification
+            Id="8c79b730-3f8a-450b-8f0a-4e78cbceda4b"
+            name="MessageOccurrenceSpecification21">
+            <covered>
+              <lifelineMoniker
+                Id="95ede694-ddf3-4491-a99c-26bae56c1fd8"
+                LastKnownName="Level"
+                LastKnownLocation="Cplusplus.uml" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <messageOccurrenceSpecification
+            Id="12f64424-ffe6-4c67-b034-9b103ee506f4"
+            name="MessageOccurrenceSpecification23">
+            <covered>
+              <lifelineMoniker
+                Id="5973f8a8-9650-443d-873f-0d4626353e33"
+                LastKnownName="Room"
+                LastKnownLocation="Cplusplus.uml" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <messageOccurrenceSpecification
+            Id="05d0e84c-759c-4bc8-807f-dfdfd63ea88f"
+            name="MessageOccurrenceSpecification24">
+            <covered>
+              <lifelineMoniker
+                Id="95ede694-ddf3-4491-a99c-26bae56c1fd8"
+                LastKnownName="Level"
+                LastKnownLocation="Cplusplus.uml" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <executionOccurrenceSpecification
+            Id="872eeda0-4758-4ce3-a915-2f37b59c80d1"
+            name="ExecutionOccurrenceSpecification14">
+            <event>
+              <executionOccurrenceSpecificationReferencesEvent>
+                <executionEventMoniker
+                  Id="aeb86068-fbfe-4872-b619-45a57f612de5"
+                  LastKnownName="ExecutionEvent"
+                  LastKnownLocation="Cplusplus.uml" />
+              </executionOccurrenceSpecificationReferencesEvent>
+            </event>
+            <covered>
+              <lifelineMoniker
+                Id="5973f8a8-9650-443d-873f-0d4626353e33"
+                LastKnownName="Room"
+                LastKnownLocation="Cplusplus.uml" />
+            </covered>
+          </executionOccurrenceSpecification>
+          <behaviorExecutionSpecification
+            Id="fc1a01b4-a756-48a9-8ef9-0122bc5f45db"
+            name="BehaviorExecutionSpecification8">
+            <coveredLifelines>
+              <lifelineMoniker
+                Id="5973f8a8-9650-443d-873f-0d4626353e33"
+                LastKnownName="Room"
+                LastKnownLocation="Cplusplus.uml" />
+            </coveredLifelines>
+            <finish>
+              <executionOccurrenceSpecificationMoniker
+                Id="beabf0da-f0ab-43e4-8447-5141788c0b52"
+                LastKnownName="ExecutionOccurrenceSpecification16"
+                LastKnownLocation="Cplusplus.uml" />
+            </finish>
+            <start>
+              <executionOccurrenceSpecificationMoniker
+                Id="203c49b4-72f4-465e-9728-c5f37d9bc7e3"
+                LastKnownName="ExecutionOccurrenceSpecification15"
+                LastKnownLocation="Cplusplus.uml" />
+            </start>
+            <nestedOccurrences>
+              <messageOccurrenceSpecificationMoniker
+                Id="0e81b21a-a60f-4335-9555-a6a2604147e5"
+                LastKnownName="MessageOccurrenceSpecification26"
+                LastKnownLocation="Cplusplus.uml" />
+              <messageOccurrenceSpecificationMoniker
+                Id="94ff599b-04ba-4794-a72e-36ad6d92c7db"
+                LastKnownName="MessageOccurrenceSpecification29"
+                LastKnownLocation="Cplusplus.uml" />
+              <executionOccurrenceSpecificationMoniker
+                Id="1a893aa8-2d3b-41e5-a27a-b280cf65c1d3"
+                LastKnownName="ExecutionOccurrenceSpecification17"
+                LastKnownLocation="Cplusplus.uml" />
+              <executionOccurrenceSpecificationMoniker
+                Id="902627d7-c7f8-40bf-b9c5-a583417a6dd1"
+                LastKnownName="ExecutionOccurrenceSpecification18"
+                LastKnownLocation="Cplusplus.uml" />
+              <messageOccurrenceSpecificationMoniker
+                Id="7f8897ce-b777-4ade-bae9-a644d9423baa"
+                LastKnownName="MessageOccurrenceSpecification27"
+                LastKnownLocation="Cplusplus.uml" />
+            </nestedOccurrences>
+          </behaviorExecutionSpecification>
+          <executionOccurrenceSpecification
+            Id="203c49b4-72f4-465e-9728-c5f37d9bc7e3"
+            name="ExecutionOccurrenceSpecification15">
+            <event>
+              <executionOccurrenceSpecificationReferencesEvent>
+                <executionEventMoniker
+                  Id="55494162-653c-48e8-b34c-6e7d5cdea57c"
+                  LastKnownName="ExecutionEvent"
+                  LastKnownLocation="Cplusplus.uml" />
+              </executionOccurrenceSpecificationReferencesEvent>
+            </event>
+            <covered>
+              <lifelineMoniker
+                Id="5973f8a8-9650-443d-873f-0d4626353e33"
+                LastKnownName="Room"
+                LastKnownLocation="Cplusplus.uml" />
+            </covered>
+          </executionOccurrenceSpecification>
+          <messageOccurrenceSpecification
+            Id="b0eb4409-c54d-47dc-8b18-6e9ef1c4cd5b"
+            name="MessageOccurrenceSpecification25">
+            <covered>
+              <lifelineMoniker
+                Id="95ede694-ddf3-4491-a99c-26bae56c1fd8"
+                LastKnownName="Level"
+                LastKnownLocation="Cplusplus.uml" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <messageOccurrenceSpecification
+            Id="0e81b21a-a60f-4335-9555-a6a2604147e5"
+            name="MessageOccurrenceSpecification26">
+            <covered>
+              <lifelineMoniker
+                Id="5973f8a8-9650-443d-873f-0d4626353e33"
+                LastKnownName="Room"
+                LastKnownLocation="Cplusplus.uml" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <messageOccurrenceSpecification
+            Id="94ff599b-04ba-4794-a72e-36ad6d92c7db"
+            name="MessageOccurrenceSpecification29">
+            <covered>
+              <lifelineMoniker
+                Id="5973f8a8-9650-443d-873f-0d4626353e33"
+                LastKnownName="Room"
+                LastKnownLocation="Cplusplus.uml" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <behaviorExecutionSpecification
+            Id="fc6c92d8-b99d-4bd4-a274-b84e0cc5f069"
+            name="BehaviorExecutionSpecification9">
+            <coveredLifelines>
+              <lifelineMoniker
+                Id="5973f8a8-9650-443d-873f-0d4626353e33"
+                LastKnownName="Room"
+                LastKnownLocation="Cplusplus.uml" />
+            </coveredLifelines>
+            <finish>
+              <executionOccurrenceSpecificationMoniker
+                Id="902627d7-c7f8-40bf-b9c5-a583417a6dd1"
+                LastKnownName="ExecutionOccurrenceSpecification18"
+                LastKnownLocation="Cplusplus.uml" />
+            </finish>
+            <start>
+              <executionOccurrenceSpecificationMoniker
+                Id="1a893aa8-2d3b-41e5-a27a-b280cf65c1d3"
+                LastKnownName="ExecutionOccurrenceSpecification17"
+                LastKnownLocation="Cplusplus.uml" />
+            </start>
+            <nestedOccurrences>
+              <messageOccurrenceSpecificationMoniker
+                Id="07c35836-4964-47ee-bb29-de916e61cc98"
+                LastKnownName="MessageOccurrenceSpecification30"
+                LastKnownLocation="Cplusplus.uml" />
+            </nestedOccurrences>
+          </behaviorExecutionSpecification>
+          <executionOccurrenceSpecification
+            Id="1a893aa8-2d3b-41e5-a27a-b280cf65c1d3"
+            name="ExecutionOccurrenceSpecification17">
+            <event>
+              <executionOccurrenceSpecificationReferencesEvent>
+                <executionEventMoniker
+                  Id="d1a10556-4ec4-4da7-976a-03aee68ae9c7"
+                  LastKnownName="ExecutionEvent"
+                  LastKnownLocation="Cplusplus.uml" />
+              </executionOccurrenceSpecificationReferencesEvent>
+            </event>
+            <covered>
+              <lifelineMoniker
+                Id="5973f8a8-9650-443d-873f-0d4626353e33"
+                LastKnownName="Room"
+                LastKnownLocation="Cplusplus.uml" />
+            </covered>
+          </executionOccurrenceSpecification>
+          <messageOccurrenceSpecification
+            Id="07c35836-4964-47ee-bb29-de916e61cc98"
+            name="MessageOccurrenceSpecification30">
+            <covered>
+              <lifelineMoniker
+                Id="5973f8a8-9650-443d-873f-0d4626353e33"
+                LastKnownName="Room"
+                LastKnownLocation="Cplusplus.uml" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <executionOccurrenceSpecification
+            Id="902627d7-c7f8-40bf-b9c5-a583417a6dd1"
+            name="ExecutionOccurrenceSpecification18">
+            <event>
+              <executionOccurrenceSpecificationReferencesEvent>
+                <executionEventMoniker
+                  Id="47f6cd07-740e-47e4-9196-e85352011397"
+                  LastKnownName="ExecutionEvent"
+                  LastKnownLocation="Cplusplus.uml" />
+              </executionOccurrenceSpecificationReferencesEvent>
+            </event>
+            <covered>
+              <lifelineMoniker
+                Id="5973f8a8-9650-443d-873f-0d4626353e33"
+                LastKnownName="Room"
+                LastKnownLocation="Cplusplus.uml" />
+            </covered>
+          </executionOccurrenceSpecification>
+          <messageOccurrenceSpecification
+            Id="7f8897ce-b777-4ade-bae9-a644d9423baa"
+            name="MessageOccurrenceSpecification27">
+            <covered>
+              <lifelineMoniker
+                Id="5973f8a8-9650-443d-873f-0d4626353e33"
+                LastKnownName="Room"
+                LastKnownLocation="Cplusplus.uml" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <messageOccurrenceSpecification
+            Id="c542a489-0a4d-4e3f-9bd0-392b4ff30f73"
+            name="MessageOccurrenceSpecification28">
+            <covered>
+              <lifelineMoniker
+                Id="95ede694-ddf3-4491-a99c-26bae56c1fd8"
+                LastKnownName="Level"
+                LastKnownLocation="Cplusplus.uml" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <executionOccurrenceSpecification
+            Id="beabf0da-f0ab-43e4-8447-5141788c0b52"
+            name="ExecutionOccurrenceSpecification16">
+            <event>
+              <executionOccurrenceSpecificationReferencesEvent>
+                <executionEventMoniker
+                  Id="e4056850-dcdb-4be1-a765-f52b68b40f8f"
+                  LastKnownName="ExecutionEvent"
+                  LastKnownLocation="Cplusplus.uml" />
+              </executionOccurrenceSpecificationReferencesEvent>
+            </event>
+            <covered>
+              <lifelineMoniker
+                Id="5973f8a8-9650-443d-873f-0d4626353e33"
+                LastKnownName="Room"
+                LastKnownLocation="Cplusplus.uml" />
+            </covered>
+          </executionOccurrenceSpecification>
+          <executionOccurrenceSpecification
+            Id="86f8502f-fc62-4d6e-b350-1925d237f999"
+            name="ExecutionOccurrenceSpecification12">
+            <event>
+              <executionOccurrenceSpecificationReferencesEvent>
+                <executionEventMoniker
+                  Id="97cb6dbb-ab23-4d45-a9b1-d3c01af1ae35"
+                  LastKnownName="ExecutionEvent"
+                  LastKnownLocation="Cplusplus.uml" />
+              </executionOccurrenceSpecificationReferencesEvent>
+            </event>
+            <covered>
+              <lifelineMoniker
+                Id="95ede694-ddf3-4491-a99c-26bae56c1fd8"
+                LastKnownName="Level"
+                LastKnownLocation="Cplusplus.uml" />
+            </covered>
+          </executionOccurrenceSpecification>
+          <messageOccurrenceSpecification
+            Id="12d89a91-5eb0-40b9-a496-80a9e0ca7920"
+            name="MessageOccurrenceSpecification3">
+            <covered>
+              <lifelineMoniker
+                Id="95ede694-ddf3-4491-a99c-26bae56c1fd8"
+                LastKnownName="Level"
+                LastKnownLocation="Cplusplus.uml" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <messageOccurrenceSpecification
+            Id="09552c41-f384-4234-b02a-f24a08426c9b"
+            name="MessageOccurrenceSpecification4">
+            <covered>
+              <lifelineMoniker
+                Id="9f7275f8-9927-4f77-a96a-e925ee18872e"
+                LastKnownName="Game"
+                LastKnownLocation="Cplusplus.uml" />
+            </covered>
+          </messageOccurrenceSpecification>
+          <executionOccurrenceSpecification
+            Id="d208e158-f384-4921-a1a7-ce8f5334f3a3"
+            name="ExecutionOccurrenceSpecification2">
+            <event>
+              <executionOccurrenceSpecificationReferencesEvent>
+                <executionEventMoniker
+                  Id="3c5939f4-1dd4-4aa5-8193-73016540d353"
+                  LastKnownName="ExecutionEvent"
+                  LastKnownLocation="Cplusplus.uml" />
+              </executionOccurrenceSpecificationReferencesEvent>
+            </event>
+            <covered>
+              <lifelineMoniker
+                Id="95ede694-ddf3-4491-a99c-26bae56c1fd8"
+                LastKnownName="Level"
+                LastKnownLocation="Cplusplus.uml" />
+            </covered>
+          </executionOccurrenceSpecification>
+        </fragments>
+        <lifelines>
+          <lifeline
+            Id="9f7275f8-9927-4f77-a96a-e925ee18872e"
+            name="Game"
+            isActor="false"
+            lifelineDisplayName="Game">
+            <represents>
+              <propertyMoniker
+                Id="e4bad42a-4fa1-4c45-823c-9b48f2cab634"
+                LastKnownLocation="Cplusplus.uml" />
+            </represents>
+            <topLevelOccurrences>
+              <messageOccurrenceSpecificationMoniker
+                Id="ed3452e2-3e32-4dab-9f9e-08158e1a26f6"
+                LastKnownName="MessageOccurrenceSpecification13"
+                LastKnownLocation="Cplusplus.uml" />
+              <messageOccurrenceSpecificationMoniker
+                Id="c1e4435b-5c62-4c2d-a6c7-3fecef1df94c"
+                LastKnownName="MessageOccurrenceSpecification16"
+                LastKnownLocation="Cplusplus.uml" />
+              <messageOccurrenceSpecificationMoniker
+                Id="e4fda1c5-1d59-4639-8e58-a467c7bf9292"
+                LastKnownName="MessageOccurrenceSpecification1"
+                LastKnownLocation="Cplusplus.uml" />
+              <messageOccurrenceSpecificationMoniker
+                Id="09552c41-f384-4234-b02a-f24a08426c9b"
+                LastKnownName="MessageOccurrenceSpecification4"
+                LastKnownLocation="Cplusplus.uml" />
+            </topLevelOccurrences>
+          </lifeline>
+          <lifeline
+            Id="95ede694-ddf3-4491-a99c-26bae56c1fd8"
+            name="Level"
+            isActor="false"
+            lifelineDisplayName="Level">
+            <represents>
+              <propertyMoniker
+                Id="3450dd39-1e6c-4d28-a178-fb42ad014b06"
+                LastKnownLocation="Cplusplus.uml" />
+            </represents>
+            <topLevelOccurrences>
+              <executionOccurrenceSpecificationMoniker
+                Id="ce6d63e1-7dea-4422-bd21-e7c59f1f6217"
+                LastKnownName="ExecutionOccurrenceSpecification7"
+                LastKnownLocation="Cplusplus.uml" />
+              <executionOccurrenceSpecificationMoniker
+                Id="cc0b7f04-e7b1-485b-819e-10a647df2c44"
+                LastKnownName="ExecutionOccurrenceSpecification8"
+                LastKnownLocation="Cplusplus.uml" />
+              <executionOccurrenceSpecificationMoniker
+                Id="b3d42845-d0c6-4f5d-bb04-184474ac7a11"
+                LastKnownName="ExecutionOccurrenceSpecification1"
+                LastKnownLocation="Cplusplus.uml" />
+              <executionOccurrenceSpecificationMoniker
+                Id="d208e158-f384-4921-a1a7-ce8f5334f3a3"
+                LastKnownName="ExecutionOccurrenceSpecification2"
+                LastKnownLocation="Cplusplus.uml" />
+            </topLevelOccurrences>
+          </lifeline>
+          <lifeline
+            Id="5973f8a8-9650-443d-873f-0d4626353e33"
+            name="Room"
+            isActor="false"
+            lifelineDisplayName="Room">
+            <represents>
+              <propertyMoniker
+                Id="c16bb6dd-0451-46bd-9c8c-be78210ffb61"
+                LastKnownLocation="Cplusplus.uml" />
+            </represents>
+            <topLevelOccurrences>
+              <executionOccurrenceSpecificationMoniker
+                Id="57c10109-567d-4059-997d-bdbb3745cbfc"
+                LastKnownName="ExecutionOccurrenceSpecification13"
+                LastKnownLocation="Cplusplus.uml" />
+              <executionOccurrenceSpecificationMoniker
+                Id="872eeda0-4758-4ce3-a915-2f37b59c80d1"
+                LastKnownName="ExecutionOccurrenceSpecification14"
+                LastKnownLocation="Cplusplus.uml" />
+              <executionOccurrenceSpecificationMoniker
+                Id="203c49b4-72f4-465e-9728-c5f37d9bc7e3"
+                LastKnownName="ExecutionOccurrenceSpecification15"
+                LastKnownLocation="Cplusplus.uml" />
+              <executionOccurrenceSpecificationMoniker
+                Id="beabf0da-f0ab-43e4-8447-5141788c0b52"
+                LastKnownName="ExecutionOccurrenceSpecification16"
+                LastKnownLocation="Cplusplus.uml" />
+            </topLevelOccurrences>
+          </lifeline>
+        </lifelines>
+        <messages>
+          <message
+            Id="4fdc67d3-dbac-41d9-8011-30b2334bdacb"
+            name="&lt;&lt;create&gt;&gt;"
+            messageKind="Complete"
+            messageSort="CreateMessage"
+            createSelfMessage="false">
+            <sendEvent>
+              <messageOccurrenceSpecificationMoniker
+                Id="ed3452e2-3e32-4dab-9f9e-08158e1a26f6"
+                LastKnownName="MessageOccurrenceSpecification13"
+                LastKnownLocation="Cplusplus.uml" />
+            </sendEvent>
+            <receiveEvent>
+              <messageOccurrenceSpecificationMoniker
+                Id="cd85d779-7edb-40ae-a77e-ccf325a51594"
+                LastKnownName="MessageOccurrenceSpecification14"
+                LastKnownLocation="Cplusplus.uml" />
+            </receiveEvent>
+          </message>
+          <message
+            Id="12246fde-a017-46c5-b34f-b10601701d2d"
+            name="&lt;&lt;return&gt;&gt;"
+            messageKind="Complete"
+            messageSort="Reply"
+            createSelfMessage="false">
+            <sendEvent>
+              <messageOccurrenceSpecificationMoniker
+                Id="87f9e64e-3470-402d-9ef0-b15880e560b3"
+                LastKnownName="MessageOccurrenceSpecification15"
+                LastKnownLocation="Cplusplus.uml" />
+            </sendEvent>
+            <receiveEvent>
+              <messageOccurrenceSpecificationMoniker
+                Id="c1e4435b-5c62-4c2d-a6c7-3fecef1df94c"
+                LastKnownName="MessageOccurrenceSpecification16"
+                LastKnownLocation="Cplusplus.uml" />
+            </receiveEvent>
+          </message>
+          <message
+            Id="97ee9f4e-4363-4d96-86b5-509043a0438b"
+            name="init(int x, int y)"
+            messageKind="Complete"
+            messageSort="SynchCall"
+            createSelfMessage="false">
+            <sendEvent>
+              <messageOccurrenceSpecificationMoniker
+                Id="e4fda1c5-1d59-4639-8e58-a467c7bf9292"
+                LastKnownName="MessageOccurrenceSpecification1"
+                LastKnownLocation="Cplusplus.uml" />
+            </sendEvent>
+            <receiveEvent>
+              <messageOccurrenceSpecificationMoniker
+                Id="e5b2da0a-c6bf-4a48-86a5-22bb8939125e"
+                LastKnownName="MessageOccurrenceSpecification2"
+                LastKnownLocation="Cplusplus.uml" />
+            </receiveEvent>
+          </message>
+          <message
+            Id="d6899556-4ac9-4ab1-b306-fd1afb755931"
+            name="createRoom()"
+            messageKind="Complete"
+            messageSort="SynchCall"
+            createSelfMessage="true">
+            <sendEvent>
+              <messageOccurrenceSpecificationMoniker
+                Id="7b1936e4-af37-4d2b-a6c1-2b49585fff5d"
+                LastKnownName="MessageOccurrenceSpecification19"
+                LastKnownLocation="Cplusplus.uml" />
+            </sendEvent>
+            <receiveEvent>
+              <messageOccurrenceSpecificationMoniker
+                Id="fa6b9c04-35e5-4999-ad5c-6a4326172f51"
+                LastKnownName="MessageOccurrenceSpecification20"
+                LastKnownLocation="Cplusplus.uml" />
+            </receiveEvent>
+          </message>
+          <message
+            Id="99f57b76-2a8c-4a74-900e-ae58216fb69a"
+            name="&lt;&lt;create&gt;&gt;"
+            messageKind="Complete"
+            messageSort="CreateMessage"
+            createSelfMessage="false">
+            <sendEvent>
+              <messageOccurrenceSpecificationMoniker
+                Id="8c79b730-3f8a-450b-8f0a-4e78cbceda4b"
+                LastKnownName="MessageOccurrenceSpecification21"
+                LastKnownLocation="Cplusplus.uml" />
+            </sendEvent>
+            <receiveEvent>
+              <messageOccurrenceSpecificationMoniker
+                Id="73a036f6-6c7d-40e8-b6ed-58250e591a99"
+                LastKnownName="MessageOccurrenceSpecification22"
+                LastKnownLocation="Cplusplus.uml" />
+            </receiveEvent>
+          </message>
+          <message
+            Id="1f0c9ec6-95d6-46e3-a4ab-631ada33ce4e"
+            name="&lt;&lt;return&gt;&gt;"
+            messageKind="Complete"
+            messageSort="Reply"
+            createSelfMessage="false">
+            <sendEvent>
+              <messageOccurrenceSpecificationMoniker
+                Id="12f64424-ffe6-4c67-b034-9b103ee506f4"
+                LastKnownName="MessageOccurrenceSpecification23"
+                LastKnownLocation="Cplusplus.uml" />
+            </sendEvent>
+            <receiveEvent>
+              <messageOccurrenceSpecificationMoniker
+                Id="05d0e84c-759c-4bc8-807f-dfdfd63ea88f"
+                LastKnownName="MessageOccurrenceSpecification24"
+                LastKnownLocation="Cplusplus.uml" />
+            </receiveEvent>
+          </message>
+          <message
+            Id="753803d8-1354-4561-a927-fe2b2a96318e"
+            name="setNorth(Room* room)"
+            messageKind="Complete"
+            messageSort="SynchCall"
+            createSelfMessage="false">
+            <sendEvent>
+              <messageOccurrenceSpecificationMoniker
+                Id="b0eb4409-c54d-47dc-8b18-6e9ef1c4cd5b"
+                LastKnownName="MessageOccurrenceSpecification25"
+                LastKnownLocation="Cplusplus.uml" />
+            </sendEvent>
+            <receiveEvent>
+              <messageOccurrenceSpecificationMoniker
+                Id="0e81b21a-a60f-4335-9555-a6a2604147e5"
+                LastKnownName="MessageOccurrenceSpecification26"
+                LastKnownLocation="Cplusplus.uml" />
+            </receiveEvent>
+          </message>
+          <message
+            Id="2317c7b4-e94f-4f40-b0b4-e014346c9b68"
+            name="setSouth(Room * room)"
+            messageKind="Complete"
+            messageSort="SynchCall"
+            createSelfMessage="true">
+            <sendEvent>
+              <messageOccurrenceSpecificationMoniker
+                Id="94ff599b-04ba-4794-a72e-36ad6d92c7db"
+                LastKnownName="MessageOccurrenceSpecification29"
+                LastKnownLocation="Cplusplus.uml" />
+            </sendEvent>
+            <receiveEvent>
+              <messageOccurrenceSpecificationMoniker
+                Id="07c35836-4964-47ee-bb29-de916e61cc98"
+                LastKnownName="MessageOccurrenceSpecification30"
+                LastKnownLocation="Cplusplus.uml" />
+            </receiveEvent>
+          </message>
+          <message
+            Id="6bddb862-fbae-42d5-8844-dfd998a96df3"
+            name="&lt;&lt;return&gt;&gt;"
+            messageKind="Complete"
+            messageSort="Reply"
+            createSelfMessage="false">
+            <sendEvent>
+              <messageOccurrenceSpecificationMoniker
+                Id="7f8897ce-b777-4ade-bae9-a644d9423baa"
+                LastKnownName="MessageOccurrenceSpecification27"
+                LastKnownLocation="Cplusplus.uml" />
+            </sendEvent>
+            <receiveEvent>
+              <messageOccurrenceSpecificationMoniker
+                Id="c542a489-0a4d-4e3f-9bd0-392b4ff30f73"
+                LastKnownName="MessageOccurrenceSpecification28"
+                LastKnownLocation="Cplusplus.uml" />
+            </receiveEvent>
+          </message>
+          <message
+            Id="705a423c-3d95-4211-9c6b-4fabccabee9c"
+            name="&lt;&lt;return&gt;&gt;"
+            messageKind="Complete"
+            messageSort="Reply"
+            createSelfMessage="false">
+            <sendEvent>
+              <messageOccurrenceSpecificationMoniker
+                Id="12d89a91-5eb0-40b9-a496-80a9e0ca7920"
+                LastKnownName="MessageOccurrenceSpecification3"
+                LastKnownLocation="Cplusplus.uml" />
+            </sendEvent>
+            <receiveEvent>
+              <messageOccurrenceSpecificationMoniker
+                Id="09552c41-f384-4234-b02a-f24a08426c9b"
+                LastKnownName="MessageOccurrenceSpecification4"
+                LastKnownLocation="Cplusplus.uml" />
+            </receiveEvent>
+          </message>
+        </messages>
+        <ownedAttributesInternal>
+          <property
+            Id="e4bad42a-4fa1-4c45-823c-9b48f2cab634"
+            isLeaf="false"
+            isStatic="false"
+            isReadOnly="false"
+            isDerived="false"
+            isDerivedUnion="false"
+            aggregation="None"
+            isComposite="false">
+            <type_NamedElement>
+              <classMoniker
+                Id="c2a8d282-2c7f-4621-8051-d7c4bfe653c9"
+                LastKnownName="Game"
+                LastKnownLocation="Cplusplus.uml" />
+            </type_NamedElement>
+          </property>
+          <property
+            Id="3450dd39-1e6c-4d28-a178-fb42ad014b06"
+            isLeaf="false"
+            isStatic="false"
+            isReadOnly="false"
+            isDerived="false"
+            isDerivedUnion="false"
+            aggregation="None"
+            isComposite="false">
+            <type_NamedElement>
+              <classMoniker
+                Id="e1cc345e-ce3c-47c7-98d5-c1e3932f8c91"
+                LastKnownName="Level"
+                LastKnownLocation="Cplusplus.uml" />
+            </type_NamedElement>
+          </property>
+          <property
+            Id="c16bb6dd-0451-46bd-9c8c-be78210ffb61"
+            isLeaf="false"
+            isStatic="false"
+            isReadOnly="false"
+            isDerived="false"
+            isDerivedUnion="false"
+            aggregation="None"
+            isComposite="false">
+            <type_NamedElement>
+              <classMoniker
+                Id="029b4447-e5a9-465d-9372-9bdcce31a025"
+                LastKnownName="Room"
+                LastKnownLocation="Cplusplus.uml" />
+            </type_NamedElement>
+          </property>
+        </ownedAttributesInternal>
+      </interaction>
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <executionEvent
+        Id="ad6d4ed8-1a31-4099-9d1c-281685ab4eeb"
+        name="ExecutionEvent" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <executionEvent
+        Id="3c5939f4-1dd4-4aa5-8193-73016540d353"
+        name="ExecutionEvent" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <executionEvent
+        Id="40ec6fa2-482b-4ca5-8f4f-4338102066a5"
+        name="ExecutionEvent" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <executionEvent
+        Id="be48c9ac-0e38-4052-a4e7-2a8378487904"
+        name="ExecutionEvent" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <executionEvent
+        Id="b5c502b0-e1ce-438a-8152-791618b46f7e"
+        name="ExecutionEvent" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <executionEvent
+        Id="97cb6dbb-ab23-4d45-a9b1-d3c01af1ae35"
+        name="ExecutionEvent" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <executionEvent
+        Id="aaf0277a-5d04-40ac-8890-a13e0bf9419d"
+        name="ExecutionEvent" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <executionEvent
+        Id="aeb86068-fbfe-4872-b619-45a57f612de5"
+        name="ExecutionEvent" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <executionEvent
+        Id="55494162-653c-48e8-b34c-6e7d5cdea57c"
+        name="ExecutionEvent" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <executionEvent
+        Id="e4056850-dcdb-4be1-a765-f52b68b40f8f"
+        name="ExecutionEvent" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <executionEvent
+        Id="d1a10556-4ec4-4da7-976a-03aee68ae9c7"
+        name="ExecutionEvent" />
+    </packageHasNamedElement>
+    <packageHasNamedElement>
+      <executionEvent
+        Id="47f6cd07-740e-47e4-9196-e85352011397"
+        name="ExecutionEvent" />
+    </packageHasNamedElement>
+  </packagedElements>
+  <primitiveType
+    Id="220a3521-e091-4221-bae9-3ef9018e845c"
+    name="Integer"
+    isAbstract="false"
+    isLeaf="false" />
+  <primitiveType
+    Id="8943dc84-709e-4f62-b15a-a3273aa6f165"
+    name="Boolean"
+    isAbstract="false"
+    isLeaf="false" />
+  <primitiveType
+    Id="59259974-6d55-42c6-b7bd-763d77ac8ef9"
+    name="String"
+    isAbstract="false"
+    isLeaf="false" />
+  <primitiveType
+    Id="3ab42e7d-4969-445a-b209-471f5cb8209c"
+    name="UnlimitedNatural"
+    isAbstract="false"
+    isLeaf="false" />
+</modelStoreModel>

@@ -5,16 +5,19 @@
 #ifndef ROGUE_ROOM_H
 #define ROGUE_ROOM_H
 
+#include <string>
 
-class  Room{
+using namespace std;
+class Room{
 
 public:
-    Room();
-
+    Room(string id);
     void setNorth(Room* room);
     void setWest(Room* room);
     void setEast(Room* room);
     void setSouth(Room* room);
+    void cleanUp();
+    virtual ~Room();
 
     Room* getNorth();
     Room* getWest();
@@ -22,9 +25,11 @@ public:
     Room* getSouth();
 
 private:
+    string id;
     Room* north  = nullptr;
     Room* west = nullptr;
     Room* east = nullptr;
     Room* south = nullptr;
 };
+
 #endif //ROGUE_ROOM_H

@@ -4,36 +4,23 @@
 
 #include "Room.h"
 
-
+Room::Room(string id) {
+    this->id = id;
+}
 void Room::setNorth(Room* room){
     north = room;
-
-    if (north != nullptr) {
-        room->setSouth(this);
-    }
 }
 
 void Room::setWest(Room* room) {
     west = room;
-    if (west != nullptr) {
-        west->setEast(this);
-    }
 }
 
 void Room::setEast(Room* room) {
     east = room;
-
-    if (east != nullptr) {
-        east->setWest(this);
-    }
 }
 
 void Room::setSouth(Room* room) {
     south = room;
-
-    if (south != nullptr) {
-        south->setNorth(this);
-    }
 }
 
 Room* Room::getNorth(){
@@ -50,4 +37,20 @@ Room* Room::getEast(){
 
 Room* Room::getSouth(){
     return south;
+}
+
+void Room::cleanUp(){
+    north = nullptr;
+    south = nullptr;
+    west = nullptr;
+    east = nullptr;
+}
+
+Room::~Room(){
+    cleanUp();
+
+    delete north;
+    delete south;
+    delete west;
+    delete east;
 }

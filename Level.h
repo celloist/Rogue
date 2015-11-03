@@ -2,7 +2,6 @@
 // Created by alhric on 30-Oct-15.
 //
 #include <iostream>
-#include <c++/bits/stl_bvector.h>
 #include "Room.h"
 
 #ifndef ROGUE_LEVEL_H

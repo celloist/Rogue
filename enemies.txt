@@ -1,0 +1,53 @@
+level 1
+rat
+slak
+mug
+
+level 2
+slang
+skelet
+kabouter
+
+level 3
+smurf
+feral cat
+reus kikker
+
+level 4
+hellhond
+reuzenspin
+wolf
+
+level 5
+zombie
+goblin
+dief
+
+level 6
+geest
+krokodil
+eenhoorn
+
+level 7
+weerwolf
+mutant
+pikachu
+
+level 8
+chimera
+skeletkoning
+robot
+
+level 9
+tovenaar
+golem
+zandworm
+
+level 10
+programmeur
+draak
+xor
+
+boss
+cthulu
+een zak noten

@@ -6,6 +6,7 @@
 #include <set>
 #include <map>
 #include "Room.h"
+#include <random>
 
 #ifndef ROGUE_LEVEL_H
 #define ROGUE_LEVEL_H
@@ -36,6 +37,14 @@ private:
     Room* northEastRoom;
     Room** rooms;
     map<pair<Room*, Room*>, int> distanaces;
-    int size;
+    int totalRoomSize;
+    int x;
+    int y;
+    random_device dev;
+    default_random_engine dre;
+    uniform_int_distribution<int> dist{1,20};
+    void setRoomDistanceToRandomly (int roomFrom, int roomTo);
+    int getRoomDistanceTo(Room* from, Room* to);
+    void calcPrimMinSpanTree();
 };
 #endif //ROGUE_LEVEL_H

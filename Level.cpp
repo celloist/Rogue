@@ -9,17 +9,20 @@
 void Level::init(int x, int y) {
     setUp(x,y);
     setDistances();
+    //calcPrimMinSpanTree();
 }
 
 void Level::setUp(int x, int y) {
     int num = x*y;
-    size = num;
+    totalRoomSize = num;
+
+    this->x = x;
+    this->y = y;
+
     rooms = new Room*[num];
     int i = 0;
-    char prefix = 'A';
     while (i < num) {
-        string id = to_string(prefix) + ":" + to_string(((i + 1) % y));
-        rooms[i] = new Room{id};
+        rooms[i] = new Room{};
 
         if (i % y > 0) {
             rooms[i]->setWest(rooms[i -1]);
@@ -40,21 +43,71 @@ void Level::setUp(int x, int y) {
 }
 
 void Level::setDistances () {
-    random_device dev;
-    default_random_engine dre{dev()};
-    uniform_int_distribution<int> dist{1, 30};
+    int i = 0;
+    while (i < totalRoomSize) {
+        int top = i - y;
+
+        if (i % y > 0) {
+            setRoomDistanceToRandomly(i, (i -1));
+        }
+
+        if (top > 0) {
+            setRoomDistanceToRandomly(i, top);
+        }
+        i++;
+    }
+}
+
+void Level::setRoomDistanceToRandomly (int roomFrom, int roomTo) {
+    int num = dist(dre);
+
+}
+
+int Level::getRoomDistanceTo (Room* fromRoom, Room* toRoom) {
+    pair<Room*, Room*> key1;
+    pair<Room*, Room*> key2;
+
+    key1.first = fromRoom;
+    key1.second = toRoom;
+
+    key2.first = toRoom;
+    key2.second = fromRoom;
+
+
+    if (distanaces.count(key1) > 0) {
+        return distanaces.at(key1);
+    } else if (distanaces.count(key2) > 0 ) {
+        distanaces.at(key2);
+    } else {
+        return -1;
+    }
+}
+
+void Level::calcPrimMinSpanTree () {
+    set<Room*> visited;
+    set<Room*,set<Room*>> path;
+    set<Room*> pq;
+
     Room* current = northEastRoom;
-    while (current) {
-        /*if (current->getSouth() != nullptr) {
-            pair<Room, Room> connection;
-            make_pair(*current, *current->getSouth());
-            distanaces[connection] = dist(dre);
-        }*/
 
-        current = current->getSouth();
 
-        if (current){
-            current = current->getSouth();
+    while (visited.size() != totalRoomSize) {
+        visited.insert(*&current);
+
+        if (current->getSouth() != nullptr && visited.count(current->getSouth()) == 0) {
+            pq.insert(current->getSouth());
+        }
+
+        if (current->getNorth() != nullptr && visited.count(current->getNorth()) == 0) {
+            pq.insert(current->getNorth());
+        }
+
+        if (current->getWest() != nullptr && visited.count(current->getWest()) == 0) {
+            pq.insert(current->getWest());
+        }
+
+        if (current->getEast() != nullptr && visited.count(current->getEast()) == 0) {
+            pq.insert(current->getEast());
         }
     }
 }
@@ -92,7 +145,7 @@ Level::~Level() {
     cleanUp();
 
     if (rooms != nullptr) {
-        for (int i = size - 1; i > 0; i--) {
+        for (int i = totalRoomSize - 1; i > 0; i--) {
             delete rooms[i];
         }
 

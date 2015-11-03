@@ -4,9 +4,6 @@
 
 #include "Room.h"
 
-Room::Room(string id) {
-    this->id = id;
-}
 void Room::setNorth(Room* room){
     north = room;
 }
@@ -37,6 +34,14 @@ Room* Room::getEast(){
 
 Room* Room::getSouth(){
     return south;
+}
+
+void Room::setDistanceTo (Room* roomFrom, Room* roomTo, int distance) {
+    pair<Room*, Room*> roomPair;
+    roomPair.first = roomFrom;
+    roomPair.second = roomTo;
+
+    distanaces[roomPair] = distance;
 }
 
 void Room::cleanUp(){

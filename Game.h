@@ -10,14 +10,19 @@
 
 class Game {
 public:
+    void setUp(int numLevels, int numXrooms, int numYrooms);
     void setCurrentLevel (Level* level);
     Level* getCurrentLevel();
     void load();
     bool save();
-private:
-    Level* currentLevel;
-    Hero* hero;
+    void cleanUp();
+    virtual ~Game();
 
+private:
+    Level* currentLevel = nullptr;
+    Level** levels = nullptr;
+    Hero* hero = nullptr;
+    int numLevels;
 };
 
 #endif //ROGUE_GAME_H

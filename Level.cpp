@@ -4,12 +4,16 @@
 
 #include <list>
 #include <random>
+//#include <altivec.h>
 #include "Level.h"
+Level::Level () {
+
+};
 
 void Level::init(int x, int y) {
     setUp(x,y);
     setDistances();
-    //calcPrimMinSpanTree();
+    calcPrimMinSpanTree();
 }
 
 void Level::setUp(int x, int y) {
@@ -21,95 +25,142 @@ void Level::setUp(int x, int y) {
 
     rooms = new Room*[num];
     int i = 0;
-    while (i < num) {
-        rooms[i] = new Room{};
 
-        if (i % y > 0) {
-            rooms[i]->setWest(rooms[i -1]);
-            rooms[i-1]->setEast(rooms[i]);
+    while (i < num) {
+        rooms[i] = new Room{this};
+        if (i % x > 0) {
+            rooms[i]->setEdge("west", rooms[i -1]);
+            rooms[i-1]->setEdge("east", rooms[i]);
         }
 
-        int top = i- y;
+        int top = i- x;
 
         if (top >= 0){
-            rooms[top]->setSouth(rooms[i]);
-            rooms[i]->setNorth(rooms[top]);
+            Room* r = rooms[i];
+            rooms[top]->setEdge("south", rooms[i]);
+            rooms[i]->setEdge("north", rooms[top]);
         }
 
         i++;
     }
 
     northEastRoom = rooms[0];
+    exitRoom = rooms[num-1];
+
 }
 
 void Level::setDistances () {
     int i = 0;
     while (i < totalRoomSize) {
-        int top = i - y;
+        int top = i - x;
 
-        if (i % y > 0) {
-            setRoomDistanceToRandomly(i, (i -1));
+        if (i % x > 0) {
+            setRoomDistanceToRandomly(rooms[i], rooms[(i -1)]);
         }
 
-        if (top > 0) {
-            setRoomDistanceToRandomly(i, top);
+        if (top >= 0) {
+            setRoomDistanceToRandomly(rooms[i], rooms[top]);
         }
         i++;
     }
 }
 
-void Level::setRoomDistanceToRandomly (int roomFrom, int roomTo) {
+void Level::setRoomDistanceToRandomly (Room* roomFrom, Room* roomTo) {
     int num = dist(dre);
 
-}
-
-int Level::getRoomDistanceTo (Room* fromRoom, Room* toRoom) {
-    pair<Room*, Room*> key1;
-    pair<Room*, Room*> key2;
-
-    key1.first = fromRoom;
-    key1.second = toRoom;
-
-    key2.first = toRoom;
-    key2.second = fromRoom;
-
-
-    if (distanaces.count(key1) > 0) {
-        return distanaces.at(key1);
-    } else if (distanaces.count(key2) > 0 ) {
-        distanaces.at(key2);
-    } else {
-        return -1;
-    }
+    roomFrom->setDistanceTo(roomTo, num);
+    roomTo->setDistanceTo(roomFrom, num);
 }
 
 void Level::calcPrimMinSpanTree () {
-    set<Room*> visited;
-    set<Room*,set<Room*>> path;
-    set<Room*> pq;
+    vector<Room*> visited;
 
     Room* current = northEastRoom;
+    vector<pair<Room*, Room*>> pq;
+    bool equals = rooms[0] == current;
 
+    while (current != nullptr && visited.size() != totalRoomSize) {
+        visited.push_back(*&current);
 
-    while (visited.size() != totalRoomSize) {
-        visited.insert(*&current);
-
-        if (current->getSouth() != nullptr && visited.count(current->getSouth()) == 0) {
-            pq.insert(current->getSouth());
+        vector<Room*>* edges = current->getEdges();
+        //Add all edges connected to the current vertex,  if they havent been visted or don't point to a visited vertex
+        for(auto it = edges->begin(); it != edges->end(); ++it) {
+            Room* to = it.operator*();
+            if (to != nullptr && std::find(visited.begin(), visited.end(), to) == visited.end()) {
+                pair<Room *, Room *> fromTo;
+                fromTo.first = current;
+                fromTo.second = to;
+                pq.push_back(fromTo);
+            }
         }
 
-        if (current->getNorth() != nullptr && visited.count(current->getNorth()) == 0) {
-            pq.insert(current->getNorth());
+        Room* nextRoom = nullptr;
+        Room* fromRoom = nullptr;
+        int smallestDistance = -1;
+        int smallestIndex = -1;
+        int index = 0;
+
+        for(auto it = pq.begin(); it != pq.end(); ++it) {
+            Room* from = it->first;
+            Room* to = it->second;
+            int distance = from->getDistanceTo(to);
+            if (distance >= 0 && (distance < smallestDistance || smallestDistance == -1)
+                && std::find(visited.begin(), visited.end(), to) == visited.end()) {
+                fromRoom = from;
+                nextRoom = to;
+                smallestDistance = distance;
+                smallestIndex = index;
+            }
+            index++;
+        }
+        //Verwijder de kleinste gevonden vertex
+        if (smallestIndex >= 0) {
+            cout << "Added to list; From : ";
+
+            for (int i = 0; i<totalRoomSize; i++){
+                if (fromRoom == rooms[i]){
+                    cout << to_string(i);
+                }
+            }
+
+            cout << ", TO:  ";
+
+            for (int i = 0; i<totalRoomSize; i++){
+                if (nextRoom == rooms[i]){
+                    cout << to_string(i);
+                }
+            }
+
+            cout << "\n";
+            pair<Room*, Room*> key1 {fromRoom, nextRoom};
+            pair<Room*, Room*> key2 {nextRoom, fromRoom};
+
+            minimalSpanningTree[key1] = nextRoom;
+            minimalSpanningTree[key2] = fromRoom;
+
+            pq.erase(pq.begin() + smallestIndex, pq.begin() + smallestIndex);
         }
 
-        if (current->getWest() != nullptr && visited.count(current->getWest()) == 0) {
-            pq.insert(current->getWest());
-        }
-
-        if (current->getEast() != nullptr && visited.count(current->getEast()) == 0) {
-            pq.insert(current->getEast());
-        }
+        current = nextRoom;
     }
+
+    vector<Room*>::iterator it;
+    for (auto it = visited.begin(); it != visited.end(); ++it) {
+        for (int i = 0; i<totalRoomSize; i++){
+            if (it.operator*() == rooms[i]){
+                cout << "index visited" + to_string(i) + " \n";
+            }
+        }
+
+    }
+    int msgOut = visited.size();
+
+    cout << "total size" + to_string(visited.size()) + "\n";
+}
+
+bool Level::isRoomInSPanningTree(Room* current, Room* to) {
+    pair<Room*, Room*> key {current, to};
+    return minimalSpanningTree.find(key) != minimalSpanningTree.end();
 }
 
 void Level::setPrevious(Level *level) {
@@ -133,6 +184,10 @@ Level* Level::getPrevious() {
 
 Room* Level::getNorthEastRoom() {
     return northEastRoom;
+}
+
+Room* Level::getExit() {
+    return exitRoom;
 }
 
 void Level::cleanUp () {

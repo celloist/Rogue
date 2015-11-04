@@ -53,7 +53,7 @@ void GameController::initCommands() {
     commands["stats"] = &GameController::checkStats;
     commands["talisman"] = &GameController::grenade;
     commands["grenade"] = &GameController::talisman;
-    commands["cheat"] = &GameController::cheat;
+//    commands["cheat"] = &GameController::cheat;
     commands["save"] = &GameController::save;
 
 }

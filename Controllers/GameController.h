@@ -46,7 +46,7 @@ private:
     string grenade();
     string talisman();
     string help();
-    string cheat();
+   // string cheat();
     string save();
 
 

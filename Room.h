@@ -30,10 +30,11 @@ public:
     Room* getEast();
     Room* getSouth();
     int findExitRoom();
-    string getShortestPathTo();
+    string getShortestPathToExit();
     vector<Room*>* getEdges();
 
 private:
+
     Room* north  = nullptr;
     Room* west = nullptr;
     Room* east = nullptr;

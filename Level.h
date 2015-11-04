@@ -1,11 +1,6 @@
 //
 // Created by alhric on 30-Oct-15.
 //
-
-#include <iostream>
-#include "Room.h"
-
-
 #ifndef ROGUE_LEVEL_H
 #define ROGUE_LEVEL_H
 

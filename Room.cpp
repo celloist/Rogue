@@ -6,6 +6,7 @@
 #include <queue>
 #include "Room.h"
 #include "Level.h"
+#include <algorithm>
 Room::Room (Level* level) {
     this->level = level;
 }
@@ -29,7 +30,7 @@ void Room::setEdge (string direction, Room* edge) {
 
     //Verwijder edge van de edges als deze wordt geupdate
     if (roomToupdate != nullptr) {
-        std::remove(edges.begin(), edges.end(), roomToupdate);
+        remove(edges.begin(), edges.end(), roomToupdate);
     }
     //Voeg edge toe als deze een waarde heeft
     if (edge != nullptr) {
@@ -68,37 +69,42 @@ int Room::getDistanceTo(Room* to) {
 int Room::findExitRoom () {
     Room* exit = level->getExit();
 
-    vector<Room*>* visited = new vector<Room*>{};
-    std::deque<pair<Room*, int>>* toSearch = new std::deque<pair<Room*, int>> {};
-    toSearch->push_back(pair<Room*, int>(this, 0));
+    vector<Room*> visited;
+    std::deque<Room*> toSearch;
+    toSearch.push_back(this);
     Room* currentRoom = nullptr;
+    map<Room*, int> searchLevels;
+    searchLevels[this] = 0;
+
     int levelToReturn = -1;
 
-    while (!toSearch->empty()) {
-        pair<Room*, int> currentRoomAndLevel = toSearch->front();
-        currentRoom = currentRoomAndLevel.first;
-        toSearch->pop_front();
+    while (!toSearch.empty()) {
+        currentRoom = toSearch.front();
 
-        if (currentRoomAndLevel.first == exit) {
-            levelToReturn = currentRoomAndLevel.second;
+        toSearch.pop_front();
+
+        if (currentRoom == exit) {
+            levelToReturn = searchLevels[currentRoom];
             break;
         } else {
-            visited->push_back(currentRoom);
+
+            visited.push_back(currentRoom);
             vector<Room*>* edges = currentRoom->getEdges();
-            int level = currentRoomAndLevel.second;
-            for (auto it = edges->begin(); it != edges->end(); ++it) {
+            int level = searchLevels[currentRoom];
+            searchLevels.erase(currentRoom);
+
+            for (auto it = edges->rbegin(); it != edges->rend(); ++it) {
                 Room* roomToAdd = it.operator*();
-                if (std::find(visited->begin(), visited->end(), roomToAdd) == visited->end()
-                    && std::find(toSearch->begin(),toSearch->end(), pair<Room*, int>(roomToAdd, level)) == toSearch->begin()) {
-                    toSearch->push_back(pair<Room*, int>(roomToAdd, level + 1));
+
+                if (std::find(visited.rbegin(), visited.rend(), roomToAdd) == visited.rend()
+                    && std::find(toSearch.rbegin(), toSearch.rend(), roomToAdd)  == toSearch.rbegin()) {
+
+                    toSearch.push_back(roomToAdd);
+                    searchLevels[roomToAdd] = level + 1;
                 }
             }
         }
-
     }
-
-    delete toSearch;
-    delete visited;
 
     return levelToReturn;
 }
@@ -121,4 +127,16 @@ Room::~Room(){
     delete south;
     delete west;
     delete east;
+}
+
+string Room::getShortestPathToExit() {
+    string path = "";
+    map<Room*,int> shortestPathTo;
+    Room* exitRoom = level->getExit();
+    Room* currentRoom = this;
+    while(currentRoom != exitRoom)
+    {
+
+    }
+    return path;
 }

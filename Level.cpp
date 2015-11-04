@@ -6,6 +6,7 @@
 #include <random>
 //#include <altivec.h>
 #include "Level.h"
+#include <algorithm>
 Level::Level () {
 
 };
@@ -115,7 +116,7 @@ void Level::calcPrimMinSpanTree () {
         }
         //Verwijder de kleinste gevonden vertex
         if (smallestIndex >= 0) {
-            cout << "Added to list; From : ";
+            /*cout << "Added to list; From : ";
 
             for (int i = 0; i<totalRoomSize; i++){
                 if (fromRoom == rooms[i]){
@@ -131,7 +132,7 @@ void Level::calcPrimMinSpanTree () {
                 }
             }
 
-            cout << "\n";
+            cout << "\n";*/
             pair<Room*, Room*> key1 {fromRoom, nextRoom};
             pair<Room*, Room*> key2 {nextRoom, fromRoom};
 
@@ -144,7 +145,7 @@ void Level::calcPrimMinSpanTree () {
         current = nextRoom;
     }
 
-    vector<Room*>::iterator it;
+    /*vector<Room*>::iterator it;
     for (auto it = visited.begin(); it != visited.end(); ++it) {
         for (int i = 0; i<totalRoomSize; i++){
             if (it.operator*() == rooms[i]){
@@ -155,7 +156,7 @@ void Level::calcPrimMinSpanTree () {
     }
     int msgOut = visited.size();
 
-    cout << "total size" + to_string(visited.size()) + "\n";
+    cout << "total size" + to_string(visited.size()) + "\n";*/
 }
 
 bool Level::isRoomInSPanningTree(Room* current, Room* to) {
@@ -175,11 +176,11 @@ void Level::setNext(Level *level) {
 }
 
 Level* Level::getNext() {
- return nextLevel;
+    return nextLevel;
 }
 
 Level* Level::getPrevious() {
- return previousLevel;
+    return previousLevel;
 }
 
 Room* Level::getNorthEastRoom() {

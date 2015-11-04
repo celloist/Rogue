@@ -12,6 +12,7 @@ int main() {
 
     Room* firstOfTop = currentLevel->getNorthEastRoom();
     Room* current = firstOfTop;
+    int num = current->findExitRoom();
 
     bool hasNextRow = currentLevel->getNorthEastRoom() != nullptr;
     bool hasNextCol = hasNextRow;
@@ -54,6 +55,8 @@ int main() {
             hasNextRow = false;
         }
     }
+
+    cout << "Num of steps from start[west] [left top], til bottom: right under: "+ to_string(num);
 
     return 0;
 }

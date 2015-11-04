@@ -29,8 +29,8 @@ public:
     Room* getWest();
     Room* getEast();
     Room* getSouth();
-    Room* findExitRoom();
-    Room* getShortestPathTo();
+    int findExitRoom();
+    string getShortestPathTo();
     vector<Room*>* getEdges();
 
 private:

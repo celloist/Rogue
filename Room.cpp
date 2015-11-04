@@ -65,35 +65,42 @@ int Room::getDistanceTo(Room* to) {
     return -1;
 }
 
-Room* Room::findExitRoom () {
+int Room::findExitRoom () {
     Room* exit = level->getExit();
 
-    vector<Room*> visited;
-    std::deque<Room*> toSearch;
-    toSearch.push_front(this);
+    vector<Room*>* visited = new vector<Room*>{};
+    std::deque<pair<Room*, int>>* toSearch = new std::deque<pair<Room*, int>> {};
+    toSearch->push_back(pair<Room*, int>(this, 0));
+    Room* currentRoom = nullptr;
+    int levelToReturn = -1;
 
-    while (!toSearch.empty()) {
-        Room* currentRoom = toSearch.front();
-        toSearch.pop_front();
-        vector<Room*> visited;
+    while (!toSearch->empty()) {
+        pair<Room*, int> currentRoomAndLevel = toSearch->front();
+        currentRoom = currentRoomAndLevel.first;
+        toSearch->pop_front();
 
-        if (currentRoom == exit) {
-            //todo found room!!! Yeah!
+        if (currentRoomAndLevel.first == exit) {
+            levelToReturn = currentRoomAndLevel.second;
             break;
         } else {
-            vector<Room*>::iterator it;
-            for (auto it = visited.begin(); it != visited.end(); ++it) {
+            visited->push_back(currentRoom);
+            vector<Room*>* edges = currentRoom->getEdges();
+            int level = currentRoomAndLevel.second;
+            for (auto it = edges->begin(); it != edges->end(); ++it) {
                 Room* roomToAdd = it.operator*();
-                if (std::find(visited.begin(), visited.end(), roomToAdd) == visited.end()
-                    && std::find(toSearch.begin(), toSearch.end(), roomToAdd) == toSearch.end()) {
-                    toSearch.push_back(roomToAdd);
+                if (std::find(visited->begin(), visited->end(), roomToAdd) == visited->end()
+                    && std::find(toSearch->begin(),toSearch->end(), pair<Room*, int>(roomToAdd, level)) == toSearch->begin()) {
+                    toSearch->push_back(pair<Room*, int>(roomToAdd, level + 1));
                 }
             }
         }
 
     }
 
-    return nullptr;
+    delete toSearch;
+    delete visited;
+
+    return levelToReturn;
 }
 
 vector<Room*>* Room::getEdges() {

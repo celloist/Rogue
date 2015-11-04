@@ -13,7 +13,7 @@ Level::Level () {
 void Level::init(int x, int y) {
     setUp(x,y);
     setDistances();
-    calcPrimMinSpanTree();
+    //calcPrimMinSpanTree();
 }
 
 void Level::setUp(int x, int y) {

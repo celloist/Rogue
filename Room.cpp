@@ -87,7 +87,6 @@ int Room::findExitRoom () {
             levelToReturn = searchLevels[currentRoom];
             break;
         } else {
-
             visited.push_back(currentRoom);
             vector<Room*>* edges = currentRoom->getEdges();
             int level = searchLevels[currentRoom];
@@ -137,6 +136,8 @@ string Room::getShortestPathToExit() {
     Room* startRoom = this;
     while(currentRoom != exitRoom)
     {
+        vector<Room*>* roomsToVisit = currentRoom->getEdges();
+
 
     }
     return path;

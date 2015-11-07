@@ -14,7 +14,7 @@ Level::Level () {
 void Level::init(int x, int y) {
     setUp(x,y);
     setDistances();
-    //calcPrimMinSpanTree();
+    calcPrimMinSpanTree();
 }
 
 void Level::setUp(int x, int y) {
@@ -116,23 +116,6 @@ void Level::calcPrimMinSpanTree () {
         }
         //Verwijder de kleinste gevonden vertex
         if (smallestIndex >= 0) {
-            /*cout << "Added to list; From : ";
-
-            for (int i = 0; i<totalRoomSize; i++){
-                if (fromRoom == rooms[i]){
-                    cout << to_string(i);
-                }
-            }
-
-            cout << ", TO:  ";
-
-            for (int i = 0; i<totalRoomSize; i++){
-                if (nextRoom == rooms[i]){
-                    cout << to_string(i);
-                }
-            }
-
-            cout << "\n";*/
             pair<Room*, Room*> key1 {fromRoom, nextRoom};
             pair<Room*, Room*> key2 {nextRoom, fromRoom};
 
@@ -145,18 +128,7 @@ void Level::calcPrimMinSpanTree () {
         current = nextRoom;
     }
 
-    /*vector<Room*>::iterator it;
-    for (auto it = visited.begin(); it != visited.end(); ++it) {
-        for (int i = 0; i<totalRoomSize; i++){
-            if (it.operator*() == rooms[i]){
-                cout << "index visited" + to_string(i) + " \n";
-            }
-        }
 
-    }
-    int msgOut = visited.size();
-
-    cout << "total size" + to_string(visited.size()) + "\n";*/
 }
 
 bool Level::isRoomInSPanningTree(Room* current, Room* to) {

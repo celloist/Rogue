@@ -134,6 +134,7 @@ string Room::getShortestPathToExit() {
     map<Room*,int> shortestPathTo;
     Room* exitRoom = level->getExit();
     Room* currentRoom = this;
+    Room* startRoom = this;
     while(currentRoom != exitRoom)
     {
 

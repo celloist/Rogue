@@ -7,6 +7,8 @@
 //#include <altivec.h>
 #include "Level.h"
 #include <algorithm>
+#include <forward_list>
+
 Level::Level () {
 
 };
@@ -14,7 +16,7 @@ Level::Level () {
 void Level::init(int x, int y) {
     setUp(x,y);
     setDistances();
-    //calcPrimMinSpanTree();
+    calcPrimMinSpanTree();
 }
 
 void Level::setUp(int x, int y) {
@@ -74,89 +76,25 @@ void Level::setRoomDistanceToRandomly (Room* roomFrom, Room* roomTo) {
 }
 
 void Level::calcPrimMinSpanTree () {
-    vector<Room*> visited;
+    vector<Room *>* pq = nullptr;
+    for (int i = 0; i < totalRoomSize; i++) {
+        Room* vector = rooms[i];
 
-    Room* current = northEastRoom;
-    vector<pair<Room*, Room*>> pq;
-    bool equals = rooms[0] == current;
+        pq = vector->getEdges();
+        Room* smallestRoom = nullptr;
+        int leastDistance = -1;
+        for (auto edgeIt = pq->begin(); edgeIt != pq->end(); ++edgeIt) {
+            auto edge = edgeIt.operator*();
 
-    while (current != nullptr && visited.size() != totalRoomSize) {
-        visited.push_back(*&current);
-
-        vector<Room*>* edges = current->getEdges();
-        //Add all edges connected to the current vertex,  if they havent been visted or don't point to a visited vertex
-        for(auto it = edges->begin(); it != edges->end(); ++it) {
-            Room* to = it.operator*();
-            if (to != nullptr && std::find(visited.begin(), visited.end(), to) == visited.end()) {
-                pair<Room *, Room *> fromTo;
-                fromTo.first = current;
-                fromTo.second = to;
-                pq.push_back(fromTo);
+            int distance = vector->getDistanceTo(edge);
+            if (smallestRoom == nullptr || distance < leastDistance) {
+                smallestRoom = edge;
+                leastDistance = distance;
             }
         }
 
-        Room* nextRoom = nullptr;
-        Room* fromRoom = nullptr;
-        int smallestDistance = -1;
-        int smallestIndex = -1;
-        int index = 0;
-
-        for(auto it = pq.begin(); it != pq.end(); ++it) {
-            Room* from = it->first;
-            Room* to = it->second;
-            int distance = from->getDistanceTo(to);
-            if (distance >= 0 && (distance < smallestDistance || smallestDistance == -1)
-                && std::find(visited.begin(), visited.end(), to) == visited.end()) {
-                fromRoom = from;
-                nextRoom = to;
-                smallestDistance = distance;
-                smallestIndex = index;
-            }
-            index++;
-        }
-        //Verwijder de kleinste gevonden vertex
-        if (smallestIndex >= 0) {
-            /*cout << "Added to list; From : ";
-
-            for (int i = 0; i<totalRoomSize; i++){
-                if (fromRoom == rooms[i]){
-                    cout << to_string(i);
-                }
-            }
-
-            cout << ", TO:  ";
-
-            for (int i = 0; i<totalRoomSize; i++){
-                if (nextRoom == rooms[i]){
-                    cout << to_string(i);
-                }
-            }
-
-            cout << "\n";*/
-            pair<Room*, Room*> key1 {fromRoom, nextRoom};
-            pair<Room*, Room*> key2 {nextRoom, fromRoom};
-
-            minimalSpanningTree[key1] = nextRoom;
-            minimalSpanningTree[key2] = fromRoom;
-
-            pq.erase(pq.begin() + smallestIndex, pq.begin() + smallestIndex);
-        }
-
-        current = nextRoom;
+        minimalSpanningTree[pair<Room*, Room*> {vector, smallestRoom}] = smallestRoom;
     }
-
-    /*vector<Room*>::iterator it;
-    for (auto it = visited.begin(); it != visited.end(); ++it) {
-        for (int i = 0; i<totalRoomSize; i++){
-            if (it.operator*() == rooms[i]){
-                cout << "index visited" + to_string(i) + " \n";
-            }
-        }
-
-    }
-    int msgOut = visited.size();
-
-    cout << "total size" + to_string(visited.size()) + "\n";*/
 }
 
 bool Level::isRoomInSPanningTree(Room* current, Room* to) {

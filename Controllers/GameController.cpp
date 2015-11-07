@@ -29,15 +29,12 @@ void GameController::start(bool testing) {
     Level* currentLevel = game.getCurrentLevel();
     GameOutput levelIo;
     while (!gameOver){
-        commandReader("stop");
-        levelIo.displayLevel(currentLevel);
-        levelIo.displayLevelsMinSpanningTree(currentLevel);
-        levelIo.displayLevelsRoomDistances(currentLevel);
+//        levelIo.displayLevel(currentLevel);
+//        levelIo.displayLevelsMinSpanningTree(currentLevel);
+//        levelIo.displayLevelsRoomDistances(currentLevel);
 
-        string command = io.askInput("What da fuck wil je doen?");
-        /*string command;
-        getline(cin,command);
-        cout << commandReader(&command) << endl;*/
+        string command = io.askInput("What da fuck wil je doen? (type help voor suggesties)");
+        commandReader(command);
     }
 }
 
@@ -45,38 +42,43 @@ void GameController::initCommands() {
 
 
 
-//   commands["stop"] = (void (*)()) &GameController::end;
-//    commands["help"] = &GameController::help;
-//
-//    //while attacking
-//    commands["vlucht"] = &GameController::escape;
-//    commands["aanval"] = &GameController::attack;
-//    commands["drink drankje"] = &GameController::usePotion;
-//    commands["gebruik object"] = &GameController::useItem;
-//
-//    //while in room
-//    commands["aanvallen"] = &GameController::engage;//TODO
-//    commands["zoek kamer"] = &GameController::searchRoom;
-//    commands["rust"] = &GameController::rest;
-//    commands["bekijk spullen"] = &GameController::checkBag;
-//    commands["bekijk map"] = &GameController::checkMap;
-//    commands["kenmerken"] = &GameController::checkStats;
-//    commands["kompas"] = &GameController::kompas;
-//    commands["talisman"] = &GameController::grenade;
-//    commands["granaat"] = &GameController::talisman;
-////    commands["cheat"] = &GameController::cheat;
-//    commands["save"] = &GameController::save;
+   commands["stop"] = GameController::end;
+    commands["help"] = GameController::help;
+
+    //while attacking
+    commands["vlucht"] = GameController::escape;
+    commands["aanval"] = GameController::attack;
+    commands["drink drankje"] = GameController::usePotion;
+    commands["gebruik object"] = GameController::useItem;
+
+    //while in room
+    commands["aanvallen"] = GameController::engage;//TODO
+    commands["zoek kamer"] = GameController::searchRoom;
+    commands["rust"] = GameController::rest;
+    commands["bekijk spullen"] = GameController::checkBag;
+    commands["bekijk map"] = GameController::checkMap;
+    commands["kenmerken"] = GameController::checkStats;
+    commands["kompas"] = GameController::kompas;
+    commands["talisman"] = GameController::grenade;
+    commands["granaat"] = GameController::talisman;
+    //    commands["cheat"] = GameController::cheat;
+    commands["save"] = GameController::save;
 
 }
 
 
 void  GameController::commandReader(string inputCommand) {
 
-//    command func = commands[inputCommand];
-////    if (commands.find(inputCommand) != commands.end()){
-//    (this->*func)();
-////    }
-    //return "Computer says no. Type help for list of commands";
+    bool check = false;
+    auto func = commands[inputCommand];
+    if (commands.find(inputCommand) != commands.end() && func != NULL){
+        check = true;
+    (this->*func)();
+   }
+        if(!check)
+        io.display("Computer says no. Type help for list of commands \n");
+
+
 }
 
 
@@ -86,15 +88,17 @@ void GameController::escape() {
 }
 
 void GameController::end() {
+    io.display("Ending game");
     gameOver = true;
 
 }
 void GameController::help() {
     string helpCommands = "commands list: \n";
-    /*for (map<string,command>::iterator it = commands.begin(); it!=commands.end(); ++it)
+    for (map<string,command>::iterator it = commands.begin(); it!=commands.end(); ++it)
     {
         helpCommands += (it->first + "\n");
-    }*/
+    }
+    io.display(helpCommands);
 
 }
 
@@ -108,7 +112,7 @@ void GameController::kompas() {
 
 //in fight
 void GameController::attack() {
-    set<string> commands{
+    set<string> fightcommands{
             ""
     };
 

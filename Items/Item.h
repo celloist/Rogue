@@ -9,8 +9,11 @@
 #include "AbstractItem.h"
 using namespace std;
 
-class Item : AbstractItem{
+class Item : AbstractItem {
 
+
+public:
+    Item(string name);
 };
 
 #endif //ROGUE_ITEM_H

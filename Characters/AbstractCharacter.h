@@ -11,8 +11,10 @@ using namespace std;
 class AbstractCharacter {
 
 public:
+    AbstractCharacter();
+    AbstractCharacter(string name,int health,int level,int attack,int defence,int exp);
+
     //vars are public because they need to be manipulated
-    string name;
     int health;
     int level;
     int attack;
@@ -24,7 +26,7 @@ public:
 
 
 
-private:
-
+protected:
+    string name;
 };
 #endif //ROGUE_ABSTRACTCHARACTER_H

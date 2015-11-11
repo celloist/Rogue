@@ -5,6 +5,7 @@
 #include "GameController.h"
 #include "../Views/GameOutput.h"
 #include <sstream>
+#include <algorithm>
 
 GameController::GameController(){
     initCommands();
@@ -28,13 +29,44 @@ void GameController::start(bool testing) {
     game.setUp(numLevels, numXRooms, numYRooms);
     Level* currentLevel = game.getCurrentLevel();
     GameOutput levelIo;
+
+    //gameloop
     while (!gameOver){
 //        levelIo.displayLevel(currentLevel);
 //        levelIo.displayLevelsMinSpanningTree(currentLevel);
 //        levelIo.displayLevelsRoomDistances(currentLevel);
 
-        string command = io.askInput("What da fuck wil je doen? (type help voor suggesties)");
+        string command = io.askInput("Wat da fuck wil je doen? (type help voor suggesties)");
         commandReader(command);
+    }
+}
+
+//engage while loop
+void GameController::engage() {
+    bool  engaging = true;
+    vector<string> attackCommands;
+
+    attackCommands.push_back("vlucht");
+    attackCommands.push_back("aanval");
+    attackCommands.push_back("drink drankje");
+    attackCommands.push_back("gebruik object");
+    attackCommands.push_back("stop");
+
+    io.display("Tijdens een gevecht kun je deze commandos gebruiken: \n vlucht, aanval, drink drankje, gebruik object, stop");
+    while(engaging)
+    {
+        string input = io.askInput("");
+        if(std::find(attackCommands.begin(),attackCommands.end(),input) != attackCommands.end())
+        {
+            if(input=="stop")
+                engaging = false;
+
+            commandReader(input);
+        }
+        else
+        {
+            io.display("Computer says no. Tijdens een gevecht kun je deze commandos gebruiken: \n vlucht, aanval, drink drankje, gebruik object, stop");
+        }
     }
 }
 
@@ -77,8 +109,6 @@ void  GameController::commandReader(string inputCommand) {
    }
         if(!check)
         io.display("Computer says no. Type help for list of commands \n");
-
-
 }
 
 
@@ -87,16 +117,19 @@ void GameController::escape() {
 
 }
 
+//ends the game loop
 void GameController::end() {
-    io.display("Ending game");
+    io.display("I'll be back");
     gameOver = true;
 
 }
+
+//prints out all the commands
 void GameController::help() {
     string helpCommands = "commands list: \n";
-    for (map<string,command>::iterator it = commands.begin(); it!=commands.end(); ++it)
+    for (map<string,command>::iterator it = commands.begin(); it!= commands.end(); ++it)
     {
-        helpCommands += (it->first + "\n");
+        helpCommands += (it->first + ", ");
     }
     io.display(helpCommands);
 
@@ -112,25 +145,22 @@ void GameController::kompas() {
 
 //in fight
 void GameController::attack() {
-    set<string> fightcommands{
-            ""
-    };
-
 
 }
 
 void GameController::usePotion() {
 
+    string potion = io.askInput("welke drankje? \n");
+    io.display(potion+ " is gebruikt");
+
 }
 
 void GameController::useItem() {
-
+    string item = io.askInput("welke object? \n");
+    io.display(item + " is gebruikt");
 }
 
 //in room
-void GameController::engage() {
-
-}
 
 void GameController::searchRoom() {
 

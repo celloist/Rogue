@@ -8,7 +8,7 @@
 #include <vector>
 #include "AbstractCharacter.h"
 #include "iostream"
-#include "../Item.h"
+#include "../Items/Item.h"
 
 using namespace std;
 
@@ -20,7 +20,7 @@ public:
     int awareness;
 
     //functions
-    std::vector<Item> getBag();
+    std::vector<AbstractItem*> getBag();
     void addItem(Item item);
     void useItem(string itemName);
     void levelUp();

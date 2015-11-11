@@ -9,7 +9,7 @@
 
 using namespace std;
 
-class ConsoleInputOuput {
+class ConsoleInputOutput {
 public:
     string askInput(string question);
     void display(string output);

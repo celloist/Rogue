@@ -6,8 +6,9 @@
 #define ROGUE_GAMECONTROLLER_H
 
 #include "iostream"
-#include "../Views/ConsoleInputOuput.h"
 #include "../Game.h"
+#include "../Views/ConsoleInputOutput.h"
+#include "../Items/Potion.h"
 #include <map>
 #include <functional>
 
@@ -24,13 +25,13 @@ public:
 
 private:
     Game game;
-    ConsoleInputOuput io;
+    ConsoleInputOutput io;
 
 
     typedef void (GameController::*command)();
 
     bool gameOver = false;
-    map<string, command>  commands;
+    map<string, command> commands;
 
     void initCommands();
     //commands

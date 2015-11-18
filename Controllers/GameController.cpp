@@ -54,6 +54,7 @@ void GameController::engage() {
     attackCommands.push_back("stop");
 
     io.display("Tijdens een gevecht kun je deze commandos gebruiken: \n vlucht, aanval, drink drankje, gebruik object, stop");
+    //todo fix endless loop
     while(engaging)
     {
         string input = io.askInput("");
@@ -72,30 +73,27 @@ void GameController::engage() {
 }
 
 void GameController::initCommands() {
-
-
-
-   commands["stop"] = GameController::end;
-    commands["help"] = GameController::help;
+    commands["stop"] = &GameController::end;
+    commands["help"] = &GameController::help;
 
     //while attacking
-    commands["vlucht"] = GameController::escape;
-    commands["aanval"] = GameController::attack;
-    commands["drink drankje"] = GameController::usePotion;
-    commands["gebruik object"] = GameController::useItem;
+    commands["vlucht"] = &GameController::escape;
+    commands["aanval"] = &GameController::attack;
+    commands["drink drankje"] = &GameController::usePotion;
+    commands["gebruik object"] = &GameController::useItem;
 
     //while in room
-    commands["aanvallen"] = GameController::engage;//TODO
-    commands["zoek kamer"] = GameController::searchRoom;
-    commands["rust"] = GameController::rest;
-    commands["bekijk spullen"] = GameController::checkBag;
-    commands["bekijk map"] = GameController::checkMap;
-    commands["kenmerken"] = GameController::checkStats;
-    commands["kompas"] = GameController::kompas;
-    commands["talisman"] = GameController::grenade;
-    commands["granaat"] = GameController::talisman;
+    commands["aanvallen"] = &GameController::engage;//TODO
+    commands["zoek kamer"] = &GameController::searchRoom;
+    commands["rust"] = &GameController::rest;
+    commands["bekijk spullen"] = &GameController::checkBag;
+    commands["bekijk map"] = &GameController::checkMap;
+    commands["kenmerken"] = &GameController::checkStats;
+    commands["kompas"] = &GameController::kompas;
+    commands["talisman"] = &GameController::grenade;
+    commands["granaat"] = &GameController::talisman;
     //    commands["cheat"] = GameController::cheat;
-    commands["save"] = GameController::save;
+    commands["save"] = &GameController::save;
 
 }
 

@@ -5,6 +5,7 @@
 #include "GameController.h"
 #include "../Views/GameOutput.h"
 #include <sstream>
+#include <algorithm>
 
 GameController::GameController(){
     initCommands();
@@ -21,28 +22,52 @@ void GameController::start(bool testing) {
         stringstream(io.askInput("Hoe veel verdiepingen lengte:")) >> numXRooms;
     } else {
         numLevels = 1;
-        numXRooms = 400;
-        numYRooms = 400;
+        numXRooms = 3;
+        numYRooms = 3;
     }
 
     game.setUp(numLevels, numXRooms, numYRooms);
+    game.itemGenerator();
     Level* currentLevel = game.getCurrentLevel();
     GameOutput levelIo;
-    currentLevel->calcPrimMinSpanTree();
+
+    //gameloop
     while (!gameOver){
+//        levelIo.displayLevel(currentLevel);
+//        levelIo.displayLevelsMinSpanningTree(currentLevel);
+//        levelIo.displayLevelsRoomDistances(currentLevel);
 
-        commandReader("stop");
-        /*levelIo.displayLevel(currentLevel);
-        levelIo.displayLevelsMinSpanningTree(currentLevel);
-        levelIo.displayLevelsRoomDistances(currentLevel);*/
+        string command = io.askInput("Wat da fuck wil je doen? (type help voor suggesties)");
+        commandReader(command);
+    }
+}
 
-        //string command = io.askInput("Wat wil je doen?");
-        auto mapData = currentLevel->getNorthEastRoom()->getShortestPathToExit();
-        levelIo.displayShortestPathToExit(mapData , currentLevel->getNorthEastRoom(), currentLevel->getExit() );
-        break;
-        /*string command;
-        getline(cin,command);
-        cout << commandReader(&command) << endl;*/
+//engage while loop
+void GameController::engage() {
+    bool  engaging = true;
+    vector<string> attackCommands;
+
+    attackCommands.push_back("vlucht");
+    attackCommands.push_back("aanval");
+    attackCommands.push_back("drink drankje");
+    attackCommands.push_back("gebruik object");
+    attackCommands.push_back("stop");
+
+    io.display("Tijdens een gevecht kun je deze commandos gebruiken: \n vlucht, aanval, drink drankje, gebruik object, stop");
+    while(engaging)
+    {
+        string input = io.askInput("");
+        if(std::find(attackCommands.begin(),attackCommands.end(),input) != attackCommands.end())
+        {
+            if(input=="stop")
+                engaging = false;
+
+            commandReader(input);
+        }
+        else
+        {
+            io.display("Computer says no. Tijdens een gevecht kun je deze commandos gebruiken: \n vlucht, aanval, drink drankje, gebruik object, stop");
+        }
     }
 }
 
@@ -50,38 +75,41 @@ void GameController::initCommands() {
 
 
 
-//   commands["stop"] = (void (*)()) &GameController::end;
-//    commands["help"] = &GameController::help;
-//
-//    //while attacking
-//    commands["vlucht"] = &GameController::escape;
-//    commands["aanval"] = &GameController::attack;
-//    commands["drink drankje"] = &GameController::usePotion;
-//    commands["gebruik object"] = &GameController::useItem;
-//
-//    //while in room
-//    commands["aanvallen"] = &GameController::engage;//TODO
-//    commands["zoek kamer"] = &GameController::searchRoom;
-//    commands["rust"] = &GameController::rest;
-//    commands["bekijk spullen"] = &GameController::checkBag;
-//    commands["bekijk map"] = &GameController::checkMap;
-//    commands["kenmerken"] = &GameController::checkStats;
-//    commands["kompas"] = &GameController::kompas;
-//    commands["talisman"] = &GameController::grenade;
-//    commands["granaat"] = &GameController::talisman;
-//    commands["cheat"] = &GameController::cheat;
-//    commands["save"] = &GameController::save;
+   commands["stop"] = GameController::end;
+    commands["help"] = GameController::help;
+
+    //while attacking
+    commands["vlucht"] = GameController::escape;
+    commands["aanval"] = GameController::attack;
+    commands["drink drankje"] = GameController::usePotion;
+    commands["gebruik object"] = GameController::useItem;
+
+    //while in room
+    commands["aanvallen"] = GameController::engage;//TODO
+    commands["zoek kamer"] = GameController::searchRoom;
+    commands["rust"] = GameController::rest;
+    commands["bekijk spullen"] = GameController::checkBag;
+    commands["bekijk map"] = GameController::checkMap;
+    commands["kenmerken"] = GameController::checkStats;
+    commands["kompas"] = GameController::kompas;
+    commands["talisman"] = GameController::grenade;
+    commands["granaat"] = GameController::talisman;
+    //    commands["cheat"] = GameController::cheat;
+    commands["save"] = GameController::save;
 
 }
 
 
 void  GameController::commandReader(string inputCommand) {
 
-//    command func = commands[inputCommand];
-////    if (commands.find(inputCommand) != commands.end()){
-//    (this->*func)();
-////    }
-    //return "Computer says no. Type help for list of commands";
+    bool check = false;
+    auto func = commands[inputCommand];
+    if (commands.find(inputCommand) != commands.end() && func != NULL){
+        check = true;
+    (this->*func)();
+   }
+        if(!check)
+        io.display("Computer says no. Type help for list of commands \n");
 }
 
 
@@ -90,51 +118,53 @@ void GameController::escape() {
 
 }
 
+//ends the game loop
 void GameController::end() {
+    io.display("I'll be back");
     gameOver = true;
 
 }
+
+//prints out all the commands
 void GameController::help() {
     string helpCommands = "commands list: \n";
-    /*for (map<string,command>::iterator it = commands.begin(); it!=commands.end(); ++it)
+    for (map<string,command>::iterator it = commands.begin(); it!= commands.end(); ++it)
     {
-        helpCommands += (it->first + "\n");
-    }*/
+        helpCommands += (it->first + ", ");
+    }
+    io.display(helpCommands);
 
 }
-
-void GameController::talisman() {
-
-}
-void GameController::kompas() {
-
-}
-
 
 //in fight
 void GameController::attack() {
-    set<string> commands{
-            ""
-    };
-
 
 }
 
 void GameController::usePotion() {
 
+    string potion = io.askInput("welke drankje? \n");
+    io.display(potion+ " is gebruikt");
+
 }
 
 void GameController::useItem() {
+    string item = io.askInput("welke object? \n");
+    io.display(item + " is gebruikt");
+
+    Hero* hero = game.getHero();
+
+    auto bag = hero->getBag();
 
 }
 
 //in room
-void GameController::engage() {
-
-}
 
 void GameController::searchRoom() {
-
+//    for (auto it = allItems.begin(); it != allItems.end(); it++) {
+//        Item *bagItem = it.operator*();
+//        hero.addItem(bagItem);
+//    }
 }
 
 void GameController::rest() {
@@ -153,13 +183,19 @@ void GameController::checkStats() {
 
 }
 
-void GameController::grenade() {
-
-}
-
 void GameController::save() {
 
 }
 
 
+void GameController::grenade() {
 
+}
+
+void GameController::kompas() {
+
+}
+
+void GameController::talisman() {
+
+}

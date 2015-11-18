@@ -159,3 +159,11 @@ map<Room *, pair<int, Room *>> Room::getShortestPathToExit() {
 
     return closedList;
 }
+
+void Room::addItem(Item *item) {
+    itemsInRoom.push_back(item);
+}
+
+vector<Item*>* Room::getItems() {
+    return  &itemsInRoom;
+}

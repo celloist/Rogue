@@ -1,10 +1,9 @@
 //
-// Created by alhric on 10-Nov-15.
+// Created by alhric on 12-Nov-15.
 //
 
 #include "Potion.h"
 
-Potion::Potion(string name) {
-    this->name = name;
-    this->type = itemType::normal;
+void Potion::use(Hero *hero) {
+
 }

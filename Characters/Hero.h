@@ -8,24 +8,27 @@
 #include <vector>
 #include "AbstractCharacter.h"
 #include "iostream"
-#include "../Items/Item.h"
+
+class Item;
 
 using namespace std;
 
 class Hero : AbstractCharacter {
 public:
+    Hero();
     Hero(string name);
 
     //vars
     int awareness;
 
     //functions
-    std::vector<AbstractItem*> getBag();
-    void addItem(Item item);
     void useItem(string itemName);
     void levelUp();
 
+    void addItem(Item* item);
+    vector<Item*>* getBag();
+
 private:
-    std::vector<Item> bag;
+    std::vector<Item*> bag;
 };
 #endif //ROGUE_HERO_H

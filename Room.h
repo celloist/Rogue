@@ -8,6 +8,8 @@
 #include <string>
 #include <map>
 #include <vector>
+#include "Items/Item.h"
+
 class Level;
 
 using namespace std;
@@ -33,6 +35,9 @@ public:
     string getShortestPathToExit();
     vector<Room*>* getEdges();
 
+    void addItem(Item* item);
+    vector<Item *> * getItems();
+
 private:
 
     Room* north  = nullptr;
@@ -42,6 +47,7 @@ private:
     map<Room*, int> distanaces;
     Level* level;
     vector<Room*> edges;
+    vector<Item*> itemsInRoom;
 };
 
 #endif //ROGUE_ROOM_H

@@ -4,3 +4,10 @@
 
 #include "AbstractCharacter.h"
 
+AbstractCharacter::AbstractCharacter(string name, int health, int level, int attack, int defence, int exp) {
+
+}
+
+AbstractCharacter::AbstractCharacter() {
+
+}

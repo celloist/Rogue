@@ -27,6 +27,7 @@ void GameController::start(bool testing) {
     }
 
     game.setUp(numLevels, numXRooms, numYRooms);
+    game.itemGenerator();
     Level* currentLevel = game.getCurrentLevel();
     GameOutput levelIo;
 
@@ -135,14 +136,6 @@ void GameController::help() {
 
 }
 
-void GameController::talisman() {
-
-}
-void GameController::kompas() {
-
-}
-
-
 //in fight
 void GameController::attack() {
 
@@ -158,12 +151,20 @@ void GameController::usePotion() {
 void GameController::useItem() {
     string item = io.askInput("welke object? \n");
     io.display(item + " is gebruikt");
+
+    Hero* hero = game.getHero();
+
+    auto bag = hero->getBag();
+
 }
 
 //in room
 
 void GameController::searchRoom() {
-
+//    for (auto it = allItems.begin(); it != allItems.end(); it++) {
+//        Item *bagItem = it.operator*();
+//        hero.addItem(bagItem);
+//    }
 }
 
 void GameController::rest() {
@@ -182,13 +183,19 @@ void GameController::checkStats() {
 
 }
 
-void GameController::grenade() {
-
-}
-
 void GameController::save() {
 
 }
 
 
+void GameController::grenade() {
 
+}
+
+void GameController::kompas() {
+
+}
+
+void GameController::talisman() {
+
+}

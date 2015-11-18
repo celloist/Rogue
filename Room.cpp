@@ -140,3 +140,11 @@ string Room::getShortestPathToExit() {
     }
     return path;
 }
+
+void Room::addItem(Item *item) {
+    itemsInRoom.push_back(item);
+}
+
+vector<Item*>* Room::getItems() {
+    return  &itemsInRoom;
+}

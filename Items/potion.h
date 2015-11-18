@@ -1,20 +1,14 @@
 //
-// Created by alhric on 10-Nov-15.
+// Created by alhric on 12-Nov-15.
 //
 
-#ifndef ROGUE_POITION_H
-#define ROGUE_POITION_H
+#ifndef ROGUE_POTION_H
+#define ROGUE_POTION_H
+#include "Item.h"
 
-
-#include "AbstractItem.h"
-
-class Potion : AbstractItem {
-
-        public:
-    Potion(string name);
-
+class Potion : public Item{
+public:
+    Potion(string name,itemType type,int value) : Item(name, type, value) {}
+    void use(Hero* hero);
 };
-
-
-
-#endif //ROGUE_POITION_H
+#endif //ROGUE_POTION_H

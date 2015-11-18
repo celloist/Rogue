@@ -10,6 +10,7 @@
 #include <map>
 #include "Room.h"
 #include <random>
+#include <forward_list>
 
 using namespace std;
 
@@ -19,11 +20,8 @@ public:
     Level();
     void init(int x, int y);
     void setUp(int x, int y);
-    void setDistances();
     void setPrevious(Level* level);
     void setNext(Level* level);
-    void cleanUp();
-    void addRoomToPQ(vector<pair<Room*, Room*>> *pq, vector<Room*>* visited, Room* from,  Room* to);
     Level* getNext();
     Room* getExit();
 
@@ -33,6 +31,7 @@ public:
     Room* getStartRoom();
     Room* getNorthEastRoom();
     bool isRoomInSPanningTree(Room* current, Room* to);
+    void calcPrimMinSpanTree();
 
 
 private:
@@ -42,7 +41,7 @@ private:
     Room* exitRoom;
     Room* northEastRoom;
     Room** rooms = nullptr;
-    map<pair<Room*, Room*>, Room*> minimalSpanningTree;
+    map<pair<Room*, Room*>, int> minimalSpanningTree;
     int totalRoomSize;
     int x;
     int y;
@@ -50,6 +49,6 @@ private:
     default_random_engine dre;
     uniform_int_distribution<int> dist{1,20};
     void setRoomDistanceToRandomly (Room* roomFrom, Room* roomTo);
-    void calcPrimMinSpanTree();
+    void calcPrimMinSpanTree (Room* vector, std::vector<Room*>* visited, std::forward_list<pair<int, pair<Room*, Room*>>> *pq);
 };
 #endif //ROGUE_LEVEL_H

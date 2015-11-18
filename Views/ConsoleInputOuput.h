@@ -5,8 +5,14 @@
 #ifndef ROGUE_CONSOLEINPUT_H
 #define ROGUE_CONSOLEINPUT_H
 
+#include <iostream>
+
+using namespace std;
 
 class ConsoleInputOuput {
+public:
+    string askInput(string question);
+    void display(string output);
 };
 
 

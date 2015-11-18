@@ -6,6 +6,8 @@
 #define ROGUE_GAMECONTROLLER_H
 
 #include "iostream"
+#include "../Views/ConsoleInputOuput.h"
+#include "../Game.h"
 #include <map>
 #include <functional>
 
@@ -15,39 +17,46 @@ using namespace std;
 class GameController {
 
 public:
+    //controller functions
+    void start(bool testing);
     GameController();
-    void inputReader();
+
 
 private:
+    Game game;
+    ConsoleInputOuput io;
 
-    typedef string (GameController::*command)();
+
+    typedef void (GameController::*command)();
+
     bool gameOver = false;
-    map<std::string,command> commands;
+    map<string, command>  commands;
 
-    //commands
-    string  commandReader(string* inputCommand);
     void initCommands();
+    //commands
+    void commandReader(string inputCommand);
     //both
-    string end();
-    string escape();
+    void end();
+    void escape();
 
     //while attacking
-    string attack();
-    string usePotion();
-    string useItem();
+    void attack();
+    void usePotion();
+    void useItem();
 
     //while in room
-    string engage();
-    string searchRoom();
-    string rest();
-    string checkBag();
-    string checkMap();
-    string checkStats();
-    string grenade();
-    string talisman();
-    string help();
+    void engage();
+    void searchRoom();
+    void rest();
+    void checkBag();
+    void checkMap();
+    void checkStats();
+    void grenade();
+    void kompas();
+    void talisman();
+    void help();
    // string cheat();
-    string save();
+    void save();
 
 
 

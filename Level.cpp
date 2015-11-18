@@ -8,6 +8,7 @@
 #include "Level.h"
 #include <algorithm>
 #include <forward_list>
+#include <deque>
 
 Level::Level () {
 
@@ -15,8 +16,7 @@ Level::Level () {
 
 void Level::init(int x, int y) {
     setUp(x,y);
-    setDistances();
-    calcPrimMinSpanTree();
+    //calcPrimMinSpanTree();
 }
 
 void Level::setUp(int x, int y) {
@@ -31,69 +31,72 @@ void Level::setUp(int x, int y) {
 
     while (i < num) {
         rooms[i] = new Room{this};
+
         if (i % x > 0) {
-            rooms[i]->setEdge("west", rooms[i -1]);
-            rooms[i-1]->setEdge("east", rooms[i]);
+            int westEastNum = dist(dre);
+            rooms[i]->setEdge("west", rooms[i -1], westEastNum);
+            rooms[i-1]->setEdge("east", rooms[i], westEastNum);
         }
 
         int top = i- x;
 
         if (top >= 0){
+            int southwestNum = dist(dre);
             Room* r = rooms[i];
-            rooms[top]->setEdge("south", rooms[i]);
-            rooms[i]->setEdge("north", rooms[top]);
+            rooms[top]->setEdge("south", rooms[i], southwestNum);
+            rooms[i]->setEdge("north", rooms[top], southwestNum);
         }
 
         i++;
     }
 
     northEastRoom = rooms[0];
-    exitRoom = rooms[num-1];
+    exitRoom = rooms[num -1];
 
-}
-
-void Level::setDistances () {
-    int i = 0;
-    while (i < totalRoomSize) {
-        int top = i - x;
-
-        if (i % x > 0) {
-            setRoomDistanceToRandomly(rooms[i], rooms[(i -1)]);
-        }
-
-        if (top >= 0) {
-            setRoomDistanceToRandomly(rooms[i], rooms[top]);
-        }
-        i++;
-    }
-}
-
-void Level::setRoomDistanceToRandomly (Room* roomFrom, Room* roomTo) {
-    int num = dist(dre);
-
-    roomFrom->setDistanceTo(roomTo, num);
-    roomTo->setDistanceTo(roomFrom, num);
 }
 
 void Level::calcPrimMinSpanTree () {
-    vector<Room *>* pq = nullptr;
-    for (int i = 0; i < totalRoomSize; i++) {
+    forward_list<pair<int, pair<Room*, Room*>>> pq;
+    map<Room*, int> mst;
+    for (int i = 0; i< totalRoomSize; i++) {
         Room* vector = rooms[i];
-
-        pq = vector->getEdges();
-        Room* smallestRoom = nullptr;
-        int leastDistance = -1;
-        for (auto edgeIt = pq->begin(); edgeIt != pq->end(); ++edgeIt) {
-            auto edge = edgeIt.operator*();
-
+        Room* edge = nullptr;
+        if (vector->getSouth() != nullptr){
+            edge = vector->getSouth();
             int distance = vector->getDistanceTo(edge);
-            if (smallestRoom == nullptr || distance < leastDistance) {
-                smallestRoom = edge;
-                leastDistance = distance;
-            }
+            pq.push_front(pair<int, pair<Room *, Room *>>{distance, {vector, edge}});
+
         }
 
-        minimalSpanningTree[pair<Room*, Room*> {vector, smallestRoom}] = smallestRoom;
+        if (vector->getWest() != nullptr){
+            edge = vector->getWest();
+            int distance = vector->getDistanceTo(edge);
+            pq.push_front(pair<int, pair<Room *, Room *>>{distance, {vector, edge}});
+        }
+    }
+
+    pq.sort();
+
+    int num = 1;
+    while (!pq.empty() && num != totalRoomSize){
+        int distance = pq.begin()->first;
+        Room* from = pq.begin()->second.first;
+        Room* to = pq.begin()->second.second;
+        pq.pop_front();
+        Room* point = nullptr;
+
+        if (mst.find(to) == mst.end()) {
+            point = to;
+        } else if (mst.find(from) == mst.end()) {
+            point = from;
+        }
+
+        if (point != nullptr){
+            mst[point] = distance;
+            minimalSpanningTree[pair<Room*, Room*> {from, to}] = distance;
+            minimalSpanningTree[pair<Room*, Room*> {to, from}] = distance;
+            num++;
+        }
     }
 }
 
@@ -129,23 +132,11 @@ Room* Level::getExit() {
     return exitRoom;
 }
 
-void Level::cleanUp () {
-    northEastRoom = nullptr;
-    previousLevel = nullptr;
-    nextLevel = nullptr;
-}
-
 Level::~Level() {
-    cleanUp();
-
     if (rooms != nullptr) {
         for (int i = totalRoomSize - 1; i > 0; i--) {
             delete rooms[i];
         }
-
-        delete northEastRoom;
-        delete previousLevel;
-        delete nextLevel;
 
         delete[] rooms;
     }

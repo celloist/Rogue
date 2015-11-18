@@ -9,58 +9,52 @@
 #include <algorithm>
 Room::Room (Level* level) {
     this->level = level;
+
+    rooms["north"] = make_pair(-1, nullptr);
+    rooms["south"] = make_pair(-1, nullptr);
+    rooms["west"] = make_pair(-1, nullptr);
+    rooms["east"] = make_pair(-1, nullptr);
 }
 
-void Room::setEdge (string direction, Room* edge) {
-    Room* roomToupdate;
+void Room::setEdge (string direction, Room* edge, int distance) {
+    if (direction == "north" ||
+            direction == "east" ||
+            direction == "south" ||
+            direction == "west") {
 
-    if (direction == "north") {
-        roomToupdate = north;
-        north = edge;
-    } else if (direction == "east") {
-        roomToupdate = east;
-        east = edge;
-    } else if (direction == "south") {
-        roomToupdate = south;
-        south = edge;
-    } else if (direction == "west") {
-        roomToupdate = west;
-        west = edge;
-    }
+        if (!edges.empty()) {
+            vector<Room *>::const_iterator position = find(edges.begin(), edges.end(), rooms[direction].second);
 
-    //Verwijder edge van de edges als deze wordt geupdate
-    if (roomToupdate != nullptr) {
-        remove(edges.begin(), edges.end(), roomToupdate);
-    }
-    //Voeg edge toe als deze een waarde heeft
-    if (edge != nullptr) {
+            if (position != edges.end()) {
+                edges.erase(position);
+            }
+        }
+        rooms[direction] = make_pair(distance, edge);
         edges.push_back(edge);
     }
 }
 
 Room* Room::getNorth(){
-    return north;
+    return rooms["north"].second;
 }
 
 Room* Room::getWest(){
-    return west;
+    return rooms["west"].second;
 }
 
 Room* Room::getEast(){
-    return east;
+    return rooms["east"].second;
 }
 
 Room* Room::getSouth(){
-    return south;
-}
-
-void Room::setDistanceTo (Room* roomTo, int distance) {
-    distanaces[roomTo] = distance;
+    return rooms["south"].second;
 }
 
 int Room::getDistanceTo(Room* to) {
-    if (distanaces.find(to) != distanaces.end() ) {
-        return distanaces[to];
+    for (auto room : rooms) {
+        if (to == room.second.second) {
+            return room.second.first;
+        }
     }
 
     return -1;
@@ -112,33 +106,56 @@ vector<Room*>* Room::getEdges() {
     return &edges;
 }
 
-void Room::cleanUp(){
-    north = nullptr;
-    south = nullptr;
-    west = nullptr;
-    east = nullptr;
-}
+map<Room *, pair<int, Room *>> Room::getShortestPathToExit() {
 
-Room::~Room(){
-    cleanUp();
+    map<Room*, Room*> roomPath;
+    deque<pair<int, Room*>> openPriorityQueue;
+    map<Room*, pair<int, Room*>> closedList;
 
-    delete north;
-    delete south;
-    delete west;
-    delete east;
-}
-
-string Room::getShortestPathToExit() {
-    string path = "";
-    map<Room*,int> shortestPathTo;
+    openPriorityQueue.push_back(make_pair(0, this));
+    roomPath[this] = this;
     Room* exitRoom = level->getExit();
-    Room* currentRoom = this;
-    Room* startRoom = this;
-    while(currentRoom != exitRoom)
-    {
-        vector<Room*>* roomsToVisit = currentRoom->getEdges();
 
+    while (!openPriorityQueue.empty()) {
+        Room* from = roomPath[openPriorityQueue.begin()->second];
 
+        int distance = openPriorityQueue.begin()->first;
+        Room* currentRoom = openPriorityQueue.begin()->second;
+
+        closedList[currentRoom] = pair<int, Room*>{distance, from};
+
+        if (currentRoom == exitRoom) {
+            break;
+        }
+
+        openPriorityQueue.erase(openPriorityQueue.begin());
+
+        auto edges = currentRoom->edges;
+
+        for (auto it = edges.begin(); it != edges.end(); it++) {
+            Room* edge = it.operator*();
+            if (closedList.find(edge) == closedList.end()) {
+                int relativeDistance = currentRoom->getDistanceTo(edge);
+
+                auto position = find_if(openPriorityQueue.begin(), openPriorityQueue.end(), [&edge](std::pair<int, Room*> const& elem) {
+                    return elem.second == edge;
+                });
+                //Room is in the openPriorityQueue and should be removed as the path from this room to the edge is the smallest possible distance
+                if (position != openPriorityQueue.end()) {
+                    int total = distance + relativeDistance;
+                    if (total < position->first) {
+                        closedList[edge] = make_pair(total, currentRoom);
+                        openPriorityQueue.erase(position);
+                    }
+                } else {
+                    openPriorityQueue.push_back(make_pair(distance + relativeDistance, edge));
+                    roomPath[edge] = currentRoom;
+                }
+            }
+        }
+
+        sort(openPriorityQueue.begin(), openPriorityQueue.end());
     }
-    return path;
+
+    return closedList;
 }

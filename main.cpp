@@ -1,18 +1,13 @@
 #include <iostream>
 #include "Game.h"
+#include "Controllers/GameController.h"
 
 using namespace std;
 
 int main() {
-    Game game;
+    GameController gc;
 
-    game.setUp(1, 400, 400);
+    gc.start(true);
 
-    Level* currentLevel = game.getCurrentLevel();
-
-    Room* firstOfTop = currentLevel->getNorthEastRoom();
-    Room* current = firstOfTop;
-    int num = current->findExitRoom();
-    cout << num;
     return 0;
 }

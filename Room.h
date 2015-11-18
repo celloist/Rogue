@@ -8,6 +8,8 @@
 #include <string>
 #include <map>
 #include <vector>
+#include <unordered_map>
+
 class Level;
 
 using namespace std;
@@ -15,32 +17,20 @@ class Room{
 
 public:
     Room(Level* level);
-    void setEdge (string direction, Room* edge);
-    void setNorth(Room* room);
-    void setWest(Room* room);
-    void setEast(Room* room);
-    void setSouth(Room* room);
-    void cleanUp();
-    void setDistanceTo (Room* to, int distance);
+    void setEdge (string direction, Room* edge, int distance);
     int getDistanceTo(Room* to);
-    virtual ~Room();
 
     Room* getNorth();
     Room* getWest();
     Room* getEast();
     Room* getSouth();
     int findExitRoom();
-    string getShortestPathToExit();
+    map<Room *, pair<int, Room *>> getShortestPathToExit();
     vector<Room*>* getEdges();
 
 private:
-
-    Room* north  = nullptr;
-    Room* west = nullptr;
-    Room* east = nullptr;
-    Room* south = nullptr;
-    map<Room*, int> distanaces;
     Level* level;
+    unordered_map<string, pair<int, Room*>> rooms;
     vector<Room*> edges;
 };
 

@@ -10,6 +10,7 @@
 #include <vector>
 #include <unordered_map>
 #include "Items/Item.h"
+#include "Characters/Enemy.h"
 
 class Level;
 
@@ -30,12 +31,14 @@ public:
     vector<Room*>* getEdges();
     void addItem(Item* item);
     vector<Item *> * getItems();
+    vector<Enemy*> * getEnemies();
 
 private:
     Level* level;
     unordered_map<string, pair<int, Room*>> rooms;
     vector<Room*> edges;
     vector<Item*> itemsInRoom;
+    vector<Enemy*> enemiesInRoom;
 };
 
 #endif //ROGUE_ROOM_H

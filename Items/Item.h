@@ -6,7 +6,9 @@
 #define ROGUE_ITEM_H
 
 #include "iostream"
-#include "../Characters/Hero.h"
+
+
+class Hero;
 
 using namespace std;
 
@@ -19,12 +21,13 @@ enum itemType{
 using namespace std;
 
 class Item {
+
 public:
     Item(string name,itemType type,int value);
     string getName();
     itemType getType();
     int getValue();
-    virtual void use(Hero* hero) = 0;
+    virtual string use(Hero* hero);
 
 protected:
     string name;

@@ -9,8 +9,9 @@
 #include "Item.h"
 
 class Armor : public Item{
+
 public:
     Armor(string name,itemType type,int value) : Item(name, type, value) {}
-    void use(Hero* hero);
+    string use(Hero* hero);
 };
 #endif //ROGUE_ARMOR_H

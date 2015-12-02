@@ -5,8 +5,11 @@
 #include "Game.h"
 #include "Items/Weapon.h"
 #include "Items/Potion.h"
+#include "Characters/Hero.h"
 
 void Game::setUp(int numLevels, int numXrooms, int numYrooms) {
+    Hero hero("Kloes",500,1,20,40,0,true,1);
+    this->hero = hero;
     levels = new Level*[numLevels];
     this->numLevels = numLevels;
 
@@ -20,6 +23,7 @@ void Game::setUp(int numLevels, int numXrooms, int numYrooms) {
     }
 
     currentLevel = levels[0];
+
 }
 
 void Game::setCurrentLevel(Level *level) {
@@ -42,10 +46,10 @@ Game::~Game(){
     }
 
     currentLevel = nullptr;
-    Hero *hero = nullptr;
+
 
     delete currentLevel;
-    delete hero;
+//    delete hero;
 
     delete[] levels;
 }
@@ -75,7 +79,7 @@ void Game::itemGenerator() {
             Item *bagItem = it.operator*();
 
             if (bagItem->getType() == type) {
-                bagItem->use(&hero);
+                cout <<bagItem->use(getHero()) << endl;
             }
         }
     }

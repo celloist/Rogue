@@ -44,7 +44,7 @@ void GameController::start(bool testing) {
 
 //engage while loop
 void GameController::engage() {
-    bool  engaging = true;
+    engaging = true;
     vector<string> attackCommands;
 
     attackCommands.push_back("vlucht");
@@ -54,7 +54,7 @@ void GameController::engage() {
     attackCommands.push_back("stop");
 
     io.display("Tijdens een gevecht kun je deze commandos gebruiken: \n vlucht, aanval, drink drankje, gebruik object, stop");
-    //todo fix endless loop
+
     while(engaging)
     {
         string input = io.askInput("");
@@ -83,7 +83,8 @@ void GameController::initCommands() {
     commands["gebruik object"] = &GameController::useItem;
 
     //while in room
-    commands["aanvallen"] = &GameController::engage;//TODO
+    commands["verplaatsen"] = &GameController::move;
+    commands["aanvallen"] = &GameController::engage;
     commands["zoek kamer"] = &GameController::searchRoom;
     commands["rust"] = &GameController::rest;
     commands["bekijk spullen"] = &GameController::checkBag;
@@ -113,7 +114,8 @@ void  GameController::commandReader(string inputCommand) {
 
 //both
 void GameController::escape() {
-
+    io.display("Je heb het gevecht verlaten \n");
+    engaging = false;
 }
 
 //ends the game loop
@@ -136,23 +138,48 @@ void GameController::help() {
 
 //in fight
 void GameController::attack() {
+    if(!hero->alive) {
+        io.display("Je bent dood, fijne daaaaaaag!");
+        end();
+    }
+    else{
+        auto* enemies = hero->getCurrentRoom()->getEnemies();
+        for (auto it = enemies->begin(); it != enemies->end(); it++) {
+            if(it.operator*()->alive) {
+                io.display(hero->attackTarget(it.operator*()));
+                io.display(it.operator*()->attackTarget(hero));
+            }
+            else{
+
+                delete *it;
+                it = enemies->erase(it);
+            }
+        }
+    }
 
 }
 
 void GameController::usePotion() {
-
     string potion = io.askInput("welke drankje? \n");
-    io.display(potion+ " is gebruikt");
+
+    if(hero->usePotion(potion,&io)) {
+        io.display(potion+ " gebruikt \n");
+    }
+    else{
+        io.display("Drankje niet gevonden probeer de bekijk spullen commando \n");
+    }
 
 }
 
 void GameController::useItem() {
-    string item = io.askInput("welke object? \n");
-    io.display(item + " is gebruikt");
+    string item = io.askInput("welke zwaard of harnass? \n");
 
-    Hero* hero = game.getHero();
-
-    auto bag = hero->getBag();
+    if(hero->useItem(item,&io)) {
+        io.display(item+ " gebruikt \n");
+    }
+    else{
+        io.display("Object niet gevonden probeer de bekijk spullen commando \n");
+    }
 
 }
 
@@ -163,6 +190,23 @@ void GameController::searchRoom() {
 //        Item *bagItem = it.operator*();
 //        hero.addItem(bagItem);
 //    }
+}
+
+void GameController::move() {
+    string direction = io.askInput("Richtingen die je kunt gaan zijn noord, oost, zuid en west. \n Welke richting wil je gaan? \n");
+    vector<string> directions;
+    directions.push_back("noord");
+    directions.push_back("zuid");
+    directions.push_back("oost");
+    directions.push_back("west");
+
+    if(std::find(directions.begin(),directions.end(),direction) != directions.end()) {
+        //TODO Mj move algorithm
+    }
+    else{
+        io.display("Computer says no. Richtingen die je kunt gaan zijn noord, oost, zuid, west\n");
+    }
+
 }
 
 void GameController::rest() {
@@ -185,7 +229,6 @@ void GameController::save() {
 
 }
 
-
 void GameController::grenade() {
 
 }
@@ -197,3 +240,5 @@ void GameController::kompas() {
 void GameController::talisman() {
 
 }
+
+

@@ -7,11 +7,16 @@
 #include "Items/Potion.h"
 
 void Game::setUp(int numLevels, int numXrooms, int numYrooms) {
+
+    random_device dev;
+    default_random_engine dre {dev()};
+    uniform_int_distribution<int> dist {1, 20};
+
     levels = new Level*[numLevels];
     this->numLevels = numLevels;
 
     for(int i = 0; i<numLevels; i++){
-        levels[i] = new Level;
+        levels[i] = new Level{dre};
 
         levels[i]->init(numXrooms, numYrooms);
         if (i > 0) {

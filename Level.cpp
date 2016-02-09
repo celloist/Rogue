@@ -4,24 +4,20 @@
 
 #include <list>
 #include <random>
-//#include <altivec.h>
 #include "Level.h"
-#include <algorithm>
-#include <forward_list>
-#include <deque>
 
-Level::Level () {
-
+Level::Level (default_random_engine dre) {
+    this->dre = dre;
 };
 
 void Level::init(int x, int y) {
     setUp(x,y);
-    //calcPrimMinSpanTree();
 }
 
 void Level::setUp(int x, int y) {
     int num = x*y;
     totalRoomSize = num;
+    mst = new Mst{totalRoomSize};
 
     this->x = x;
     this->y = y;
@@ -36,6 +32,7 @@ void Level::setUp(int x, int y) {
             int westEastNum = dist(dre);
             rooms[i]->setEdge("west", rooms[i -1], westEastNum);
             rooms[i-1]->setEdge("east", rooms[i], westEastNum);
+            mst->addEdge(rooms[i -1], rooms[i], westEastNum);
         }
 
         int top = i- x;
@@ -45,6 +42,7 @@ void Level::setUp(int x, int y) {
             Room* r = rooms[i];
             rooms[top]->setEdge("south", rooms[i], southwestNum);
             rooms[i]->setEdge("north", rooms[top], southwestNum);
+            mst->addEdge(rooms[top], rooms[i], southwestNum);
         }
 
         i++;
@@ -52,57 +50,10 @@ void Level::setUp(int x, int y) {
 
     northEastRoom = rooms[0];
     exitRoom = rooms[num -1];
-
 }
 
-void Level::calcPrimMinSpanTree () {
-    forward_list<pair<int, pair<Room*, Room*>>> pq;
-    map<Room*, int> mst;
-    for (int i = 0; i< totalRoomSize; i++) {
-        Room* vector = rooms[i];
-        Room* edge = nullptr;
-        if (vector->getSouth() != nullptr){
-            edge = vector->getSouth();
-            int distance = vector->getDistanceTo(edge);
-            pq.push_front(pair<int, pair<Room *, Room *>>{distance, {vector, edge}});
-
-        }
-
-        if (vector->getWest() != nullptr){
-            edge = vector->getWest();
-            int distance = vector->getDistanceTo(edge);
-            pq.push_front(pair<int, pair<Room *, Room *>>{distance, {vector, edge}});
-        }
-    }
-
-    pq.sort();
-
-    int num = 1;
-    while (!pq.empty() && num != totalRoomSize){
-        int distance = pq.begin()->first;
-        Room* from = pq.begin()->second.first;
-        Room* to = pq.begin()->second.second;
-        pq.pop_front();
-        Room* point = nullptr;
-
-        if (mst.find(to) == mst.end()) {
-            point = to;
-        } else if (mst.find(from) == mst.end()) {
-            point = from;
-        }
-
-        if (point != nullptr){
-            mst[point] = distance;
-            minimalSpanningTree[pair<Room*, Room*> {from, to}] = distance;
-            minimalSpanningTree[pair<Room*, Room*> {to, from}] = distance;
-            num++;
-        }
-    }
-}
-
-bool Level::isRoomInSPanningTree(Room* current, Room* to) {
-    pair<Room*, Room*> key {current, to};
-    return minimalSpanningTree.find(key) != minimalSpanningTree.end();
+bool Level::isRoomInSpanningTree(Room* from, Room* to) {
+    return mst->isInSpanningTree(from, to);
 }
 
 void Level::setPrevious(Level *level) {
@@ -139,5 +90,10 @@ Level::~Level() {
         }
 
         delete[] rooms;
+        delete mst;
     }
+}
+
+Mst *Level::getMst() {
+    return mst;
 }

@@ -11,13 +11,14 @@
 #include "Room.h"
 #include <random>
 #include <forward_list>
+#include "Mst.h"
 
 using namespace std;
 
 class  Level {
 
 public:
-    Level();
+    Level(default_random_engine dist);
     void init(int x, int y);
     void setUp(int x, int y);
     void setPrevious(Level* level);
@@ -30,25 +31,23 @@ public:
     Level* getPrevious();
     Room* getStartRoom();
     Room* getNorthEastRoom();
-    bool isRoomInSPanningTree(Room* current, Room* to);
-    void calcPrimMinSpanTree();
-
+    bool isRoomInSpanningTree(Room* from, Room* to);
+    Mst* getMst();
 
 private:
     Level* previousLevel;
     Level* nextLevel;
-    Room* startRoom;
     Room* exitRoom;
     Room* northEastRoom;
     Room** rooms = nullptr;
-    map<pair<Room*, Room*>, int> minimalSpanningTree;
+    map<pair<Room*,Room*>, int> minimalSpanningTreePaths;
+    map<pair<Room*, Room*>, int> excludedSanningTreePaths;
+    Mst* mst = nullptr;
     int totalRoomSize;
     int x;
     int y;
     random_device dev;
     default_random_engine dre;
     uniform_int_distribution<int> dist{1,20};
-    void setRoomDistanceToRandomly (Room* roomFrom, Room* roomTo);
-    void calcPrimMinSpanTree (Room* vector, std::vector<Room*>* visited, std::forward_list<pair<int, pair<Room*, Room*>>> *pq);
-};
+ };
 #endif //ROGUE_LEVEL_H

@@ -10,7 +10,7 @@ kabouter
 
 level 3
 smurf
-feral cat
+feral kat
 reus kikker
 
 level 4

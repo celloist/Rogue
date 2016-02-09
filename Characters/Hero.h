@@ -28,8 +28,10 @@ public:
     int baseDefense;
 
     //functions
-    bool useItem(string itemName,ConsoleInputOutput* io);
-    bool usePotion(string itemName,ConsoleInputOutput* io);
+    string displayInventory(itemType type);
+    string displayInventory();
+    string useItem(string itemName);
+    string usePotion(string itemName);
     void levelUp();
     bool move(string direction);
 
@@ -43,5 +45,7 @@ public:
 private:
     std::vector<Item*> bag;
     Room* currentRoom;
+
+
 };
 #endif //ROGUE_HERO_H

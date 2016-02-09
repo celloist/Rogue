@@ -35,39 +35,67 @@ Room *Hero::getCurrentRoom() {
     return currentRoom;
 }
 
-bool Hero::useItem(string itemName,ConsoleInputOutput* io) {
-
-    string useInfo = "";
-    for ( auto it = bag.begin(); it!= bag.end(); ++it)
-    {
-        auto item = it.operator*();
-        if(item->getName() == itemName)
-        {
-            if(item->getType() != itemType::potion){
-                useInfo = item->use(this);
-                io->display(useInfo);
-                return true;
+//There are 3 options here you can get potions, other items or all items by giving a NULL value as itemType
+string Hero::displayInventory(itemType type) {
+    string items = "";
+    for (auto it = bag.begin(); it != bag.end(); it++) {
+        if (type == itemType::potion) {
+            if (it.operator*()->getType() == type) {
+                items += it.operator*()->getName() + " ,";
+            }
+        }
+        else{
+            if (it.operator*()->getType() != itemType::potion) {
+                items += it.operator*()->getName() + " ,";
             }
         }
     }
-    return false;
 }
 
-bool Hero::usePotion(string itemName, ConsoleInputOutput *io) {
+string Hero::displayInventory() {
+    string items = "";
+    for (auto it = bag.begin(); it != bag.end(); it++) {
+                items += it.operator*()->getName() + " ,";
+    }
+    return items;
+}
+
+string Hero::useItem(string itemName) {
+
     string useInfo = "";
     for ( auto it = bag.begin(); it!= bag.end(); ++it)
     {
         auto item = it.operator*();
+        if(item->getName() == itemName && item->getType() != itemType::potion)
+        {
+            useInfo = item->use(this);
+            return useInfo;
+        }
+    }
+    return "Object niet gevonden probeer de bekijk spullen commando \n";
+}
+
+
+
+
+string Hero::usePotion(string itemName) {
+
+
+    string useInfo = "";
+    for ( auto it = bag.begin(); it!= bag.end(); ++it)
+    {
+        auto* item = it.operator*();
         if(item->getName() == itemName)
         {
             if(item->getType() == itemType::potion){
-                io->display(useInfo);
-                delete *it;
+                useInfo = item->use(this);
                 bag.erase(it);
-                return true;
+                bag.clear();
+                return useInfo;
             }
         }
     }
-    return false;
+    return "Drankje niet gevonden probeer de bekijk spullen commando \n";
 }
+
 

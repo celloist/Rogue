@@ -16,7 +16,7 @@ string Potion::use(Hero* hero) {
         hero->health = (hero->health) + (this->value);
     }
     used = true;
-    return "Je heb je zelf genezen, je hp is nu " + to_string(hero->health) +" door drankje: "+ this->name;
+    return "Je heb je zelf genezen, je hp is nu " + to_string(hero->health) +" door drankje: "+ this->name +"\n";
 }
 
 bool Potion::isUsed() {

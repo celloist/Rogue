@@ -58,6 +58,7 @@ Game::~Game(){
     return &allItems;
 }
 
+//TODO generate random objects
 void Game::itemGenerator() {
     allItems.push_back(new Weapon("Sword", itemType::weapon, 50));
     allItems.push_back(new Potion("HP", itemType::potion, 100));

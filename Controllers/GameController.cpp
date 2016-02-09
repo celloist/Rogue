@@ -47,7 +47,7 @@ void GameController::engage() {
     engaging = true;
     vector<string> attackCommands;
 
-    attackCommands.push_back("vlucht");
+    attackCommands.push_back("vlucht");//set engaging to false
     attackCommands.push_back("aanval");
     attackCommands.push_back("drink drankje");
     attackCommands.push_back("gebruik object");
@@ -83,7 +83,7 @@ void GameController::initCommands() {
     commands["gebruik object"] = &GameController::useItem;
 
     //while in room
-    commands["verplaatsen"] = &GameController::move;
+    commands["verplaats"] = &GameController::move;
     commands["aanvallen"] = &GameController::engage;
     commands["zoek kamer"] = &GameController::searchRoom;
     commands["rust"] = &GameController::rest;
@@ -108,7 +108,7 @@ void  GameController::commandReader(string inputCommand) {
     (this->*func)();
    }
         if(!check)
-        io.display("Computer says no. Type help for list of commands \n");
+        io.display("Computer says no. Type help voor commando's \n");
 }
 
 
@@ -136,7 +136,7 @@ void GameController::help() {
 
 }
 
-//in fight
+//in fight TODO Delete needs to be fixed
 void GameController::attack() {
     if(!hero->alive) {
         io.display("Je bent dood, fijne daaaaaaag!");
@@ -144,42 +144,46 @@ void GameController::attack() {
     }
     else{
         auto* enemies = hero->getCurrentRoom()->getEnemies();
+        vector<Enemy*> removeEnemies;
         for (auto it = enemies->begin(); it != enemies->end(); it++) {
             if(it.operator*()->alive) {
                 io.display(hero->attackTarget(it.operator*()));
                 io.display(it.operator*()->attackTarget(hero));
             }
             else{
+                removeEnemies.push_back(it.operator*());
 
-                delete *it;
-                it = enemies->erase(it);
             }
+        }
+
+        //remove the enemies from the room TODO still needs to delete the enemy itself
+        for (auto it = removeEnemies.begin();it!=removeEnemies.end();it++){
+            it = enemies->erase(it);
+            enemies->clear();
         }
     }
 
 }
 
 void GameController::usePotion() {
-    string potion = io.askInput("welke drankje? \n");
+    string items = hero->displayInventory(itemType::potion);
 
-    if(hero->usePotion(potion,&io)) {
-        io.display(potion+ " gebruikt \n");
-    }
-    else{
-        io.display("Drankje niet gevonden probeer de bekijk spullen commando \n");
-    }
+    io.display("Drankjes: "+items + "\n");
+
+    string potion = io.askInput("Welke drankje? \n");
+
+   io.display(hero->usePotion(potion));
 
 }
 
 void GameController::useItem() {
-    string item = io.askInput("welke zwaard of harnass? \n");
+    string items = hero->displayInventory(itemType::weapon);
 
-    if(hero->useItem(item,&io)) {
-        io.display(item+ " gebruikt \n");
-    }
-    else{
-        io.display("Object niet gevonden probeer de bekijk spullen commando \n");
-    }
+    io.display("Objecten: "+items + "\n");
+
+    string item = io.askInput("Welke zwaard of harnass? \n");
+
+    io.display(hero->useItem(item));
 
 }
 
@@ -193,18 +197,20 @@ void GameController::searchRoom() {
 }
 
 void GameController::move() {
-    string direction = io.askInput("Richtingen die je kunt gaan zijn noord, oost, zuid en west. \n Welke richting wil je gaan? \n");
+    string direction = io.askInput("Richtingen die je kunt gaan zijn noord, oost, zuid, west en boven of beneden in een exitroom. \n Welke richting wil je gaan? \n");
     vector<string> directions;
     directions.push_back("noord");
     directions.push_back("zuid");
     directions.push_back("oost");
     directions.push_back("west");
+    directions.push_back("beneden");
+    directions.push_back("boven");
 
     if(std::find(directions.begin(),directions.end(),direction) != directions.end()) {
         //TODO Mj move algorithm
     }
     else{
-        io.display("Computer says no. Richtingen die je kunt gaan zijn noord, oost, zuid, west\n");
+        io.display("Computer says no. Richtingen die je kunt gaan zijn noord, oost, zuid, west en boven of beneden in een exitroom\n");
     }
 
 }
@@ -214,7 +220,8 @@ void GameController::rest() {
 }
 
 void GameController::checkBag() {
-
+    string inventory = hero->displayInventory();
+    io.display("Buidel"+ inventory +"\n");
 }
 
 void GameController::checkMap() {

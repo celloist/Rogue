@@ -3,7 +3,9 @@
 //
 
 #include "Weapon.h"
+#include "../Characters/Hero.h"
 
-void Weapon::use(Hero *hero) {
-    cout<<"feels like a used weapon"<< endl;
+string Weapon::use(Hero* hero) {
+    hero->attack = (hero->baseAttack) + (this->value);
+    return "Je doet nu " + to_string(hero->attack) +" meer schade door wapen: "+ this->name +"\n";
 }

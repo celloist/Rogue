@@ -5,8 +5,11 @@
 #include "Game.h"
 #include "Items/Weapon.h"
 #include "Items/Potion.h"
+#include "Characters/Hero.h"
 
 void Game::setUp(int numLevels, int numXrooms, int numYrooms) {
+    Hero hero("Kloes",500,1,20,40,0,true,1);
+    this->hero = hero;
 
     random_device dev;
     default_random_engine dre {dev()};
@@ -25,6 +28,7 @@ void Game::setUp(int numLevels, int numXrooms, int numYrooms) {
     }
 
     currentLevel = levels[0];
+
 }
 
 void Game::setCurrentLevel(Level *level) {
@@ -59,6 +63,7 @@ Game::~Game(){
     return &allItems;
 }
 
+//TODO generate random objects
 void Game::itemGenerator() {
     allItems.push_back(new Weapon("Sword", itemType::weapon, 50));
     allItems.push_back(new Potion("HP", itemType::potion, 100));
@@ -80,7 +85,7 @@ void Game::itemGenerator() {
             Item *bagItem = it.operator*();
 
             if (bagItem->getType() == type) {
-                bagItem->use(&hero);
+                cout <<bagItem->use(getHero()) << endl;
             }
         }
     }

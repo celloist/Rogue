@@ -8,7 +8,7 @@
 #include "iostream"
 #include "AbstractCharacter.h"
 
-class Enemy : AbstractCharacter {
+class Enemy : public AbstractCharacter {
 
 
 };

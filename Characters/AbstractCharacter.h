@@ -9,24 +9,28 @@
 using namespace std;
 
 class AbstractCharacter {
-
 public:
     AbstractCharacter();
     AbstractCharacter(string name,int health,int level,int attack,int defence,int exp);
 
     //vars are public because they need to be manipulated
+
+
+    //functions
+    virtual string attackTarget(AbstractCharacter* target);
+
+    bool isAlive();
+
+    string name;
     int health;
     int level;
     int attack;
     int defence;
     int exp;
-
-    //functions
-    string attackTarget(int &targethealth,int &targetattack,int &targetdefence);
-
-
+    bool alive;
 
 protected:
-    string name;
+    virtual string receiveDamage(int damage);
+
 };
 #endif //ROGUE_ABSTRACTCHARACTER_H

@@ -8,7 +8,6 @@
 #include "Characters/Hero.h"
 
 void Game::setUp(int numLevels, int numXrooms, int numYrooms) {
-
     Hero hero("Kloes",500,1,20,40,0,true,1);
     this->hero = hero;
 
@@ -52,10 +51,10 @@ Game::~Game(){
     }
 
     currentLevel = nullptr;
-
+    Hero *hero = nullptr;
 
     delete currentLevel;
-//    delete hero;
+    delete hero;
 
     delete[] levels;
 }

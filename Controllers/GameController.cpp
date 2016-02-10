@@ -21,9 +21,9 @@ void GameController::start(bool testing) {
         stringstream(io.askInput("Hoe veel kamers over de breedte:")) >> numYRooms;
         stringstream(io.askInput("Hoe veel verdiepingen lengte:")) >> numXRooms;
     } else {
-        numLevels = 10;
-        numXRooms = 5;
-        numYRooms = 5;
+        numLevels = 1;
+        numXRooms = 3;
+        numYRooms = 3;
     }
 
     game.setUp(numLevels, numXRooms, numYRooms);
@@ -110,11 +110,10 @@ void  GameController::commandReader(string inputCommand) {
     auto func = commands[inputCommand];
     if (commands.find(inputCommand) != commands.end() && func != NULL){
         check = true;
-        (this->*func)();
-    }
-
-    if(!check)
-        io.display("Computer says no. Type help for list of commands \n");
+    (this->*func)();
+   }
+        if(!check)
+        io.display("Computer says no. Type help voor commando's \n");
 }
 
 

@@ -21,9 +21,9 @@ void GameController::start(bool testing) {
         stringstream(io.askInput("Hoe veel kamers over de breedte:")) >> numYRooms;
         stringstream(io.askInput("Hoe veel verdiepingen lengte:")) >> numXRooms;
     } else {
-        numLevels = 1;
-        numXRooms = 3;
-        numYRooms = 3;
+        numLevels = 10;
+        numXRooms = 5;
+        numYRooms = 5;
     }
 
     game.setUp(numLevels, numXRooms, numYRooms);
@@ -31,12 +31,17 @@ void GameController::start(bool testing) {
     Level* currentLevel = game.getCurrentLevel();
     GameOutput levelIo;
 
+    bool calculated = currentLevel->getMst()->calc();
+    currentLevel->getMst()->collapse(20);
     //gameloop
     while (!gameOver){
-//        levelIo.displayLevel(currentLevel);
-//        levelIo.displayLevelsMinSpanningTree(currentLevel);
-//        levelIo.displayLevelsRoomDistances(currentLevel);
+        //levelIo.displayLevel(currentLevel);
+        levelIo.displayLevelsMinSpanningTree(currentLevel);
+        levelIo.displayLevelsRoomDistances(currentLevel);
+        Room* start = currentLevel->getNorthEastRoom();
+        Room* exit = currentLevel->getExit();
 
+        /*levelIo.displayShortestPathToExit(start->getShortestPathToExit(), start, exit);*/
         string command = io.askInput("Wat da fuck wil je doen? (type help voor suggesties)");
         commandReader(command);
     }
@@ -105,10 +110,11 @@ void  GameController::commandReader(string inputCommand) {
     auto func = commands[inputCommand];
     if (commands.find(inputCommand) != commands.end() && func != NULL){
         check = true;
-    (this->*func)();
-   }
-        if(!check)
-        io.display("Computer says no. Type help voor commando's \n");
+        (this->*func)();
+    }
+
+    if(!check)
+        io.display("Computer says no. Type help for list of commands \n");
 }
 
 

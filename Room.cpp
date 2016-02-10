@@ -22,7 +22,7 @@ void Room::setEdge (string direction, Room* edge, int distance) {
             direction == "east" ||
             direction == "south" ||
             direction == "west") {
-
+        //on update
         if (!edges.empty()) {
             vector<Room *>::const_iterator position = find(edges.begin(), edges.end(), rooms[direction].second);
 
@@ -107,6 +107,15 @@ vector<Room*>* Room::getEdges() {
     return &edges;
 }
 
+void Room::removeEdge(Room *edge) {
+    for (auto it = edges.begin(); it != edges.end();  it++) {
+        if (it.operator*() == edge) {
+            edges.erase(it);
+            break;
+        }
+    }
+}
+
 map<Room *, pair<int, Room *>> Room::getShortestPathToExit() {
 
     map<Room*, Room*> roomPath;
@@ -171,4 +180,14 @@ vector<Item*>* Room::getItems() {
 
 vector<Enemy*>* Room::getEnemies() {
     return &enemiesInRoom;
+}
+
+bool Room::isConnectedTo(Room *edge) {
+    for (auto it = edges.begin(); it != edges.end(); it++) {
+        if (it.operator*() == edge) {
+            return true;
+        }
+    }
+
+    return false;
 }

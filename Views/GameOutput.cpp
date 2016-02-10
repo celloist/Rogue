@@ -54,7 +54,7 @@ void GameOutput::displayLevelsMinSpanningTree(Level* currentLevel) {
             top+= " *";
             if (current->getEast() != nullptr) {
                 top+= " ";
-                if (currentLevel->isRoomInSPanningTree(current, current->getEast())){
+                if (currentLevel->isRoomInSpanningTree(current, current->getEast())){
                     top+= "<1>";
                 }else {
                     top+= ">0<";
@@ -63,7 +63,7 @@ void GameOutput::displayLevelsMinSpanningTree(Level* currentLevel) {
             }
 
             if (current->getSouth() != nullptr) {
-                if (currentLevel->isRoomInSPanningTree(current, current->getSouth())){
+                if (currentLevel->isRoomInSpanningTree(current, current->getSouth())){
                     bottom+= "<1>";
                 }else {
                     bottom+= ">0<";
@@ -98,13 +98,25 @@ void GameOutput::displayLevelsRoomDistances(Level* currentLevel) {
     string bottom;
     while (firstOfTop != nullptr) {
         while(current != nullptr){
-            top+=" *";
+            top+=" * ";
+            string num;
             if (current->getEast() != nullptr) {
-                top+= " <"+ to_string(current->getDistanceTo(current->getEast())) +">";
+                if (current->isConnectedTo(current->getEast())) {
+                    num = to_string(current->getDistanceTo(current->getEast()));
+                    top+= " <"+ ((num.length() <= 1) ? " " + num : num ) +">";
+                } else {
+                    top += " < ~>";
+                }
             }
 
             if (current->getSouth() != nullptr) {
-                bottom += "<"+ to_string(current->getDistanceTo(current->getSouth()))+ ">";
+                if (current->isConnectedTo(current->getSouth())) {
+                    num = to_string(current->getDistanceTo(current->getSouth()));
+                    bottom += "<" + ((num.length() <= 1) ? " " + num : num) + "> ";
+                } else {
+                    bottom += "< ~> ";
+                }
+
 
                 while (bottom.length() < top.length()) {
                     bottom+=" ";
@@ -114,7 +126,7 @@ void GameOutput::displayLevelsRoomDistances(Level* currentLevel) {
             current = current->getEast();
         }
 
-        cout << top + "\n" + bottom + "\n";
+        cout << top + "\n\n" + bottom + "\n\n";
         top = "";
         bottom = "";
 

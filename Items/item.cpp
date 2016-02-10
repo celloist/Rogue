@@ -24,3 +24,7 @@ int Item::getValue() {
     return value;
 }
 
+string Item::use(Hero *hero) {
+    return "";
+}
+

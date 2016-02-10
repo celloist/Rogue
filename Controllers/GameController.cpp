@@ -31,12 +31,17 @@ void GameController::start(bool testing) {
     Level* currentLevel = game.getCurrentLevel();
     GameOutput levelIo;
 
+    bool calculated = currentLevel->getMst()->calc();
+    currentLevel->getMst()->collapse(20);
     //gameloop
     while (!gameOver){
-//        levelIo.displayLevel(currentLevel);
-//        levelIo.displayLevelsMinSpanningTree(currentLevel);
-//        levelIo.displayLevelsRoomDistances(currentLevel);
+        //levelIo.displayLevel(currentLevel);
+        levelIo.displayLevelsMinSpanningTree(currentLevel);
+        levelIo.displayLevelsRoomDistances(currentLevel);
+        Room* start = currentLevel->getNorthEastRoom();
+        Room* exit = currentLevel->getExit();
 
+        /*levelIo.displayShortestPathToExit(start->getShortestPathToExit(), start, exit);*/
         string command = io.askInput("Wat da fuck wil je doen? (type help voor suggesties)");
         commandReader(command);
     }
@@ -44,17 +49,17 @@ void GameController::start(bool testing) {
 
 //engage while loop
 void GameController::engage() {
-    bool  engaging = true;
+    engaging = true;
     vector<string> attackCommands;
 
-    attackCommands.push_back("vlucht");
+    attackCommands.push_back("vlucht");//set engaging to false
     attackCommands.push_back("aanval");
     attackCommands.push_back("drink drankje");
     attackCommands.push_back("gebruik object");
     attackCommands.push_back("stop");
 
     io.display("Tijdens een gevecht kun je deze commandos gebruiken: \n vlucht, aanval, drink drankje, gebruik object, stop");
-    //todo fix endless loop
+
     while(engaging)
     {
         string input = io.askInput("");
@@ -83,7 +88,8 @@ void GameController::initCommands() {
     commands["gebruik object"] = &GameController::useItem;
 
     //while in room
-    commands["aanvallen"] = &GameController::engage;//TODO
+    commands["verplaats"] = &GameController::move;
+    commands["aanvallen"] = &GameController::engage;
     commands["zoek kamer"] = &GameController::searchRoom;
     commands["rust"] = &GameController::rest;
     commands["bekijk spullen"] = &GameController::checkBag;
@@ -107,13 +113,14 @@ void  GameController::commandReader(string inputCommand) {
     (this->*func)();
    }
         if(!check)
-        io.display("Computer says no. Type help for list of commands \n");
+        io.display("Computer says no. Type help voor commando's \n");
 }
 
 
 //both
 void GameController::escape() {
-
+    io.display("Je heb het gevecht verlaten \n");
+    engaging = false;
 }
 
 //ends the game loop
@@ -134,25 +141,54 @@ void GameController::help() {
 
 }
 
-//in fight
+//in fight TODO Delete needs to be fixed
 void GameController::attack() {
+    if(!hero->alive) {
+        io.display("Je bent dood, fijne daaaaaaag!");
+        end();
+    }
+    else{
+        auto* enemies = hero->getCurrentRoom()->getEnemies();
+        vector<Enemy*> removeEnemies;
+        for (auto it = enemies->begin(); it != enemies->end(); it++) {
+            if(it.operator*()->alive) {
+                io.display(hero->attackTarget(it.operator*()));
+                io.display(it.operator*()->attackTarget(hero));
+            }
+            else{
+                removeEnemies.push_back(it.operator*());
+
+            }
+        }
+
+        //remove the enemies from the room TODO still needs to delete the enemy itself
+        for (auto it = removeEnemies.begin();it!=removeEnemies.end();it++){
+            it = enemies->erase(it);
+            enemies->clear();
+        }
+    }
 
 }
 
 void GameController::usePotion() {
+    string items = hero->displayInventory(itemType::potion);
 
-    string potion = io.askInput("welke drankje? \n");
-    io.display(potion+ " is gebruikt");
+    io.display("Drankjes: "+items + "\n");
+
+    string potion = io.askInput("Welke drankje? \n");
+
+   io.display(hero->usePotion(potion));
 
 }
 
 void GameController::useItem() {
-    string item = io.askInput("welke object? \n");
-    io.display(item + " is gebruikt");
+    string items = hero->displayInventory(itemType::weapon);
 
-    Hero* hero = game.getHero();
+    io.display("Objecten: "+items + "\n");
 
-    auto bag = hero->getBag();
+    string item = io.askInput("Welke zwaard of harnass? \n");
+
+    io.display(hero->useItem(item));
 
 }
 
@@ -165,12 +201,32 @@ void GameController::searchRoom() {
 //    }
 }
 
+void GameController::move() {
+    string direction = io.askInput("Richtingen die je kunt gaan zijn noord, oost, zuid, west en boven of beneden in een exitroom. \n Welke richting wil je gaan? \n");
+    vector<string> directions;
+    directions.push_back("noord");
+    directions.push_back("zuid");
+    directions.push_back("oost");
+    directions.push_back("west");
+    directions.push_back("beneden");
+    directions.push_back("boven");
+
+    if(std::find(directions.begin(),directions.end(),direction) != directions.end()) {
+        //TODO Mj move algorithm
+    }
+    else{
+        io.display("Computer says no. Richtingen die je kunt gaan zijn noord, oost, zuid, west en boven of beneden in een exitroom\n");
+    }
+
+}
+
 void GameController::rest() {
 
 }
 
 void GameController::checkBag() {
-
+    string inventory = hero->displayInventory();
+    io.display("Buidel"+ inventory +"\n");
 }
 
 void GameController::checkMap() {
@@ -185,7 +241,6 @@ void GameController::save() {
 
 }
 
-
 void GameController::grenade() {
 
 }
@@ -197,3 +252,5 @@ void GameController::kompas() {
 void GameController::talisman() {
 
 }
+
+

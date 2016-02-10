@@ -25,11 +25,13 @@ public:
 private:
     Game game;
     ConsoleInputOutput io;
+    Hero* hero = game.getHero();
 
 
     typedef void (GameController::*command)();
 
     bool gameOver = false;
+    bool engaging = false;
     map<string, command> commands;
 
     void initCommands();
@@ -45,6 +47,7 @@ private:
     void useItem();
 
     //while in room
+    void move();
     void engage();
     void searchRoom();
     void rest();

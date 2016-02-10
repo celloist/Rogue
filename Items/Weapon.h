@@ -6,9 +6,11 @@
 #define ROGUE_WEAPON_H
 #include "Item.h"
 
+
 class Weapon : public  Item{
+
 public:
     Weapon(string name,itemType type,int value) : Item(name, type, value) {}
-    void use(Hero* hero);
+    string use(Hero* hero);
 };
 #endif //ROGUE_WEAPON_H

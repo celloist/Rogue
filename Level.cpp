@@ -5,51 +5,58 @@
 #include <list>
 #include <random>
 #include "Level.h"
+#include "Game.h"
 
-Level::Level (default_random_engine dre) {
+Level::Level (default_random_engine dre, int x, int y, Game* game) {
     this->dre = dre;
-};
-
-void Level::init(int x, int y) {
-    setUp(x,y);
-}
-
-void Level::setUp(int x, int y) {
-    int num = x*y;
-    totalRoomSize = num;
-    mst = new Mst{totalRoomSize};
-
     this->x = x;
     this->y = y;
+    this->game = game;
+};
 
-    rooms = new Room*[num];
-    int i = 0;
+void Level::init() {
+    if (!initialized) {
+        int num = x * y;
+        totalRoomSize = num;
+        mst = new Mst{totalRoomSize};
 
-    while (i < num) {
-        rooms[i] = new Room{this};
 
-        if (i % x > 0) {
-            int westEastNum = dist(dre);
-            rooms[i]->setEdge("west", rooms[i -1], westEastNum);
-            rooms[i-1]->setEdge("east", rooms[i], westEastNum);
-            mst->addEdge(rooms[i -1], rooms[i], westEastNum);
+        rooms = new Room *[num];
+        int i = 0;
+
+        uniform_int_distribution<int> roomdist{0, num - 1};
+        int exitRoomIndex = 0;//roomdist(dre);
+        while (i < num) {
+            if (i != exitRoomIndex) {
+                rooms[i] = new Room{this};
+            } else {
+                rooms[i] = new ExitRoom{this};
+            }
+            if (i % x > 0) {
+                int westEastNum = dist(dre);
+                rooms[i]->setEdge("west", rooms[i - 1], westEastNum);
+                rooms[i - 1]->setEdge("east", rooms[i], westEastNum);
+                mst->addEdge(rooms[i - 1], rooms[i], westEastNum);
+            }
+
+            int top = i - x;
+
+            if (top >= 0) {
+                int southwestNum = dist(dre);
+                Room *r = rooms[i];
+                rooms[top]->setEdge("south", rooms[i], southwestNum);
+                rooms[i]->setEdge("north", rooms[top], southwestNum);
+                mst->addEdge(rooms[top], rooms[i], southwestNum);
+            }
+
+            i++;
         }
 
-        int top = i- x;
+        northEastRoom = rooms[0];
+        exitRoom = rooms[num - 1];
 
-        if (top >= 0){
-            int southwestNum = dist(dre);
-            Room* r = rooms[i];
-            rooms[top]->setEdge("south", rooms[i], southwestNum);
-            rooms[i]->setEdge("north", rooms[top], southwestNum);
-            mst->addEdge(rooms[top], rooms[i], southwestNum);
-        }
-
-        i++;
+        initialized = true;
     }
-
-    northEastRoom = rooms[0];
-    exitRoom = rooms[num -1];
 }
 
 bool Level::isRoomInSpanningTree(Room* from, Room* to) {
@@ -68,6 +75,9 @@ void Level::setNext(Level *level) {
 }
 
 Level* Level::getNext() {
+    if (nextLevel) {
+        nextLevel->init();
+    }
     return nextLevel;
 }
 
@@ -96,4 +106,8 @@ Level::~Level() {
 
 Mst *Level::getMst() {
     return mst;
+}
+
+void Level::setAsCurrentLevel() {
+    game->setCurrentLevel(this);
 }

@@ -33,7 +33,7 @@ bool Mst::calc() {
 
             pq.erase(pq.begin());
 
-            if (num < size && (toLevel == -1 && fromLevel == -1 || fromLevel != toLevel)) {
+            if (num < size && ((toLevel == -1 && fromLevel == -1) || fromLevel != toLevel)) {
                 if (toLevel == -1 && fromLevel == -1) {
                     levels[++currentLevel] = vector<Room *>();
                     levels[currentLevel].push_back(to);

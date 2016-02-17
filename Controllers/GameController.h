@@ -25,7 +25,8 @@ public:
 private:
     Game game;
     ConsoleInputOutput io;
-    Hero* hero = game.getHero();
+    //TODO fix the way in which the hero property is added
+    Hero* hero;
 
 
     typedef void (GameController::*command)();

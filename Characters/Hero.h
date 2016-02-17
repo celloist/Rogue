@@ -39,7 +39,7 @@ public:
     vector<Item*>* getBag();
 
     Room* getCurrentRoom();
-
+    void setRoom(Room* room);
 
 
 private:

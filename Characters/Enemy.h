@@ -9,7 +9,8 @@
 #include "AbstractCharacter.h"
 
 class Enemy : public AbstractCharacter {
-
+public:
+    ~Enemy();
 
 };
 

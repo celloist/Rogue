@@ -3,3 +3,8 @@
 //
 
 #include "Enemy.h"
+
+Enemy::~Enemy() {
+    std:cout<<"enemy "+this->name+" deleted"<<std::endl;
+
+}

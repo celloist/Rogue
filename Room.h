@@ -33,6 +33,7 @@ public:
     map<Room *, pair<int, Room *>> getShortestPathToExit();
     vector<Room*>* getEdges();
     void addItem(Item* item);
+    void addEnemy(Enemy* enemy);
     vector<Item *> * getItems();
     vector<Enemy*> * getEnemies();
 

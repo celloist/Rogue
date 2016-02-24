@@ -23,6 +23,7 @@ public:
     virtual ~Game();
 
     vector<Item*>* getItems();
+    vector<Enemy*>* getEnemies();
     Hero* getHero();
 
 private:
@@ -32,6 +33,7 @@ private:
     int numLevels;
 
     vector<Item*> allItems;
+    vector<Enemy*> allEnemies;
 };
 
 #endif //ROGUE_GAME_H

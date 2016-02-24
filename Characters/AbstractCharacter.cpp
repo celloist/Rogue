@@ -2,17 +2,17 @@
 // Created by alhric on 30-Oct-15.
 //
 
+#include <math.h>
 #include "AbstractCharacter.h"
-#include "../Views/ConsoleInputOutput.h"
 
-AbstractCharacter::AbstractCharacter(string name, int health, int level, int attack, int defence, int exp) {
+AbstractCharacter::AbstractCharacter(string name,int level) {
 
     this->name = name;
-    this->health = health;
+    this->health = (level* 10);
     this->level = level;
-    this->attack = attack;
-    this->defence = defence;
-    this->exp = exp;
+    this->attack = (level *2);
+    this->defence = (int) round(level *1.5);
+    this->exp = (level * 100);
     this->alive = true;
 }
 
@@ -33,10 +33,22 @@ string AbstractCharacter::receiveDamage(int damage) {
 
     return name + " heeft "+to_string(damage)+" schade gekregen, "+name+" heeft nog "+to_string(health)+" leven over.";
 }
+
+// random succesfull attack based on attack and defence points rand (a/0.7
+// starts out with 50% chance and builds up with the attack. 50+attack and peaks at 95% for chance pick a number between 1 to 100
  string AbstractCharacter::attackTarget(AbstractCharacter* target) {
-     return target->receiveDamage(attack);
+    int damage = 0;
+    int percentage = (attack +50);
+    if(percentage> 95)
+        percentage = 95;
+    //TODO random between 1 and 100 if it falls in the range then attack else return miss
+    //TODO defended damage = random ((defence/4),defence);
+    damage = damage-defence;
+
+     return target->receiveDamage(damage);
 }
 
 bool AbstractCharacter::isAlive() {
     return alive;
 }
+

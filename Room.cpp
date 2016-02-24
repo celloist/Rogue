@@ -174,6 +174,10 @@ void Room::addItem(Item* item) {
     itemsInRoom.push_back(item);
 }
 
+void Room::addEnemy(Enemy *enemy) {
+    enemiesInRoom.push_back(enemy);
+}
+
 vector<Item*>* Room::getItems() {
     return &itemsInRoom;
 }
@@ -191,3 +195,5 @@ bool Room::isConnectedTo(Room *edge) {
 
     return false;
 }
+
+

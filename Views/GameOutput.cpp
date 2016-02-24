@@ -16,9 +16,12 @@ void GameOutput::displayLevel(Level *currentLevel) {
 
     while (hasNextRow) {
         while(hasNextCol){
-            output+= "*";
+            if (current->hasBeenVisited()) {
+                output += "n";
+            } else {
+                output += "*";
+            }
             if (current->getEast() != nullptr) {
-
                 current = current->getEast();
             } else {
                 hasNextCol = false;

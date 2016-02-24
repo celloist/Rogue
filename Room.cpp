@@ -6,8 +6,7 @@
 #include <queue>
 #include "Room.h"
 #include "Level.h"
-#include "Items/Item.h"
-#include <algorithm>
+
 Room::Room (Level* level) {
     this->level = level;
 
@@ -51,6 +50,15 @@ Room* Room::getSouth(){
     return rooms["south"].second;
 }
 
+Room *Room::getByEdgeName(string name) {
+
+    if (rooms.find(name) != rooms.end()){
+        return rooms[name].second;
+    }
+
+    return nullptr;
+}
+
 int Room::getDistanceTo(Room* to) {
     for (auto room : rooms) {
         if (to == room.second.second) {
@@ -61,9 +69,7 @@ int Room::getDistanceTo(Room* to) {
     return -1;
 }
 
-int Room::findExitRoom () {
-    Room* exit = level->getExit();
-
+int Room::findRoom (Room* exit) {
     vector<Room*> visited;
     std::deque<Room*> toSearch;
     toSearch.push_back(this);
@@ -87,11 +93,11 @@ int Room::findExitRoom () {
             int level = searchLevels[currentRoom];
             searchLevels.erase(currentRoom);
 
-            for (auto it = edges->rbegin(); it != edges->rend(); ++it) {
+            for (auto it = edges->rbegin(); it != edges->rend(); it++) {
                 Room* roomToAdd = it.operator*();
 
-                if (std::find(visited.rbegin(), visited.rend(), roomToAdd) == visited.rend()
-                    && std::find(toSearch.rbegin(), toSearch.rend(), roomToAdd)  == toSearch.rbegin()) {
+                if (std::find(visited.begin(), visited.end(), roomToAdd) == visited.end()
+                    && std::find(toSearch.begin(), toSearch.end(), roomToAdd)  == toSearch.end()) {
 
                     toSearch.push_back(roomToAdd);
                     searchLevels[roomToAdd] = level + 1;
@@ -115,9 +121,8 @@ void Room::removeEdge(Room *edge) {
         }
     }
 }
-
+//TODO add the number of traps and enemies with their HP
 map<Room *, pair<int, Room *>> Room::getShortestPathToExit() {
-
     map<Room*, Room*> roomPath;
     deque<pair<int, Room*>> openPriorityQueue;
     map<Room*, pair<int, Room*>> closedList;
@@ -174,6 +179,10 @@ void Room::addItem(Item* item) {
     itemsInRoom.push_back(item);
 }
 
+void Room::removeItem(Item *item) {
+
+}
+
 vector<Item*>* Room::getItems() {
     return &itemsInRoom;
 }
@@ -190,4 +199,40 @@ bool Room::isConnectedTo(Room *edge) {
     }
 
     return false;
+}
+
+void Room::addEnemy(Enemy *enemy) {
+    enemiesInRoom.push_back(enemy);
+}
+
+void Room::removeEnemy(Enemy *enemy) {
+    auto it = find(enemiesInRoom.begin(), enemiesInRoom.end(), enemy);
+
+    if (it != enemiesInRoom.end()) {
+        enemiesInRoom.erase(it);
+    }
+}
+
+void Room::moveinHero(Hero *hero) {
+    this->hero = hero;
+
+    if (!visited) {
+        visited = true;
+    }
+}
+
+void Room::moveoutHero() {
+    hero = nullptr;
+}
+
+bool Room::hasBeenVisited() {
+    return visited;
+}
+
+Level *Room::getLevel() {
+    return level;
+}
+
+void Room::accept(Visitor* v){
+    v->visit(this);
 }

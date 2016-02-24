@@ -8,21 +8,24 @@
 #include <list>
 #include <set>
 #include <map>
-#include "Room.h"
 #include <random>
 #include <forward_list>
 #include "Mst.h"
+#include "Room.h"
+#include "ExitRoom.h"
+
+class Game;
 
 using namespace std;
 
-class  Level {
+class Level {
 
 public:
-    Level(default_random_engine dist);
-    void init(int x, int y);
-    void setUp(int x, int y);
+    Level(default_random_engine& dist, int x, int y, Game* game);
+    void init();
     void setPrevious(Level* level);
     void setNext(Level* level);
+    void setAsCurrent();
     Level* getNext();
     Room* getExit();
 
@@ -33,6 +36,7 @@ public:
     Room* getNorthEastRoom();
     bool isRoomInSpanningTree(Room* from, Room* to);
     Mst* getMst();
+    void setAsCurrentLevel();
 
 private:
     Level* previousLevel;
@@ -46,8 +50,10 @@ private:
     int totalRoomSize;
     int x;
     int y;
+    bool initialized = false;
     random_device dev;
     default_random_engine dre;
     uniform_int_distribution<int> dist{1,20};
+    Game* game;
  };
 #endif //ROGUE_LEVEL_H

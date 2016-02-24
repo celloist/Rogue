@@ -19,16 +19,14 @@ void Game::setUp(int numLevels, int numXrooms, int numYrooms) {
     this->numLevels = numLevels;
 
     for(int i = 0; i<numLevels; i++){
-        levels[i] = new Level{dre};
-
-        levels[i]->init(numXrooms, numYrooms);
+        levels[i] = new Level{dre, numXrooms, numYrooms, this};
         if (i > 0) {
             levels[i]->setPrevious(levels[i -1]);
         }
+        levels[i]->init();
     }
 
     currentLevel = levels[0];
-
 }
 
 void Game::setCurrentLevel(Level *level) {

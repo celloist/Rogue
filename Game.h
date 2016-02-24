@@ -13,7 +13,6 @@
 class Game {
 public:
     void setUp(int numLevels, int numXrooms, int numYrooms);
-    //void setHero(Hero hero);
     void itemGenerator();//TODO
     void setCurrentLevel (Level* level);
     Level* getCurrentLevel();

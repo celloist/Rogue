@@ -22,6 +22,7 @@ public:
     void addEdge(Room* from, Room* to, int distance);
     int find(Room* to);
     bool calc();
+    bool isCalculated();
     bool isInSpanningTree(Room* from, Room* to);
     bool collapse(int num);
 private:

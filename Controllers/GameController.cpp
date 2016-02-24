@@ -138,7 +138,6 @@ void GameController::help() {
         helpCommands += (it->first + ", ");
     }
     io.display(helpCommands);
-
 }
 
 //TODO delete fixed needs test

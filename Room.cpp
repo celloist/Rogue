@@ -93,11 +93,11 @@ int Room::findRoom (Room* exit) {
             int level = searchLevels[currentRoom];
             searchLevels.erase(currentRoom);
 
-            for (auto it = edges->rbegin(); it != edges->rend(); ++it) {
+            for (auto it = edges->rbegin(); it != edges->rend(); it++) {
                 Room* roomToAdd = it.operator*();
 
-                if (std::find(visited.rbegin(), visited.rend(), roomToAdd) == visited.rend()
-                    && std::find(toSearch.rbegin(), toSearch.rend(), roomToAdd)  == toSearch.rbegin()) {
+                if (std::find(visited.begin(), visited.end(), roomToAdd) == visited.end()
+                    && std::find(toSearch.begin(), toSearch.end(), roomToAdd)  == toSearch.end()) {
 
                     toSearch.push_back(roomToAdd);
                     searchLevels[roomToAdd] = level + 1;

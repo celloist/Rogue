@@ -81,6 +81,10 @@ bool Mst::calc() {
     return true;
 }
 
+bool Mst::isCalculated() {
+    return calculated;
+}
+
 bool Mst::isInSpanningTree(Room *from, Room *to) {
     return minimalSpanningTreePaths.find(make_pair(from, to)) != minimalSpanningTreePaths.end();
 }

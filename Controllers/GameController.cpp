@@ -23,9 +23,9 @@ void GameController::start(bool testing) {
         stringstream(io.askInput("Hoe veel kamers over de breedte:")) >> numYRooms;
         stringstream(io.askInput("Hoe veel verdiepingen lengte:")) >> numXRooms;
     } else {
-        numLevels = 1;
+        numLevels = 10;
         numXRooms = 2;
-        numYRooms = 1;
+        numYRooms = 2;
     }
 
     game.setUp(numLevels, numXRooms, numYRooms);

@@ -9,12 +9,14 @@
 void ExitRoom::init() {
     if (!initializedLevelEdges) {
         if (level->getNext()) {
-            rooms["down"] = make_pair(0,level->getNext()->getExit());
+            rooms["down"] = make_pair(0, level->getNext()->getExit());
         }
 
         if (level->getPrevious()) {
             rooms["up"] = make_pair(0,level->getPrevious()->getExit());
         }
+
+        initializedLevelEdges = true;
     }
 }
 

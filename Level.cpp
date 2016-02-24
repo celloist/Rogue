@@ -7,7 +7,7 @@
 #include "Level.h"
 #include "Game.h"
 
-Level::Level (default_random_engine dre, int x, int y, Game* game) {
+Level::Level (default_random_engine& dre, int x, int y, Game* game) {
     this->dre = dre;
     this->x = x;
     this->y = y;
@@ -25,7 +25,7 @@ void Level::init() {
         int i = 0;
 
         uniform_int_distribution<int> roomdist{0, num - 1};
-        int exitRoomIndex = 0;//roomdist(dre);
+        int exitRoomIndex = roomdist(dre);
         while (i < num) {
             if (i != exitRoomIndex) {
                 rooms[i] = new Room{this};
@@ -53,7 +53,7 @@ void Level::init() {
         }
 
         northEastRoom = rooms[0];
-        exitRoom = rooms[num - 1];
+        exitRoom = rooms[exitRoomIndex];
 
         initialized = true;
     }
@@ -105,6 +105,9 @@ Level::~Level() {
 }
 
 Mst *Level::getMst() {
+    if (!mst->isCalculated()) {
+        mst->calc();
+    }
     return mst;
 }
 

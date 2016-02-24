@@ -15,32 +15,49 @@ void DeafultLevelOutput::displayLevel(Level *currentLevel) {
     bool hasNextRow = currentLevel->getNorthEastRoom() != nullptr;
     bool hasNextCol = hasNextRow;
 
-    while (hasNextRow) {
-        while(hasNextCol){
+
+    string bottom;
+    while (firstOfTop != nullptr) {
+        while(current != nullptr){
             if (current->hasBeenVisited()) {
                 current->accept(this);
+
+                if (current->getSouth()){
+                    if (current->isConnectedTo(current->getSouth())) {
+                        bottom += "|";
+                    } else {
+                        bottom += "~";
+                    }
+                }
+
+                if (current->getEast()) {
+                    if (current->isConnectedTo(current->getEast())){
+                        output+= "-";
+                    } else {
+                        output+= "~";
+                    }
+                    bottom+= " ";
+                }
+
             } else {
-                output += "*";
+                output += ".";
+                if (current->getEast()) {
+                    output+= " ";
+                    bottom+= "  ";
+                }
             }
-            if (current->getEast() != nullptr) {
-                current = current->getEast();
-            } else {
-                hasNextCol = false;
-            }
+
+
+            current = current->getEast();
         }
 
-        cout << output + "\n";
+        cout << output + "\n\n" + bottom + "\n\n";
         output = "";
+        bottom = "";
 
-        if (firstOfTop->getSouth() != nullptr) {
-            firstOfTop = firstOfTop->getSouth();
-            current = firstOfTop;
-            hasNextCol = true;
-        } else {
-            hasNextRow = false;
-        }
+        firstOfTop = firstOfTop->getSouth();
+        current = firstOfTop;
     }
-
     cout << "\n";
 }
 

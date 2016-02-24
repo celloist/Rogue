@@ -23,10 +23,10 @@ void Game::setUp(int numLevels, int numXrooms, int numYrooms) {
         if (i > 0) {
             levels[i]->setPrevious(levels[i -1]);
         }
+        levels[i]->init();
     }
 
     currentLevel = levels[0];
-    currentLevel->init();
 }
 
 void Game::setCurrentLevel(Level *level) {

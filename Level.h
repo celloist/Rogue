@@ -21,7 +21,7 @@ using namespace std;
 class Level {
 
 public:
-    Level(default_random_engine dist, int x, int y, Game* game);
+    Level(default_random_engine& dist, int x, int y, Game* game);
     void init();
     void setPrevious(Level* level);
     void setNext(Level* level);
@@ -50,7 +50,7 @@ private:
     int totalRoomSize;
     int x;
     int y;
-    bool initialized;
+    bool initialized = false;
     random_device dev;
     default_random_engine dre;
     uniform_int_distribution<int> dist{1,20};

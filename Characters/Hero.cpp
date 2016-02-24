@@ -101,6 +101,13 @@ string Hero::usePotion(string itemName) {
 }
 
 
+void Hero::setRoom(Room *room) {
+    if (currentRoom) {
+        currentRoom->moveoutHero();
+    }
+    room->moveinHero(this);
+    this->currentRoom = room;
+}
 string Hero::levelUp(int exp) {
     this->exp += exp;
     int oldLevel = level;

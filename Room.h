@@ -11,11 +11,12 @@
 #include <unordered_map>
 #include "Items/Item.h"
 #include "Characters/Enemy.h"
+#include "ItemVisitable.h"
 
 class Level;
 
 using namespace std;
-class Room{
+class Room : ItemVisitable{
 
 public:
     Room(Level* level);
@@ -28,21 +29,33 @@ public:
     Room* getEast();
     Room* getSouth();
 
-    bool isConnectedTo (Room* edge);
-    int findExitRoom();
+    virtual Room* getByEdgeName(string name);
+
+    virtual bool isConnectedTo (Room* edge);
+    int findRoom (Room* exit);
     map<Room *, pair<int, Room *>> getShortestPathToExit();
     vector<Room*>* getEdges();
     void addItem(Item* item);
-    void addEnemy(Enemy* enemy);
+    void removeItem(Item* item);
     vector<Item *> * getItems();
-    vector<Enemy*> * getEnemies();
-
+    void addEnemy(Enemy* enemy);
+    void removeEnemy(Enemy* enemy);
+    vector<Enemy*>* getEnemies();
+    virtual void moveinHero(Hero* hero);
+    void moveoutHero();
+    bool hasBeenVisited();
+    Level* getLevel();
+    virtual void accept(Visitor*);
 private:
-    Level* level;
-    unordered_map<string, pair<int, Room*>> rooms;
     vector<Room*> edges;
     vector<Item*> itemsInRoom;
     vector<Enemy*> enemiesInRoom;
+    bool visited;
+
+protected:
+    Hero* hero = nullptr;
+    Level* level;
+    unordered_map<string, pair<int, Room*>> rooms;
 };
 
 #endif //ROGUE_ROOM_H

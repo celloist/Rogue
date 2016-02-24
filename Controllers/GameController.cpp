@@ -4,10 +4,12 @@
 
 #include "GameController.h"
 #include "../Views/GameOutput.h"
+#include "../Views/DeafultLevelOutput.h"
 #include <sstream>
 #include <algorithm>
 
 GameController::GameController(){
+    hero = game.getHero();
     initCommands();
 }
 //controller functions
@@ -21,28 +23,20 @@ void GameController::start(bool testing) {
         stringstream(io.askInput("Hoe veel kamers over de breedte:")) >> numYRooms;
         stringstream(io.askInput("Hoe veel verdiepingen lengte:")) >> numXRooms;
     } else {
-        numLevels = 1;
-        numXRooms = 3;
-        numYRooms = 3;
+        numLevels = 10;
+        numXRooms = 2;
+        numYRooms = 2;
     }
 
     game.setUp(numLevels, numXRooms, numYRooms);
     game.itemGenerator();
     Level* currentLevel = game.getCurrentLevel();
-    GameOutput levelIo;
+    //TODO make starting room random
+    game.getHero()->setRoom(currentLevel->getNorthEastRoom());
 
-    bool calculated = currentLevel->getMst()->calc();
-    currentLevel->getMst()->collapse(20);
     //gameloop
     while (!gameOver){
-        //levelIo.displayLevel(currentLevel);
-        levelIo.displayLevelsMinSpanningTree(currentLevel);
-        levelIo.displayLevelsRoomDistances(currentLevel);
-        Room* start = currentLevel->getNorthEastRoom();
-        Room* exit = currentLevel->getExit();
-
-        /*levelIo.displayShortestPathToExit(start->getShortestPathToExit(), start, exit);*/
-        string command = io.askInput("Wat da fuck wil je doen? (type help voor suggesties)");
+        string command = io.askInput("Wat wil je doen? (type help voor suggesties)");
         commandReader(command);
     }
 }
@@ -96,15 +90,15 @@ void GameController::initCommands() {
     commands["bekijk map"] = &GameController::checkMap;
     commands["kenmerken"] = &GameController::checkStats;
     commands["kompas"] = &GameController::kompas;
-    commands["talisman"] = &GameController::grenade;
-    commands["granaat"] = &GameController::talisman;
+    commands["talisman"] = &GameController::talisman;
+    commands["handgranaat"] = &GameController::grenade;
     //    commands["cheat"] = GameController::cheat;
     commands["save"] = &GameController::save;
 
 }
 
 
-void  GameController::commandReader(string inputCommand) {
+void GameController::commandReader(string inputCommand) {
 
     bool check = false;
     auto func = commands[inputCommand];
@@ -199,16 +193,24 @@ void GameController::searchRoom() {
 
 void GameController::move() {
     string direction = io.askInput("Richtingen die je kunt gaan zijn noord, oost, zuid, west en boven of beneden in een exitroom. \n Welke richting wil je gaan? \n");
-    vector<string> directions;
-    directions.push_back("noord");
-    directions.push_back("zuid");
-    directions.push_back("oost");
-    directions.push_back("west");
-    directions.push_back("beneden");
-    directions.push_back("boven");
+    map<string, string> directions;
+    directions["noord"] = "north";
+    directions["zuid"] = "south";
+    directions["oost"] = "east";
+    directions["west"] = "west";
+    directions["beneden"] = "down";
+    directions["boven"] = "up";
 
-    if(std::find(directions.begin(),directions.end(),direction) != directions.end()) {
-        //TODO Mj move algorithm
+    if(directions.find(direction) != directions.end()) {
+        Hero* hero = game.getHero();
+        Room* currentRoom = hero->getCurrentRoom();
+        Room* travelToRoom = currentRoom->getByEdgeName(directions[direction]);
+
+        if (travelToRoom != nullptr && currentRoom->isConnectedTo(travelToRoom)) {
+            hero->setRoom(travelToRoom);
+        } else {
+            io.display("Computer says no. De richting is geblokkerd of er bestaat geen kamer in de richting: "+ direction+ ".\n");
+        }
     }
     else{
         io.display("Computer says no. Richtingen die je kunt gaan zijn noord, oost, zuid, west en boven of beneden in een exitroom\n");
@@ -226,7 +228,14 @@ void GameController::checkBag() {
 }
 
 void GameController::checkMap() {
+    Level* currentLevel = game.getCurrentLevel();
 
+    /*GameOutput levelIo;
+    levelIo.displayLevel(currentLevel);
+    levelIo.displayLevelsMinSpanningTree(currentLevel);
+    levelIo.displayLevelsRoomDistances(currentLevel);*/
+    DeafultLevelOutput dl;
+    dl.displayLevel(currentLevel);
 }
 
 void GameController::checkStats() {
@@ -236,17 +245,33 @@ void GameController::checkStats() {
 void GameController::save() {
 
 }
-
+//TODO test collapse
 void GameController::grenade() {
-
+    Level* currentLevel = game.getCurrentLevel();
+    if (currentLevel->getMst()->collapse(10)){
+        io.display("De kerker schudt op zijn grondvesten, alle tegenstanders in de kamer zijn verslagen! Een donderend geluid maakt duidelijk dat gedeeltes van de kerker zijn ingestort...");
+    } else {
+        io.display("Je vreest dat een extra handgranaat een cruciale passage zal blokkeren. Het is beter om deze niet meer te gebruiken op deze verdieping.");
+    }
 }
 
 void GameController::kompas() {
+    Level* currentLevel = game.getCurrentLevel();
 
+    GameOutput levelIo;
+
+    Room* start = game.getHero()->getCurrentRoom();
+    Room* exit = currentLevel->getExit();
+
+    levelIo.displayShortestPathToExit(start->getShortestPathToExit(), start, exit);
+    io.display("\n");
 }
 
 void GameController::talisman() {
-
+    Level* currentLevel = game.getCurrentLevel();
+    Room* currentRoom = game.getHero()->getCurrentRoom();
+    int distance = currentRoom->findRoom(currentLevel->getExit());
+    io.display("De talisman licht op en fluistert dat de trap  "+ to_string(distance) +" kamers ver weg is.\n");
 }
 
 

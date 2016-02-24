@@ -8,11 +8,14 @@
 #include "Characters/Hero.h"
 
 void Game::setUp(int numLevels, int numXrooms, int numYrooms) {
-    Hero hero("Kloes",500,1,20,40,0,true,1);
+    Hero hero("Kloes",1);
     this->hero = hero;
 
     random_device dev;
     default_random_engine dre {dev()};
+
+    cout<<"random";
+    cout<<dre<<endl;
     uniform_int_distribution<int> dist {1, 20};
 
     levels = new Level*[numLevels];
@@ -92,4 +95,16 @@ void Game::itemGenerator() {
 
 Hero *Game::getHero() {
     return  &hero;
+}
+//TODO test
+void Game::cleanUp() {
+    for(auto it = allEnemies.begin();it!= allEnemies.end();it++)
+    {
+        Enemy* enemy = it.operator*();
+        if(!enemy->isAlive()){
+            enemy->~Enemy();
+            allEnemies.erase(it);
+        }
+    }
+    allEnemies.clear();
 }

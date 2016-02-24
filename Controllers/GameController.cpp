@@ -111,7 +111,7 @@ void GameController::commandReader(string inputCommand) {
 }
 
 
-//both
+//add random
 void GameController::escape() {
     io.display("Je heb het gevecht verlaten \n");
     engaging = false;
@@ -132,10 +132,9 @@ void GameController::help() {
         helpCommands += (it->first + ", ");
     }
     io.display(helpCommands);
-
 }
 
-//in fight TODO Delete needs to be fixed
+//TODO delete fixed needs test
 void GameController::attack() {
     if(!hero->alive) {
         io.display("Je bent dood, fijne daaaaaaag!");
@@ -143,23 +142,19 @@ void GameController::attack() {
     }
     else{
         auto* enemies = hero->getCurrentRoom()->getEnemies();
-        vector<Enemy*> removeEnemies;
+        int expEarned = 0;
         for (auto it = enemies->begin(); it != enemies->end(); it++) {
             if(it.operator*()->alive) {
                 io.display(hero->attackTarget(it.operator*()));
                 io.display(it.operator*()->attackTarget(hero));
             }
             else{
-                removeEnemies.push_back(it.operator*());
-
+                expEarned += it.operator*()->exp;
+                it = enemies->erase(it);
+                game.cleanUp();
             }
         }
-
-        //remove the enemies from the room TODO still needs to delete the enemy itself
-        for (auto it = removeEnemies.begin();it!=removeEnemies.end();it++){
-            it = enemies->erase(it);
-            enemies->clear();
-        }
+        enemies->clear();
     }
 
 }
@@ -192,6 +187,7 @@ void GameController::searchRoom() {
 //    for (auto it = allItems.begin(); it != allItems.end(); it++) {
 //        Item *bagItem = it.operator*();
 //        hero.addItem(bagItem);
+    //
 //    }
 }
 
@@ -228,7 +224,7 @@ void GameController::rest() {
 
 void GameController::checkBag() {
     string inventory = hero->displayInventory();
-    io.display("Buidel"+ inventory +"\n");
+    io.display("Buidel: "+ inventory +"\n");
 }
 
 void GameController::checkMap() {

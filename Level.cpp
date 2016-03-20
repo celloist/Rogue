@@ -16,7 +16,7 @@ Level::Level (default_random_engine& dre, int x, int y) {
     this->y = y;
 };
 
-void Level::init(LevelDescritions& ld) {
+void Level::init(LevelDescritions& ld, vector<Enemy*>& enemies) {
     int num = x * y;
     totalRoomSize = num;
     mst = new Mst{totalRoomSize};
@@ -54,6 +54,8 @@ void Level::init(LevelDescritions& ld) {
     exitRoom = rooms[exitRoomIndex];
     roomUp = rooms[stairsUpRoomIndex];
     startRoom = rooms[startRoomIndex];
+
+    assignEnemiesRadomly(enemies, roomdist);
 }
 
 void Level::setRoomByIndex(string edgeFrom, int indexFrom, string edgeTo, int indexTo){
@@ -79,6 +81,19 @@ string Level::createRoomDescription(LevelDescritions &descritions) {
             + "De ruimte wordt verlicht door een "+ getRandomDescription(descritions.lightsources) + ".\n"
             + "Op de achtergrond hoor je "+ getRandomDescription(descritions.sounds)
             + " en af en toe valt er een "+ getRandomDescription(descritions.misc) + ".";
+}
+
+void Level::assignEnemiesRadomly(vector<Enemy*> &enemies, uniform_int_distribution<int>& roomdist) {
+    auto it = enemies.begin();
+    while (it != enemies.end()) {
+        Enemy* enemy = it.operator*();
+        int index = roomdist(dre);
+
+        if (rooms[index] != startRoom) {
+            rooms[index]->addEnemy(enemy);
+            it++;
+        }
+    }
 }
 
 bool Level::isRoomInSpanningTree(Room* from, Room* to) {

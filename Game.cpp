@@ -7,7 +7,7 @@
 #include "Items/Potion.h"
 #include "Characters/Hero.h"
 
-void Game::setUp(int numLevels, int numXrooms, int numYrooms, LevelDescritions& levelDescritions) {
+void Game::setUp(int numLevels, int numXrooms, int numYrooms, LevelDescritions& levelDescritions, map<int, vector<Enemy*>>& enemies) {
     random_device dev;
     default_random_engine dre {dev()};
     uniform_int_distribution<int> dist {1, 20};
@@ -15,12 +15,45 @@ void Game::setUp(int numLevels, int numXrooms, int numYrooms, LevelDescritions& 
     levels = new Level*[numLevels];
     this->numLevels = numLevels;
 
+    int numOfEnemiesPerLevel = 0;
+
+    if (enemies.size() > 0) {
+        if (numLevels < enemies.size()) {
+            numOfEnemiesPerLevel = enemies.size() / numLevels ;
+        }
+    } else {
+        throw std::invalid_argument( "received empty enemies vector" );
+    }
+
     for(int i = 0; i<numLevels; i++){
         levels[i] = new Level{dre, numXrooms, numYrooms};
-        levels[i]->init(levelDescritions);
+        vector<Enemy*> levelEnemies;
+        //assign level enenmies
+        if (numOfEnemiesPerLevel > 0) {
+            int n = i * numOfEnemiesPerLevel;
+            int j = n + numOfEnemiesPerLevel;
+
+            if ((i + 1) == numLevels && j < enemies.size()) {
+                j = enemies.size();
+            }
+
+            for (; n < j; n++) {
+                std::copy(enemies[n].begin(), enemies[n].end(), back_inserter(levelEnemies));
+            }
+        } else if ((i + 1) == numLevels) {
+            for (auto it = enemies.begin(); it != enemies.end(); it++) {
+                std::copy(it.operator*().second.begin(), it.operator*().second.end(), back_inserter(levelEnemies));
+            }
+        }
+
+        levels[i]->init(levelDescritions, levelEnemies);
         if (i > 0) {
             levels[i]->setPrevious(levels[i -1]);
         }
+    }
+
+    for (auto it = enemies.begin(); it != enemies.end(); it++) {
+        std::copy(it.operator*().second.begin(), it.operator*().second.end(), back_inserter(allEnemies));
     }
 
     currentLevel = levels[0];
@@ -40,6 +73,14 @@ Level* Game::getCurrentLevel() {
 Game::~Game(){
     for (int i = 0; i<numLevels; i++) {
         delete levels[i];
+    }
+
+    for(auto it = allEnemies.begin();it!= allEnemies.end();it++) {
+        delete it.operator*();
+    }
+
+    for (auto it = allItems.begin(); it != allItems.end(); it++) {
+        delete it.operator*();
     }
 
     currentLevel = nullptr;
@@ -92,9 +133,8 @@ void Game::cleanUp() {
     {
         Enemy* enemy = it.operator*();
         if(!enemy->isAlive()){
-            enemy->~Enemy();
+            delete enemy;
             allEnemies.erase(it);
         }
     }
-    allEnemies.clear();
 }

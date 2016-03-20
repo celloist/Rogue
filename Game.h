@@ -41,7 +41,7 @@ public:
 class Game {
 public:
     Game(Hero h) : hero(h) {}
-    void setUp(int numLevels, int numXrooms, int numYrooms, LevelDescritions& levelDescritions);
+    void setUp(int numLevels, int numXrooms, int numYrooms, LevelDescritions& levelDescritions, map<int, vector<Enemy*>>& enemies);
     void itemGenerator();//TODO
     void setCurrentLevel (Level* level);
     Level* getCurrentLevel();

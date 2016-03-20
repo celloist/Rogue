@@ -10,7 +10,7 @@ using namespace std;
 
 class AbstractCharacter {
 public:
-    AbstractCharacter();
+    AbstractCharacter(){}
     AbstractCharacter(string name,int level);
 
     //vars are public because they need to be manipulated

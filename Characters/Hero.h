@@ -17,9 +17,7 @@ using namespace std;
 
 class Hero : public AbstractCharacter {
 public:
-    Hero();
-    Hero(string name);
-    Hero(string name,int health);
+    Hero(string name, int health);
 
     //vars
     int awareness;

@@ -21,6 +21,60 @@ vector<string> readFile (string textfile) {
     return list;
 }
 
+vector<string> devideString (const string& input, char divider) {
+    vector<string> divided;
+
+    std::stringstream ss(input);
+    std::string item;
+    while (std::getline(ss, item, divider)) {
+        divided.push_back(item);
+    }
+
+    return divided;
+};
+
+vector<vector<string>> devideSet (const vector<string>& set, char divider) {
+    vector<vector<string>> devidedSet;
+
+    for (auto it = set.begin(); it != set.end(); it++) {
+        devidedSet.push_back(devideString(it.operator*(), divider));
+    }
+
+    return devidedSet;
+}
+
+map<int, vector<Enemy*>> getEnemiesForFile (string path) {
+    vector<vector<string>> devidedSetEnemiesDescriptions = devideSet(readFile(path), ' ');
+    //Random enemies
+    map<int, vector<Enemy*>> enemies;
+    for (auto it = devidedSetEnemiesDescriptions.begin(); it != devidedSetEnemiesDescriptions.end(); it++) {
+
+        auto enemiesDescriptionSetRow = it.operator*();
+        if (enemiesDescriptionSetRow.size() == 2) {
+            auto enemiesDescriptionSetRowIt = enemiesDescriptionSetRow.begin();
+            //level
+            string mainLevel = enemiesDescriptionSetRowIt.operator*();
+            int level = std::atoi(mainLevel.c_str());
+            //increment
+            enemiesDescriptionSetRowIt++;
+            //Get name
+            string name = enemiesDescriptionSetRowIt.operator*();
+            enemiesDescriptionSetRow.begin().operator*();
+            Enemy *enemy = new Enemy{name, level};
+
+            if (enemies.find(enemy->level) == enemies.end()) {
+                enemies[enemy->level] = vector<Enemy*>{};
+            }
+
+            enemies[enemy->level].push_back(enemy);
+
+        }
+    }
+
+    return enemies;
+}
+
+
 GameController::GameController() : game(Hero("Kloes", 500)) {
     hero = game.getHero();
     initCommands();
@@ -41,7 +95,7 @@ void GameController::start(bool testing, string roomPathPrefix) {
         numXRooms = 2;
         numYRooms = 2;
     }
-
+    //Room level descriptions
     LevelDescritions ld = {
             readFile(roomPathPrefix + "decorations.txt"),
             readFile(roomPathPrefix + "furniture.txt"),
@@ -52,7 +106,8 @@ void GameController::start(bool testing, string roomPathPrefix) {
             readFile(roomPathPrefix + "misc.txt")
     };
 
-    game.setUp(numLevels, numXRooms, numYRooms, ld);
+    map<int, vector<Enemy*>> enemies = getEnemiesForFile(roomPathPrefix + "enemies.txt");
+    game.setUp(numLevels, numXRooms, numYRooms, ld, enemies);
     game.itemGenerator();
     Level* currentLevel = game.getCurrentLevel();
     //TODO make starting room random

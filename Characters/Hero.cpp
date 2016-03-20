@@ -4,19 +4,6 @@
 #include <math.h>
 #include "Hero.h"
 
-void Hero::addItem(Item *item) {
-    bag.push_back(item);
-}
-
-vector<Item *>* Hero::getBag() {
-    return &bag;
-}
-
-
-Hero::Hero(string name) {
- this->name = name;
-}
-
 Hero::Hero(string name, int level) {
     this->name = name;
     this->baseHealth= (level*11);
@@ -28,8 +15,12 @@ Hero::Hero(string name, int level) {
     this->awareness = (int) round(level * 1.4);
 }
 
-Hero::Hero() {
-    this->name = "test";
+void Hero::addItem(Item *item) {
+    bag.push_back(item);
+}
+
+vector<Item *>* Hero::getBag() {
+    return &bag;
 }
 
 Room *Hero::getCurrentRoom() {

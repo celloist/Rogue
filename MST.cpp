@@ -1,7 +1,7 @@
 //
 // Created by Mark Jan Kamminga on 06-02-16.
 //
-
+#include <algorithm>
 #include "Mst.h"
 
 int Mst::find(Room* t) {

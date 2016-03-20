@@ -19,7 +19,7 @@ class Hero : public AbstractCharacter {
 public:
     Hero();
     Hero(string name);
-    Hero(string name,int health,int level,int attack,int defence,int exp, bool alive, int awareness);
+    Hero(string name,int health);
 
     //vars
     int awareness;
@@ -32,7 +32,7 @@ public:
     string displayInventory();
     string useItem(string itemName);
     string usePotion(string itemName);
-    void levelUp();
+    string levelUp(int exp);
     bool move(string direction);
 
     void addItem(Item* item);

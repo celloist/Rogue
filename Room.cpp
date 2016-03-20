@@ -6,6 +6,7 @@
 #include <queue>
 #include "Room.h"
 #include "Level.h"
+#include <algorithm>
 
 Room::Room (Level* level, string description) {
     this->level = level;

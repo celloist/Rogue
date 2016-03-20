@@ -21,7 +21,7 @@ void Game::setUp(int numLevels, int numXrooms, int numYrooms, LevelDescritions& 
         if (i > 0) {
             levels[i]->setPrevious(levels[i -1]);
         }
-
+        levels[i]->init();
     }
 
     currentLevel = levels[0];
@@ -86,4 +86,16 @@ void Game::itemGenerator() {
 
 Hero *Game::getHero() {
     return  &hero;
+}
+//TODO test
+void Game::cleanUp() {
+    for(auto it = allEnemies.begin();it!= allEnemies.end();it++)
+    {
+        Enemy* enemy = it.operator*();
+        if(!enemy->isAlive()){
+            enemy->~Enemy();
+            allEnemies.erase(it);
+        }
+    }
+    allEnemies.clear();
 }

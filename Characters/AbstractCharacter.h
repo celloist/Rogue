@@ -11,7 +11,7 @@ using namespace std;
 class AbstractCharacter {
 public:
     AbstractCharacter();
-    AbstractCharacter(string name,int health,int level,int attack,int defence,int exp);
+    AbstractCharacter(string name,int level);
 
     //vars are public because they need to be manipulated
 

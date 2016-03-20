@@ -1,6 +1,7 @@
 //
 // Created by alhric on 30-Oct-15.
 //
+#include <math.h>
 #include "Hero.h"
 
 void Hero::addItem(Item *item) {
@@ -16,15 +17,15 @@ Hero::Hero(string name) {
  this->name = name;
 }
 
-Hero::Hero(string name, int health, int level, int attack, int defence, int exp, bool alive, int awareness) {
+Hero::Hero(string name, int level) {
     this->name = name;
-    this->baseHealth= health;
+    this->baseHealth= (level*11);
     this->level = level;
-    this->baseAttack = attack;
-    this->baseDefense = defence;
-    this->exp = exp;
-    this->alive = alive;
-    this->awareness = awareness;
+    this->baseAttack = (level*3);
+    this->baseDefense = (level*2);
+    this->exp = 0;
+    this->alive = true;
+    this->awareness = (int) round(level * 1.4);
 }
 
 Hero::Hero() {
@@ -35,7 +36,7 @@ Room *Hero::getCurrentRoom() {
     return currentRoom;
 }
 
-//There are 3 options here you can get potions, other items or all items by giving a NULL value as itemType
+//Displays potion or a combination of weapons and armor
 string Hero::displayInventory(itemType type) {
     string items = "";
     for (auto it = bag.begin(); it != bag.end(); it++) {
@@ -52,6 +53,7 @@ string Hero::displayInventory(itemType type) {
     }
 }
 
+//displays all items
 string Hero::displayInventory() {
     string items = "";
     for (auto it = bag.begin(); it != bag.end(); it++) {
@@ -103,4 +105,17 @@ void Hero::setRoom(Room *room) {
     }
     room->moveinHero(this);
     this->currentRoom = room;
+}
+string Hero::levelUp(int exp) {
+    this->exp += exp;
+    int oldLevel = level;
+    level = (this->exp/100/4);
+    string message = "Je hebt "+ exp;
+    message = message  +" erbij verdient. \n";
+    if(level>oldLevel) {
+        message = "Je hebt een nieuwe level erbij gekregen! Je bent nu level:" + level;
+        message = message + ". \n";
+    }
+    return message;
+
 }

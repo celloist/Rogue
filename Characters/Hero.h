@@ -44,7 +44,7 @@ public:
 
 private:
     std::vector<Item*> bag;
-    Room* currentRoom;
+    Room* currentRoom = nullptr;
 
 
 };

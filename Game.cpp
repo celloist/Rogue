@@ -7,10 +7,7 @@
 #include "Items/Potion.h"
 #include "Characters/Hero.h"
 
-void Game::setUp(int numLevels, int numXrooms, int numYrooms) {
-    Hero hero("Kloes",500,1,20,40,0,true,1);
-    this->hero = hero;
-
+void Game::setUp(int numLevels, int numXrooms, int numYrooms, LevelDescritions& levelDescritions) {
     random_device dev;
     default_random_engine dre {dev()};
     uniform_int_distribution<int> dist {1, 20};
@@ -19,11 +16,12 @@ void Game::setUp(int numLevels, int numXrooms, int numYrooms) {
     this->numLevels = numLevels;
 
     for(int i = 0; i<numLevels; i++){
-        levels[i] = new Level{dre, numXrooms, numYrooms, this};
+        levels[i] = new Level{dre, numXrooms, numYrooms};
+        levels[i]->init(levelDescritions);
         if (i > 0) {
             levels[i]->setPrevious(levels[i -1]);
         }
-        levels[i]->init();
+
     }
 
     currentLevel = levels[0];
@@ -34,13 +32,10 @@ void Game::setCurrentLevel(Level *level) {
 }
 
 Level* Game::getCurrentLevel() {
+    if (hero.getCurrentRoom() != nullptr && hero.getCurrentRoom()->getLevel() != currentLevel) {
+        setCurrentLevel(hero.getCurrentRoom()->getLevel());
+    }
     return currentLevel;
-}
-
-void Game::load() {}
-
-bool Game::save() {
-    return false;
 }
 
 Game::~Game(){
@@ -70,7 +65,6 @@ void Game::itemGenerator() {
         Item *bagItem = it.operator*();
         hero.addItem(bagItem);
     }
-
 
     string item = "sword";
     map<string, itemType> types;

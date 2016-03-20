@@ -17,10 +17,9 @@ using namespace std;
 class GameController {
 
 public:
-    //controller functions
-    void start(bool testing);
     GameController();
-
+    //controller functions
+    void start(bool testing, string);
 
 private:
     Game game;
@@ -59,11 +58,8 @@ private:
     void kompas();
     void talisman();
     void help();
-   // string cheat();
+    void cheat();
     void save();
-
-
-
 };
 
 

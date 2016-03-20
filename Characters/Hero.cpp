@@ -79,8 +79,6 @@ string Hero::useItem(string itemName) {
 
 
 string Hero::usePotion(string itemName) {
-
-
     string useInfo = "";
     for ( auto it = bag.begin(); it!= bag.end(); ++it)
     {

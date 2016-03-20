@@ -7,8 +7,9 @@
 #include "Room.h"
 #include "Level.h"
 
-Room::Room (Level* level) {
+Room::Room (Level* level, string description) {
     this->level = level;
+    this->description = description;
 
     rooms["north"] = make_pair(-1, nullptr);
     rooms["south"] = make_pair(-1, nullptr);
@@ -34,22 +35,6 @@ void Room::setEdge (string direction, Room* edge, int distance) {
     }
 }
 
-Room* Room::getNorth(){
-    return rooms["north"].second;
-}
-
-Room* Room::getWest(){
-    return rooms["west"].second;
-}
-
-Room* Room::getEast(){
-    return rooms["east"].second;
-}
-
-Room* Room::getSouth(){
-    return rooms["south"].second;
-}
-
 Room *Room::getByEdgeName(string name) {
 
     if (rooms.find(name) != rooms.end()){
@@ -67,6 +52,21 @@ int Room::getDistanceTo(Room* to) {
     }
 
     return -1;
+}
+
+int Room::getWeightTo(Room *to) {
+    int weight = getDistanceTo(to);
+    if (weight > 0) {
+        for(auto it = to->enemiesInRoom.begin(); it != to->enemiesInRoom.end(); it++){
+            weight+= it.operator*()->health;
+        }
+
+        if (to->trap != nullptr) {
+            weight+= 30;
+        }
+    };
+
+    return weight;
 }
 
 int Room::findRoom (Room* exit) {
@@ -121,23 +121,22 @@ void Room::removeEdge(Room *edge) {
         }
     }
 }
-//TODO add the number of traps and enemies with their HP
-map<Room *, pair<int, Room *>> Room::getShortestPathToExit() {
+
+map<Room *, pair<int, Room *>> Room::getShortestPathToExit(Room* exitRoom) {
     map<Room*, Room*> roomPath;
     deque<pair<int, Room*>> openPriorityQueue;
     map<Room*, pair<int, Room*>> closedList;
 
     openPriorityQueue.push_back(make_pair(0, this));
     roomPath[this] = this;
-    Room* exitRoom = level->getExit();
 
     while (!openPriorityQueue.empty()) {
         Room* from = roomPath[openPriorityQueue.begin()->second];
 
-        int distance = openPriorityQueue.begin()->first;
+        int weight = openPriorityQueue.begin()->first;
         Room* currentRoom = openPriorityQueue.begin()->second;
 
-        closedList[currentRoom] = pair<int, Room*>{distance, from};
+        closedList[currentRoom] = pair<int, Room*>{weight, from};
 
         if (currentRoom == exitRoom) {
             break;
@@ -150,20 +149,20 @@ map<Room *, pair<int, Room *>> Room::getShortestPathToExit() {
         for (auto it = edges.begin(); it != edges.end(); it++) {
             Room* edge = it.operator*();
             if (closedList.find(edge) == closedList.end()) {
-                int relativeDistance = currentRoom->getDistanceTo(edge);
+                int relativeWeight = currentRoom->getWeightTo(edge);
 
                 auto position = find_if(openPriorityQueue.begin(), openPriorityQueue.end(), [&edge](std::pair<int, Room*> const& elem) {
                     return elem.second == edge;
                 });
                 //Room is in the openPriorityQueue and should be removed as the path from this room to the edge is the smallest possible distance
                 if (position != openPriorityQueue.end()) {
-                    int total = distance + relativeDistance;
+                    int total = weight + relativeWeight;
                     if (total < position->first) {
                         closedList[edge] = make_pair(total, currentRoom);
                         openPriorityQueue.erase(position);
                     }
                 } else {
-                    openPriorityQueue.push_back(make_pair(distance + relativeDistance, edge));
+                    openPriorityQueue.push_back(make_pair(weight + relativeWeight, edge));
                     roomPath[edge] = currentRoom;
                 }
             }
@@ -175,12 +174,23 @@ map<Room *, pair<int, Room *>> Room::getShortestPathToExit() {
     return closedList;
 }
 
+void Room::setTrap(Trap *trap) {
+    this->trap = trap;
+}
+
+bool Room::hasTrap() {
+    return this->trap != nullptr;
+}
+
 void Room::addItem(Item* item) {
     itemsInRoom.push_back(item);
 }
 
 void Room::removeItem(Item *item) {
-
+    auto pos = find(itemsInRoom.begin(), itemsInRoom.end(), item);
+    if (pos != itemsInRoom.end()) {
+        itemsInRoom.erase(pos);
+    }
 }
 
 vector<Item*>* Room::getItems() {
@@ -235,4 +245,8 @@ Level *Room::getLevel() {
 
 void Room::accept(Visitor* v){
     v->visit(this);
+}
+
+string Room::getDescription() {
+    return description;
 }

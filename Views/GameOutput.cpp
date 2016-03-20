@@ -5,7 +5,7 @@
 #include "GameOutput.h"
 
 void GameOutput::displayLevel(Level *currentLevel) {
-
+    /*
     Room* current = currentLevel->getNorthEastRoom();
     Room* firstOfTop = current;
 
@@ -40,10 +40,10 @@ void GameOutput::displayLevel(Level *currentLevel) {
         }
     }
 
-    cout << "\n";
+    cout << "\n";*/
 }
 void GameOutput::displayLevelsMinSpanningTree(Level* currentLevel) {
-    Room* current = currentLevel->getNorthEastRoom();
+    /*Room* current = currentLevel->getNorthEastRoom();
     Room* firstOfTop = current;
 
     bool hasNextRow = currentLevel->getNorthEastRoom() != nullptr;
@@ -87,56 +87,7 @@ void GameOutput::displayLevelsMinSpanningTree(Level* currentLevel) {
         firstOfTop = firstOfTop->getSouth();
         current = firstOfTop;
     }
-    cout << "\n";
-};
-
-void GameOutput::displayLevelsRoomDistances(Level* currentLevel) {
-    Room* current = currentLevel->getNorthEastRoom();
-    Room* firstOfTop = current;
-
-    bool hasNextRow = currentLevel->getNorthEastRoom() != nullptr;
-    bool hasNextCol = hasNextRow;
-
-    string top;
-    string bottom;
-    while (firstOfTop != nullptr) {
-        while(current != nullptr){
-            top+=" * ";
-            string num;
-            if (current->getEast() != nullptr) {
-                if (current->isConnectedTo(current->getEast())) {
-                    num = to_string(current->getDistanceTo(current->getEast()));
-                    top+= " <"+ ((num.length() <= 1) ? " " + num : num ) +">";
-                } else {
-                    top += " < ~>";
-                }
-            }
-
-            if (current->getSouth() != nullptr) {
-                if (current->isConnectedTo(current->getSouth())) {
-                    num = to_string(current->getDistanceTo(current->getSouth()));
-                    bottom += "<" + ((num.length() <= 1) ? " " + num : num) + "> ";
-                } else {
-                    bottom += "< ~> ";
-                }
-
-
-                while (bottom.length() < top.length()) {
-                    bottom+=" ";
-                }
-            }
-
-            current = current->getEast();
-        }
-
-        cout << top + "\n\n" + bottom + "\n\n";
-        top = "";
-        bottom = "";
-
-        firstOfTop = firstOfTop->getSouth();
-        current = firstOfTop;
-    }
-    cout << "\n";
+    cout << "\n";*/
 };
 
 void GameOutput::displayShortestPathToExit (map<Room *, pair<int, Room *>> backTrack, Room* start, Room* exit) {
@@ -144,18 +95,25 @@ void GameOutput::displayShortestPathToExit (map<Room *, pair<int, Room *>> backT
     string path;
     int size = backTrack.size();
     int i =0;
+    int numOfEnemies = 0;
+    string hp;
+    int numOfTraps = 0;
+
     while (lastRoom != start && i < size) {
         auto room = backTrack[lastRoom];
         Room* from = room.second;
 
         string direction;
-        if (lastRoom->getNorth() == from) {
+        /*
+         * guage direction
+         */
+        if (lastRoom->getByEdgeName("north") == from) {
             direction = "zuid";
-        } else if (lastRoom->getSouth() == from) {
+        } else if (lastRoom->getByEdgeName("south") == from) {
             direction = "noord";
-        }else if (lastRoom->getWest() == from) {
+        }else if (lastRoom->getByEdgeName("west") == from) {
             direction = "oost";
-        }else if (lastRoom->getEast() == from) {
+        }else if (lastRoom->getByEdgeName("east") == from) {
             direction = "west";
         }
 
@@ -165,11 +123,50 @@ void GameOutput::displayShortestPathToExit (map<Room *, pair<int, Room *>> backT
             path= direction + " - " + path;
         }
 
+        /*
+         * Add enemies
+         */
+
+        if (from->getEnemies()) {
+            vector<Enemy*>* enemies = from->getEnemies();
+            for (auto it = enemies->begin(); it != enemies->end(); it++) {
+                numOfEnemies++;
+
+                if (hp.length() > 1) {
+                    hp += ", " + it.operator*()->health;
+                } else {
+                    hp += it.operator*()->health;
+                }
+
+                hp+= " hp";
+            }
+        }
+
+        if (from->hasTrap()) {
+            numOfTraps++;
+        }
+
         backTrack.erase(lastRoom);
 
         lastRoom = from;
         i++;
     }
 
-    cout << "Het kortste pad naar de uitgang is: " + path;
+    string output = "Het kortste pad naar de uitgang is: " + (path.size() > 0 ? path : "hier blijven")  + ".\n";
+
+    if (numOfEnemies > 0) {
+        output+= "Aantal vijanden: "+ to_string(numOfEnemies) + " (" + hp + ").";
+    } else {
+        output+= "Geen vijanden.";
+    }
+
+    output+= "\n";
+
+    if (numOfTraps > 0) {
+        output+= "Aantal vallen: "+ to_string(numOfTraps);
+    } else {
+        output+= "Geen vallen.";
+    }
+
+    cout << output + "\n";
 }

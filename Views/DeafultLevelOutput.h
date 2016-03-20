@@ -17,7 +17,7 @@ public:
     void add(string& output);
     void visit(Room*);
     void visit(ExitRoom*);
-private:
+protected:
     string output;
 
 };

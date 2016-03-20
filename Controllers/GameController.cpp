@@ -5,15 +5,29 @@
 #include "GameController.h"
 #include "../Views/GameOutput.h"
 #include "../Views/DeafultLevelOutput.h"
+#include "../Views/CheatLevelOutput.h"
 #include <sstream>
-#include <algorithm>
+#include <fstream>
 
-GameController::GameController(){
+vector<string> readFile (string textfile) {
+    ifstream input_file{textfile};
+    string line;
+    vector<string> list;
+
+    while (getline(input_file, line)) {
+        list.push_back(line);
+    }
+
+    return list;
+}
+
+GameController::GameController() {
     hero = game.getHero();
     initCommands();
 }
+
 //controller functions
-void GameController::start(bool testing) {
+void GameController::start(bool testing, string roomPathPrefix) {
     int numLevels;
     int numXRooms;
     int numYRooms;
@@ -23,16 +37,27 @@ void GameController::start(bool testing) {
         stringstream(io.askInput("Hoe veel kamers over de breedte:")) >> numYRooms;
         stringstream(io.askInput("Hoe veel verdiepingen lengte:")) >> numXRooms;
     } else {
-        numLevels = 10;
+        numLevels = 2;
         numXRooms = 2;
         numYRooms = 2;
     }
 
-    game.setUp(numLevels, numXRooms, numYRooms);
+    LevelDescritions ld = {
+            readFile(roomPathPrefix + "decorations.txt"),
+            readFile(roomPathPrefix + "furniture.txt"),
+            readFile(roomPathPrefix + "lightsources.txt"),
+            readFile(roomPathPrefix + "sizes.txt"),
+            readFile(roomPathPrefix + "sounds.txt"),
+            readFile(roomPathPrefix + "tidyness.txt"),
+            readFile(roomPathPrefix + "misc.txt")
+    };
+
+    game.setUp(numLevels, numXRooms, numYRooms, ld);
     game.itemGenerator();
     Level* currentLevel = game.getCurrentLevel();
     //TODO make starting room random
-    game.getHero()->setRoom(currentLevel->getNorthEastRoom());
+    game.getHero()->setRoom(currentLevel->getStartRoom());
+    io.display(game.getHero()->getCurrentRoom()->getDescription() + "\n");
 
     //gameloop
     while (!gameOver){
@@ -92,7 +117,7 @@ void GameController::initCommands() {
     commands["kompas"] = &GameController::kompas;
     commands["talisman"] = &GameController::talisman;
     commands["handgranaat"] = &GameController::grenade;
-    //    commands["cheat"] = GameController::cheat;
+    commands["cheat"] = &GameController::cheat;
     commands["save"] = &GameController::save;
 
 }
@@ -196,7 +221,6 @@ void GameController::searchRoom() {
 }
 
 void GameController::move() {
-    string direction = io.askInput("Richtingen die je kunt gaan zijn noord, oost, zuid, west en boven of beneden in een exitroom. \n Welke richting wil je gaan? \n");
     map<string, string> directions;
     directions["noord"] = "north";
     directions["zuid"] = "south";
@@ -205,6 +229,9 @@ void GameController::move() {
     directions["beneden"] = "down";
     directions["boven"] = "up";
 
+    string direction = io.askInput("Richtingen die je kunt gaan zijn noord, oost, zuid, west en boven of beneden in een exitroom. \n Welke richting wil je gaan? \n");
+
+
     if(directions.find(direction) != directions.end()) {
         Hero* hero = game.getHero();
         Room* currentRoom = hero->getCurrentRoom();
@@ -212,6 +239,8 @@ void GameController::move() {
 
         if (travelToRoom != nullptr && currentRoom->isConnectedTo(travelToRoom)) {
             hero->setRoom(travelToRoom);
+            io.display(travelToRoom->getDescription() + "\n\n");
+
         } else {
             io.display("Computer says no. De richting is geblokkerd of er bestaat geen kamer in de richting: "+ direction+ ".\n");
         }
@@ -242,6 +271,11 @@ void GameController::checkMap() {
     dl.displayLevel(currentLevel);
 }
 
+void GameController::cheat() {
+    CheatLevelOutput clOutput;
+    clOutput.displayLevel(game.getCurrentLevel());
+}
+
 void GameController::checkStats() {
 
 }
@@ -267,7 +301,7 @@ void GameController::kompas() {
     Room* start = game.getHero()->getCurrentRoom();
     Room* exit = currentLevel->getExit();
 
-    levelIo.displayShortestPathToExit(start->getShortestPathToExit(), start, exit);
+    levelIo.displayShortestPathToExit(start->getShortestPathToExit(exit), start, exit);
     io.display("\n");
 }
 
@@ -277,5 +311,3 @@ void GameController::talisman() {
     int distance = currentRoom->findRoom(currentLevel->getExit());
     io.display("De talisman licht op en fluistert dat de trap  "+ to_string(distance) +" kamers ver weg is.\n");
 }
-
-

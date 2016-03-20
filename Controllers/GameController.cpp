@@ -21,7 +21,7 @@ vector<string> readFile (string textfile) {
     return list;
 }
 
-GameController::GameController() {
+GameController::GameController() : game(Hero("Kloes", 500)) {
     hero = game.getHero();
     initCommands();
 }

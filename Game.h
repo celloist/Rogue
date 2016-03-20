@@ -40,7 +40,7 @@ public:
 
 class Game {
 public:
-    Game() : hero(Hero("Kloes",500,1,20,40,0,true,1)) {}
+    Game(Hero h) : hero(h) {}
     void setUp(int numLevels, int numXrooms, int numYrooms, LevelDescritions& levelDescritions);
     void itemGenerator();//TODO
     void setCurrentLevel (Level* level);

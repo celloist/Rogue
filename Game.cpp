@@ -21,7 +21,6 @@ void Game::setUp(int numLevels, int numXrooms, int numYrooms, LevelDescritions& 
         if (i > 0) {
             levels[i]->setPrevious(levels[i -1]);
         }
-        levels[i]->init();
     }
 
     currentLevel = levels[0];

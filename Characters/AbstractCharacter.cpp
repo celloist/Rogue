@@ -6,7 +6,6 @@
 #include "AbstractCharacter.h"
 
 AbstractCharacter::AbstractCharacter(string name,int level, default_random_engine& dre) {
-
     this->name = name;
     this->health = (level* 10);
     this->level = level;
@@ -14,11 +13,6 @@ AbstractCharacter::AbstractCharacter(string name,int level, default_random_engin
     this->defence = (int) round(level *1.5);
     this->exp = (level * 100);
     this->alive = true;
-    this->dre = dre;
-}
-
-AbstractCharacter::AbstractCharacter() {
-
 }
 
 string AbstractCharacter::receiveDamage(int damage) {

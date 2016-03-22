@@ -1,0 +1,4 @@
+fakkel
+lamp
+kaars
+lantaarn

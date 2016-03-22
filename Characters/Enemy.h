@@ -10,6 +10,7 @@
 
 class Enemy : public AbstractCharacter {
 public:
+    Enemy (string name, int level) : AbstractCharacter(name, level) {}
     ~Enemy();
 
 };

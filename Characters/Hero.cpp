@@ -3,21 +3,8 @@
 //
 #include <math.h>
 #include "Hero.h"
-//TODO cleanup hero
-void Hero::addItem(Item *item) {
-    bag.push_back(item);
-}
 
-vector<Item *>* Hero::getBag() {
-    return &bag;
-}
-
-
-Hero::Hero(string name) {
- this->name = name;
-}
-
-Hero::Hero(string name, int level, default_random_engine& dre) {
+Hero::Hero(string name, int level) {
     this->name = name;
     this->baseHealth= (level*11);
     this->level = level;
@@ -28,8 +15,12 @@ Hero::Hero(string name, int level, default_random_engine& dre) {
     this->awareness = (int) round(level * 1.4);
 }
 
-Hero::Hero() {
-    this->name = "test";
+void Hero::addItem(Item *item) {
+    bag.push_back(item);
+}
+
+vector<Item *>* Hero::getBag() {
+    return &bag;
 }
 
 Room *Hero::getCurrentRoom() {
@@ -81,8 +72,6 @@ string Hero::useItem(string itemName) {
 
 
 string Hero::usePotion(string itemName) {
-
-
     string useInfo = "";
     for ( auto it = bag.begin(); it!= bag.end(); ++it)
     {
@@ -115,10 +104,14 @@ string Hero::levelUp(int exp) {
     level = (this->exp/100/4);
     string message = "Je hebt "+ exp;
     message = message  +" erbij verdient. \n";
-    if(level>oldLevel) {
+    if(level > oldLevel) {
         message = "Je hebt een nieuwe level erbij gekregen! Je bent nu level:" + level;
         message = message + ". \n";
     }
     return message;
 
+}
+
+void Hero::clearItems() {
+    bag.clear();
 }

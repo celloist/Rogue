@@ -17,17 +17,16 @@ using namespace std;
 class GameController {
 
 public:
-    //controller functions
-    void start(bool testing);
     GameController();
-
+    //controller functions
+    void start(bool testing, string, string);
 
 private:
     Game game;
     ConsoleInputOutput io;
     //TODO fix the way in which the hero property is added
     Hero* hero;
-
+    string path;
 
     typedef void (GameController::*command)();
 
@@ -59,11 +58,9 @@ private:
     void kompas();
     void talisman();
     void help();
-   // string cheat();
+    void cheat();
     void save();
-
-
-
+    void load();
 };
 
 

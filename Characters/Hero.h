@@ -17,6 +17,7 @@ using namespace std;
 
 class Hero : public AbstractCharacter {
 public:
+    Hero(string name, int health);
     Hero();
     Hero(string name);
     Hero(string name,int health, default_random_engine& dre);
@@ -40,6 +41,7 @@ public:
 
     Room* getCurrentRoom();
     void setRoom(Room* room);
+    void clearItems();
 
 
 private:

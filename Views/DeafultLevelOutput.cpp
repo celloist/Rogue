@@ -22,16 +22,16 @@ void DeafultLevelOutput::displayLevel(Level *currentLevel) {
             if (current->hasBeenVisited()) {
                 current->accept(this);
 
-                if (current->getSouth()){
-                    if (current->isConnectedTo(current->getSouth())) {
+                if (current->getByEdgeName("south")){
+                    if (current->isConnectedTo(current->getByEdgeName("south"))) {
                         bottom += "|";
                     } else {
                         bottom += "~";
                     }
                 }
 
-                if (current->getEast()) {
-                    if (current->isConnectedTo(current->getEast())){
+                if (current->getByEdgeName("east")) {
+                    if (current->isConnectedTo(current->getByEdgeName("east"))){
                         output+= "-";
                     } else {
                         output+= "~";
@@ -41,21 +41,21 @@ void DeafultLevelOutput::displayLevel(Level *currentLevel) {
 
             } else {
                 output += ".";
-                if (current->getEast()) {
+                if (current->getByEdgeName("east")) {
                     output+= " ";
                     bottom+= "  ";
                 }
             }
 
 
-            current = current->getEast();
+            current = current->getByEdgeName("east");
         }
 
         cout << output + "\n\n" + bottom + "\n\n";
         output = "";
         bottom = "";
 
-        firstOfTop = firstOfTop->getSouth();
+        firstOfTop = firstOfTop->getByEdgeName("south");
         current = firstOfTop;
     }
     cout << "\n";
@@ -65,7 +65,12 @@ void DeafultLevelOutput::visit(Room *room) {
     output+= "N";
 }
 
-
 void DeafultLevelOutput::visit(ExitRoom *room) {
-    output+= "T";
+    if (room->isConnectedTo(room->getByEdgeName("down"))) {
+        output += "E";
+    } else if (room->isConnectedTo(room->getByEdgeName("up"))) {
+        output += "U";
+    } else {
+        output += "T";
+    }
 }

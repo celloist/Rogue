@@ -1,0 +1,5 @@
+schilderij
+foto
+poster
+ansichtkaart
+landkaart

@@ -13,18 +13,15 @@ using namespace std;
 
 class ExitRoom : public Room {
 public:
-    ExitRoom (Level* level) : Room(level){
+    ExitRoom (Level* level, string description) : Room(level, description){
         rooms["up"] = make_pair(-1, nullptr);
         rooms["down"] = make_pair(-1, nullptr);
     }
-
+    virtual void setEdge (string direction, Room* edge, int distance);
     virtual bool isConnectedTo (Room* edge);
-    virtual Room* getByEdgeName(string name);
-    virtual void moveinHero(Hero *hero);
     virtual void accept(Visitor*);
 
 private:
-    void init();
     bool initializedLevelEdges;
 };
 

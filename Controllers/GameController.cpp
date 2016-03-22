@@ -125,8 +125,8 @@ void GameController::start(bool testing, string pathPrefix, string roomPrefix) {
         stringstream(io.askInput("Hoe veel verdiepingen lengte:")) >> numXRooms;
     } else {
         numLevels = 2;
-        numXRooms = 2;
-        numYRooms = 2;
+        numXRooms = 10;
+        numYRooms = 10;
     }
 
     string roomPathPrefix = pathPrefix + roomPrefix;
@@ -172,15 +172,12 @@ void GameController::engage() {
     while(engaging)
     {
         string input = io.askInput("");
-        if(std::find(attackCommands.begin(),attackCommands.end(),input) != attackCommands.end())
-        {
+        if(std::find(attackCommands.begin(),attackCommands.end(),input) != attackCommands.end()) {
             if(input=="stop")
                 engaging = false;
 
             commandReader(input);
-        }
-        else
-        {
+        } else {
             io.display("Computer says no. Tijdens een gevecht kun je deze commandos gebruiken: \n vlucht, aanval, drink drankje, gebruik object, stop");
         }
     }
@@ -317,24 +314,29 @@ void GameController::move() {
     directions["beneden"] = "down";
     directions["boven"] = "up";
 
-    string direction = io.askInput("Richtingen die je kunt gaan zijn noord, oost, zuid, west en boven of beneden in een exitroom. \n Welke richting wil je gaan? \n");
+    vector<string> availibleDirectionsRefrence;
 
-
-    if(directions.find(direction) != directions.end()) {
-        Hero* hero = game.getHero();
-        Room* currentRoom = hero->getCurrentRoom();
-        Room* travelToRoom = currentRoom->getByEdgeName(directions[direction]);
-
-        if (travelToRoom != nullptr && currentRoom->isConnectedTo(travelToRoom)) {
-            hero->setRoom(travelToRoom);
-            io.display(travelToRoom->getDescription() + "\n\n");
-
-        } else {
-            io.display("Computer says no. De richting is geblokkerd of er bestaat geen kamer in de richting: "+ direction+ ".\n");
+    Hero* hero = game.getHero();
+    Room* currentRoom = hero->getCurrentRoom();
+    string avalibleDirections = "";
+    for (auto it = directions.begin(); it != directions.end(); it++) {
+        Room* r = currentRoom->getByEdgeName(it->second);
+        if (r != nullptr && currentRoom->isConnectedTo(r)) {
+            availibleDirectionsRefrence.push_back(it->first);
+            avalibleDirections+= ((avalibleDirections.length() == 0) ? "" : ", ") + it->first;
         }
     }
+
+    string direction = io.askInput("Richtingen die je kunt gaan zijn "+ avalibleDirections +". \n Welke richting wil je gaan? \n");
+
+
+    if(find(availibleDirectionsRefrence.begin(), availibleDirectionsRefrence.end(), direction) != availibleDirectionsRefrence.end()) {
+        Room* travelToRoom = currentRoom->getByEdgeName(directions[direction]);
+        hero->setRoom(travelToRoom);
+        io.display(travelToRoom->getDescription() + "\n\n");
+    }
     else{
-        io.display("Computer says no. Richtingen die je kunt gaan zijn noord, oost, zuid, west en boven of beneden in een exitroom\n");
+        io.display("Computer says no. Richtingen bestaat niet of is geblokkeerd!\n");
     }
 
 }
@@ -403,7 +405,8 @@ void GameController::save() {
 //TODO test collapse
 void GameController::grenade() {
     Level* currentLevel = game.getCurrentLevel();
-    if (currentLevel->getMst()->collapse(10)){
+    bool collapsed = currentLevel->getMst()->collapse(10);
+    if (collapsed){
         io.display("De kerker schudt op zijn grondvesten, alle tegenstanders in de kamer zijn verslagen! Een donderend geluid maakt duidelijk dat gedeeltes van de kerker zijn ingestort...");
     } else {
         io.display("Je vreest dat een extra handgranaat een cruciale passage zal blokkeren. Het is beter om deze niet meer te gebruiken op deze verdieping.");

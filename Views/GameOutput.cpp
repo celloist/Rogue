@@ -133,9 +133,9 @@ void GameOutput::displayShortestPathToExit (map<Room *, pair<int, Room *>> backT
                 numOfEnemies++;
 
                 if (hp.length() > 1) {
-                    hp += ", " + it.operator*()->health;
+                    hp += ", " + to_string(it.operator*()->health);
                 } else {
-                    hp += it.operator*()->health;
+                    hp += to_string(it.operator*()->health);
                 }
 
                 hp+= " hp";

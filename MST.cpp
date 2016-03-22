@@ -91,12 +91,20 @@ bool Mst::isInSpanningTree(Room *from, Room *to) {
 
 bool Mst::collapse(int num) {
     if (num <= excludedSanningTreePaths.size()) {
+        int totalNum = num - 1;
+        Room *from = nullptr;
+        Room *to = nullptr;
         for (auto it = excludedSanningTreePaths.begin(); it != excludedSanningTreePaths.end() && num > 0; it++, num--) {
-            Room *from = it.operator*().first.first;
-            Room *to = it.operator*().first.second;
+            from = it.operator*().first.first;
+            to = it.operator*().first.second;
 
             from->removeEdge(to);
             to->removeEdge(from);
+        }
+        auto end = excludedSanningTreePaths.find(make_pair(from, to));
+
+        if (end != excludedSanningTreePaths.end()) {
+            excludedSanningTreePaths.erase(excludedSanningTreePaths.begin(), end);
         }
 
         return true;

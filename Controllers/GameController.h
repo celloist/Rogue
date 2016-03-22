@@ -28,6 +28,7 @@ private:
     Hero* hero;
     string path;
 
+
     typedef void (GameController::*command)();
 
     bool gameOver = false;

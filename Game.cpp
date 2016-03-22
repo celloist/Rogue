@@ -7,12 +7,11 @@
 #include "Items/Potion.h"
 #include "Characters/Hero.h"
 
-void Game::setUp(int numLevels, int numXrooms, int numYrooms) {
+void Game::setUp(int numLevels, int numXrooms, int numYrooms, LevelDescritions& levelDescritions, map<int, vector<Enemy*>>& enemies) {
     Hero hero("Kloes",1);
     this->hero = hero;
 
-    random_device dev;
-    default_random_engine dre {dev()};
+
 
     cout<<"random";
     cout<<dre<<endl;
@@ -34,7 +33,7 @@ void Game::setUp(int numLevels, int numXrooms, int numYrooms) {
     for(int i = 0; i<numLevels; i++){
         levels[i] = new Level{dre, numXrooms, numYrooms};
         vector<Enemy*> levelEnemies;
-        //assign level enenmies
+        //assign level enemies
         if (numOfEnemiesPerLevel > 0) {
             int n = i * numOfEnemiesPerLevel;
             int j = n + numOfEnemiesPerLevel;

@@ -52,6 +52,8 @@ public:
     vector<Item*>* getItems();
     vector<Enemy*>* getEnemies();
     Hero* getHero();
+    void removeItem(Item*);
+    void addItem(Item*);
 
 private:
     Level* currentLevel = nullptr;

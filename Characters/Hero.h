@@ -38,6 +38,7 @@ public:
 
     Room* getCurrentRoom();
     void setRoom(Room* room);
+    void clearItems();
 
 
 private:

@@ -8,6 +8,10 @@
 #include "../Views/CheatLevelOutput.h"
 #include <sstream>
 #include <fstream>
+#include "../Items/item.h"
+#include "../Items/Weapon.h"
+#include "../Items/Armor.h"
+#include "../Items/potion.h"
 
 vector<string> readFile (string textfile) {
     ifstream input_file{textfile};
@@ -17,6 +21,8 @@ vector<string> readFile (string textfile) {
     while (getline(input_file, line)) {
         list.push_back(line);
     }
+
+    input_file.close();
 
     return list;
 }
@@ -43,7 +49,7 @@ vector<vector<string>> devideSet (const vector<string>& set, char divider) {
     return devidedSet;
 }
 
-map<int, vector<Enemy*>> getEnemiesForFile (string path) {
+map<int, vector<Enemy*>> getEnemiesFromFile (string path) {
     vector<vector<string>> devidedSetEnemiesDescriptions = devideSet(readFile(path), ' ');
     //Random enemies
     map<int, vector<Enemy*>> enemies;
@@ -74,6 +80,31 @@ map<int, vector<Enemy*>> getEnemiesForFile (string path) {
     return enemies;
 }
 
+vector<Item*> getItemsFromFile (string path) {
+    vector<Item*> items;
+    vector<vector<string>> devidedSetItemsDescriptions = devideSet(readFile(path), ' ');
+
+    for (auto it = devidedSetItemsDescriptions.begin(); it != devidedSetItemsDescriptions.end(); it++) {
+        auto values = it.operator*();
+
+        int type = atoi(values.at(0).c_str());
+
+        string name = values.at(1);
+        int value = atoi(values.at(2).c_str());
+
+        if (type == itemType::weapon) {
+            items.push_back(new Weapon{name, itemType::weapon, value});
+        } else if (type == itemType::armor) {
+            items.push_back(new Armor{name, itemType::armor, value});
+        } else if (type == itemType::potion) {
+            items.push_back(new Potion{name, itemType::potion, value});
+        }
+    }
+
+    return items;
+
+}
+
 
 GameController::GameController() : game(Hero("Kloes", 500)) {
     hero = game.getHero();
@@ -81,10 +112,12 @@ GameController::GameController() : game(Hero("Kloes", 500)) {
 }
 
 //controller functions
-void GameController::start(bool testing, string roomPathPrefix) {
+void GameController::start(bool testing, string pathPrefix, string roomPrefix) {
     int numLevels;
     int numXRooms;
     int numYRooms;
+
+    path = pathPrefix;
 
     if (!testing) {
         stringstream(io.askInput("Hoe veel verdiepingen:")) >> numLevels;
@@ -95,6 +128,8 @@ void GameController::start(bool testing, string roomPathPrefix) {
         numXRooms = 2;
         numYRooms = 2;
     }
+
+    string roomPathPrefix = pathPrefix + roomPrefix;
     //Room level descriptions
     LevelDescritions ld = {
             readFile(roomPathPrefix + "decorations.txt"),
@@ -106,7 +141,7 @@ void GameController::start(bool testing, string roomPathPrefix) {
             readFile(roomPathPrefix + "misc.txt")
     };
 
-    map<int, vector<Enemy*>> enemies = getEnemiesForFile(roomPathPrefix + "enemies.txt");
+    map<int, vector<Enemy*>> enemies = getEnemiesFromFile(roomPathPrefix + "enemies.txt");
     game.setUp(numLevels, numXRooms, numYRooms, ld, enemies);
     game.itemGenerator();
     Level* currentLevel = game.getCurrentLevel();
@@ -174,6 +209,7 @@ void GameController::initCommands() {
     commands["handgranaat"] = &GameController::grenade;
     commands["cheat"] = &GameController::cheat;
     commands["save"] = &GameController::save;
+    commands["load"] = &GameController::load;
 
 }
 
@@ -186,7 +222,8 @@ void GameController::commandReader(string inputCommand) {
         check = true;
     (this->*func)();
    }
-        if(!check)
+
+    if(!check)
         io.display("Computer says no. Type help voor commando's \n");
 }
 
@@ -302,9 +339,7 @@ void GameController::move() {
 
 }
 
-void GameController::rest() {
-
-}
+void GameController::rest() {}
 
 void GameController::checkBag() {
     string inventory = hero->displayInventory();
@@ -313,11 +348,6 @@ void GameController::checkBag() {
 
 void GameController::checkMap() {
     Level* currentLevel = game.getCurrentLevel();
-
-    /*GameOutput levelIo;
-    levelIo.displayLevel(currentLevel);
-    levelIo.displayLevelsMinSpanningTree(currentLevel);
-    levelIo.displayLevelsRoomDistances(currentLevel);*/
     DeafultLevelOutput dl;
     dl.displayLevel(currentLevel);
 }
@@ -327,12 +357,48 @@ void GameController::cheat() {
     clOutput.displayLevel(game.getCurrentLevel());
 }
 
-void GameController::checkStats() {
+void GameController::checkStats() {}
 
+void GameController::load() {
+    if (hero->getCurrentRoom() == game.getCurrentLevel()->getStartRoom()) {
+        vector<Item *> *items = hero->getBag();
+
+        for (auto it = items->begin(); it != items->end(); it++) {
+            game.removeItem(it.operator*());
+        }
+
+        hero->clearItems();
+
+        vector<Item *> loadedItems = getItemsFromFile(path + "heroItems.txt");
+
+        for (auto it = loadedItems.begin(); it != loadedItems.end(); it++) {
+            game.addItem(it.operator*());
+            hero->addItem(it.operator*());
+        }
+    } else {
+        io.display("Je kunt alleen in de startkamer laden!");
+    }
 }
 
 void GameController::save() {
+    if (hero->getCurrentRoom() == game.getCurrentLevel()->getExit()) {
+        vector<Item *> *items = hero->getBag();
+        ofstream myfile;
+        myfile.open(path + "heroItems.txt");
+        if (myfile.is_open()) {
+            for (auto it = items->begin(); it != items->end(); it++) {
+                Item *item = it.operator*();
+                myfile << to_string(item->getType()) + " " + item->getName() + " " + to_string(item->getValue()) + "\n";
+            }
 
+            myfile.close();
+            io.display("Opgeslagen");
+        } else {
+            io.display("Fout tijdens het opslaan!");
+        }
+    } else {
+        io.display("Je kunt alleen bij de uitgangen opslaan!");
+    }
 }
 //TODO test collapse
 void GameController::grenade() {

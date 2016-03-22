@@ -97,16 +97,21 @@ void Hero::setRoom(Room *room) {
     room->moveinHero(this);
     this->currentRoom = room;
 }
+
 string Hero::levelUp(int exp) {
     this->exp += exp;
     int oldLevel = level;
     level = (this->exp/100/4);
     string message = "Je hebt "+ exp;
     message = message  +" erbij verdient. \n";
-    if(level>oldLevel) {
+    if(level > oldLevel) {
         message = "Je hebt een nieuwe level erbij gekregen! Je bent nu level:" + level;
         message = message + ". \n";
     }
     return message;
 
+}
+
+void Hero::clearItems() {
+    bag.clear();
 }

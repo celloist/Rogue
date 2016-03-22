@@ -138,3 +138,17 @@ void Game::cleanUp() {
         }
     }
 }
+
+void Game::removeItem(Item *item) {
+    auto pos = find(allItems.begin(), allItems.end(), item);
+    if (pos != allItems.end()){
+
+        delete item;
+
+        allItems.erase(pos);
+    }
+}
+
+void Game::addItem(Item* item) {
+    allItems.push_back(item);
+}

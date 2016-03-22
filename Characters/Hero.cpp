@@ -3,7 +3,7 @@
 //
 #include <math.h>
 #include "Hero.h"
-
+//TODO cleanup hero
 void Hero::addItem(Item *item) {
     bag.push_back(item);
 }
@@ -17,7 +17,7 @@ Hero::Hero(string name) {
  this->name = name;
 }
 
-Hero::Hero(string name, int level) {
+Hero::Hero(string name, int level, default_random_engine& dre) {
     this->name = name;
     this->baseHealth= (level*11);
     this->level = level;
@@ -108,6 +108,7 @@ void Hero::setRoom(Room *room) {
     room->moveinHero(this);
     this->currentRoom = room;
 }
+
 string Hero::levelUp(int exp) {
     this->exp += exp;
     int oldLevel = level;

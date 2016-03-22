@@ -33,7 +33,9 @@ bool ExitRoom::isConnectedTo(Room *edge) {
 }
 
 void ExitRoom::moveinHero(Hero *hero){
-    Room::moveinHero(hero);
+    if (hero->getCurrentRoom()){
+        Room::moveinHero(hero);
+    }
     level->setAsCurrentLevel();
 }
 

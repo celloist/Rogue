@@ -18,7 +18,8 @@ public:
     Level* getCurrentLevel();
     void load();
     bool save();
-    void cleanUp();
+    void cleanUpEnemies();
+    void cleanUpPotions();
     virtual ~Game();
 
     vector<Item*>* getItems();

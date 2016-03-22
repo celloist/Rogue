@@ -22,3 +22,7 @@ string Potion::use(Hero* hero) {
 bool Potion::isUsed() {
     return used;
 }
+
+Potion::~Potion() {
+
+}

@@ -148,10 +148,10 @@ void GameController::attack() {
                 io.display(hero->attackTarget(it.operator*()));
                 io.display(it.operator*()->attackTarget(hero));
             }
-            else{
+            else if(!it.operator*()->alive){
                 expEarned += it.operator*()->exp;
                 it = enemies->erase(it);
-                game.cleanUp();
+                game.cleanUpEnemies();
             }
         }
         enemies->clear();
@@ -182,8 +182,9 @@ void GameController::useItem() {
 }
 
 //in room
-
+//TODO code crashes
 void GameController::searchRoom() {
+    //search room for items and pick them up
 //    for (auto it = allItems.begin(); it != allItems.end(); it++) {
 //        Item *bagItem = it.operator*();
 //        hero.addItem(bagItem);

@@ -1,7 +1,7 @@
 level 1
 rat
 slak
-mug
+kinderdisco
 
 level 2
 slang
@@ -49,5 +49,5 @@ draak
 xor
 
 boss
-cthulu
+Bopolis
 een zak noten

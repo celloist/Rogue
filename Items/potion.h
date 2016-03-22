@@ -10,6 +10,7 @@ class Potion : public Item{
 
 public:
     Potion(string name,itemType type,int value) : Item(name, type, value) {}
+    ~Potion();
     string use(Hero* hero);
     bool isUsed();
 

@@ -24,10 +24,12 @@ class Item {
 
 public:
     Item(string name,itemType type,int value);
+    ~Item();
     string getName();
     itemType getType();
     int getValue();
     virtual string use(Hero* hero);
+    virtual bool isUsed();
 
 protected:
     string name;

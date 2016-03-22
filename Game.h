@@ -20,6 +20,7 @@ public:
     vector<string> tidyness;
     vector<string> misc;
 
+
     LevelDescritions(vector<string> dec,
                      vector<string> fur,
                      vector<string> light,
@@ -40,13 +41,15 @@ public:
 
 class Game {
 public:
-    Game(Hero h) : hero(h) {}
+    Game(Hero h, default_random_engine &default_rand ) : hero(h), dre(default_rand) {}
     void setUp(int numLevels, int numXrooms, int numYrooms, LevelDescritions& levelDescritions, map<int, vector<Enemy*>>& enemies);
     void itemGenerator();//TODO
     void setCurrentLevel (Level* level);
     Level* getCurrentLevel();
-    void cleanUp();
     void createEnemiesForLevel(int level);
+    void cleanUpEnemies();
+    void cleanUpPotions();
+    default_random_engine dre;
     virtual ~Game();
 
     vector<Item*>* getItems();

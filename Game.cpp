@@ -8,8 +8,13 @@
 #include "Characters/Hero.h"
 
 void Game::setUp(int numLevels, int numXrooms, int numYrooms, LevelDescritions& levelDescritions, map<int, vector<Enemy*>>& enemies) {
-    random_device dev;
-    default_random_engine dre {dev()};
+    Hero hero("Kloes",1);
+    this->hero = hero;
+
+
+
+    cout<<"random";
+    cout<<dre<<endl;
     uniform_int_distribution<int> dist {1, 20};
 
     levels = new Level*[numLevels];
@@ -28,7 +33,7 @@ void Game::setUp(int numLevels, int numXrooms, int numYrooms, LevelDescritions& 
     for(int i = 0; i<numLevels; i++){
         levels[i] = new Level{dre, numXrooms, numYrooms};
         vector<Enemy*> levelEnemies;
-        //assign level enenmies
+        //assign level enemies
         if (numOfEnemiesPerLevel > 0) {
             int n = i * numOfEnemiesPerLevel;
             int j = n + numOfEnemiesPerLevel;
@@ -128,7 +133,7 @@ Hero *Game::getHero() {
     return  &hero;
 }
 //TODO test
-void Game::cleanUp() {
+void Game::cleanUpEnemies() {
     for(auto it = allEnemies.begin();it!= allEnemies.end();it++)
     {
         Enemy* enemy = it.operator*();
@@ -137,6 +142,21 @@ void Game::cleanUp() {
             allEnemies.erase(it);
         }
     }
+    allEnemies.clear();
+}
+
+
+void Game::cleanUpPotions() {
+    for(auto it = allItems.begin();it!= allItems.end();it++)
+    {
+        Item* item = it.operator*();
+        if(item->isUsed() ){
+            item->~Item();
+            allItems.erase(it);
+        }
+    }
+    allItems.clear();
+
 }
 
 void Game::removeItem(Item *item) {

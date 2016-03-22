@@ -5,7 +5,7 @@
 #include <math.h>
 #include "AbstractCharacter.h"
 
-AbstractCharacter::AbstractCharacter(string name,int level) {
+AbstractCharacter::AbstractCharacter(string name,int level, default_random_engine& dre) {
     this->name = name;
     this->health = (level* 10);
     this->level = level;

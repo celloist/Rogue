@@ -13,10 +13,14 @@
 #include "../Items/Armor.h"
 #include "../Items/potion.h"
 
+random_device dev;
+default_random_engine def_rand {dev()};
+
 vector<string> readFile (string textfile) {
     ifstream input_file{textfile};
     string line;
     vector<string> list;
+
 
     while (getline(input_file, line)) {
         list.push_back(line);
@@ -66,7 +70,7 @@ map<int, vector<Enemy*>> getEnemiesFromFile (string path) {
             //Get name
             string name = enemiesDescriptionSetRowIt.operator*();
             enemiesDescriptionSetRow.begin().operator*();
-            Enemy *enemy = new Enemy{name, level};
+            Enemy *enemy = new Enemy{name, level,def_rand};
 
             if (enemies.find(enemy->level) == enemies.end()) {
                 enemies[enemy->level] = vector<Enemy*>{};
@@ -106,7 +110,7 @@ vector<Item*> getItemsFromFile (string path) {
 }
 
 
-GameController::GameController() : game(Hero("Kloes", 500)) {
+GameController::GameController() : game(Hero("Kloes", 500),def_rand) {
     hero = game.getHero();
     initCommands();
 }
@@ -262,10 +266,10 @@ void GameController::attack() {
                 io.display(hero->attackTarget(it.operator*()));
                 io.display(it.operator*()->attackTarget(hero));
             }
-            else{
+            else if(!it.operator*()->alive){
                 expEarned += it.operator*()->exp;
                 it = enemies->erase(it);
-                game.cleanUp();
+                game.cleanUpEnemies();
             }
         }
         enemies->clear();
@@ -296,8 +300,9 @@ void GameController::useItem() {
 }
 
 //in room
-
+//TODO code crashes
 void GameController::searchRoom() {
+    //search room for items and pick them up
 //    for (auto it = allItems.begin(); it != allItems.end(); it++) {
 //        Item *bagItem = it.operator*();
 //        hero.addItem(bagItem);

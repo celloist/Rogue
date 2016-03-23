@@ -10,6 +10,7 @@
 
 class Enemy : public AbstractCharacter {
 public:
+    Enemy (string name, int level,std::default_random_engine &dre) : AbstractCharacter(name, level,dre) {}
     ~Enemy();
 
 };

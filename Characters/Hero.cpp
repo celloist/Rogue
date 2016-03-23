@@ -4,19 +4,6 @@
 #include <math.h>
 #include "Hero.h"
 
-void Hero::addItem(Item *item) {
-    bag.push_back(item);
-}
-
-vector<Item *>* Hero::getBag() {
-    return &bag;
-}
-
-
-Hero::Hero(string name) {
- this->name = name;
-}
-
 Hero::Hero(string name, int level) {
     this->name = name;
     this->baseHealth= (level*11);
@@ -28,8 +15,12 @@ Hero::Hero(string name, int level) {
     this->awareness = (int) round(level * 1.4);
 }
 
-Hero::Hero() {
-    this->name = "test";
+void Hero::addItem(Item *item) {
+    bag.push_back(item);
+}
+
+vector<Item *>* Hero::getBag() {
+    return &bag;
 }
 
 Room *Hero::getCurrentRoom() {
@@ -81,8 +72,6 @@ string Hero::useItem(string itemName) {
 
 
 string Hero::usePotion(string itemName) {
-
-
     string useInfo = "";
     for ( auto it = bag.begin(); it!= bag.end(); ++it)
     {
@@ -108,16 +97,21 @@ void Hero::setRoom(Room *room) {
     room->moveinHero(this);
     this->currentRoom = room;
 }
+
 string Hero::levelUp(int exp) {
     this->exp += exp;
     int oldLevel = level;
     level = (this->exp/100/4);
     string message = "Je hebt "+ exp;
     message = message  +" erbij verdient. \n";
-    if(level>oldLevel) {
+    if(level > oldLevel) {
         message = "Je hebt een nieuwe level erbij gekregen! Je bent nu level:" + level;
         message = message + ". \n";
     }
     return message;
 
+}
+
+void Hero::clearItems() {
+    bag.clear();
 }

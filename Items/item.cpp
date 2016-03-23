@@ -28,3 +28,10 @@ string Item::use(Hero *hero) {
     return "";
 }
 
+bool Item::isUsed() {
+    return false;
+}
+
+Item::~Item() {
+
+}

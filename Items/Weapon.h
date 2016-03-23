@@ -6,7 +6,6 @@
 #define ROGUE_WEAPON_H
 #include "Item.h"
 
-
 class Weapon : public  Item{
 
 public:

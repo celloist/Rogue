@@ -5,13 +5,16 @@
 #ifndef ROGUE_ABSTRACTCHARACTER_H
 #define ROGUE_ABSTRACTCHARACTER_H
 
+#include <algorithm>
+#include <random>
 #include "iostream"
+
 using namespace std;
 
 class AbstractCharacter {
 public:
-    AbstractCharacter();
-    AbstractCharacter(string name,int level);
+    AbstractCharacter(){}
+    AbstractCharacter(string name,int level, default_random_engine& dre);
 
     //vars are public because they need to be manipulated
 
@@ -28,6 +31,7 @@ public:
     int defence;
     int exp;
     bool alive;
+    default_random_engine dre;
 
 protected:
     virtual string receiveDamage(int damage);

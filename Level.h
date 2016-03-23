@@ -15,19 +15,20 @@
 #include "ExitRoom.h"
 
 class Game;
+struct LevelDescritions;
 
 using namespace std;
 
 class Level {
 
 public:
-    Level(default_random_engine& dist, int x, int y, Game* game);
-    void init();
+    Level(default_random_engine& dist, int x, int y);
+    void init(LevelDescritions&, vector<Enemy*>&, vector<Item*>);
     void setPrevious(Level* level);
     void setNext(Level* level);
-    void setAsCurrent();
     Level* getNext();
     Room* getExit();
+    Room* getStairsUpRoom();
 
     virtual ~Level();
 
@@ -36,17 +37,17 @@ public:
     Room* getNorthEastRoom();
     bool isRoomInSpanningTree(Room* from, Room* to);
     Mst* getMst();
-    void setAsCurrentLevel();
 
 private:
     Level* previousLevel;
     Level* nextLevel;
-    Room* exitRoom;
+    Room* roomUp = nullptr;
+    Room* exitRoom = nullptr;
     Room* northEastRoom;
+    Room* startRoom = nullptr;
     Room** rooms = nullptr;
-    map<pair<Room*,Room*>, int> minimalSpanningTreePaths;
-    map<pair<Room*, Room*>, int> excludedSanningTreePaths;
     Mst* mst = nullptr;
+    vector<Trap*> traps;
     int totalRoomSize;
     int x;
     int y;
@@ -54,6 +55,12 @@ private:
     random_device dev;
     default_random_engine dre;
     uniform_int_distribution<int> dist{1,20};
-    Game* game;
+
+    void setRoomByIndex(string edgeFrom, int indexFrom, string edgeTo, int indexTo);
+    void assignEnemiesRadomly(vector<Enemy*>&, uniform_int_distribution<int>&);
+    void assignItemsRadomly(vector<Item*>&, uniform_int_distribution<int>&);
+    string getRandomDescription(vector<string>& item);
+    string createRoomDescription(LevelDescritions&);
+
  };
 #endif //ROGUE_LEVEL_H

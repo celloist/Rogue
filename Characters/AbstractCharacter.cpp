@@ -3,10 +3,10 @@
 //
 
 #include <math.h>
+#include <random>
 #include "AbstractCharacter.h"
 
-AbstractCharacter::AbstractCharacter(string name,int level) {
-
+AbstractCharacter::AbstractCharacter(string name,int level, default_random_engine& dre) {
     this->name = name;
     this->health = (level* 10);
     this->level = level;
@@ -14,10 +14,6 @@ AbstractCharacter::AbstractCharacter(string name,int level) {
     this->defence = (int) round(level *1.5);
     this->exp = (level * 100);
     this->alive = true;
-}
-
-AbstractCharacter::AbstractCharacter() {
-
 }
 
 string AbstractCharacter::receiveDamage(int damage) {

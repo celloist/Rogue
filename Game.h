@@ -42,13 +42,13 @@ public:
 class Game {
 public:
     Game(Hero h, default_random_engine &default_rand ) : hero(h), dre(default_rand) {}
-    void setUp(int numLevels, int numXrooms, int numYrooms, LevelDescritions& levelDescritions, map<int, vector<Enemy*>>& enemies);
-    void itemGenerator();//TODO
+    void setUp(int numLevels, int numXrooms, int numYrooms, LevelDescritions& levelDescritions, map<int, vector<Enemy*>>& enemies, vector<Item*>& items);
     void setCurrentLevel (Level* level);
     Level* getCurrentLevel();
-    void createEnemiesForLevel(int level);
+    vector<Enemy*> createEnemiesForLevel(int numOfEnemiesPerLevel, int level, map<int, vector<Enemy*>>& enemies);
+    vector<Item*> distributeItemsForLevel(vector<Item*>);
     void cleanUpEnemies();
-    void cleanUpPotions();
+    void cleanUpItems();
     default_random_engine dre;
     virtual ~Game();
 

@@ -7,14 +7,7 @@
 #include "Items/Potion.h"
 #include "Characters/Hero.h"
 
-void Game::setUp(int numLevels, int numXrooms, int numYrooms, LevelDescritions& levelDescritions, map<int, vector<Enemy*>>& enemies) {
-    Hero hero("Kloes",1);
-    this->hero = hero;
-
-
-
-    cout<<"random";
-    cout<<dre<<endl;
+void Game::setUp(int numLevels, int numXrooms, int numYrooms, LevelDescritions& levelDescritions, map<int, vector<Enemy*>>& enemies, vector<Item*>& items) {
     uniform_int_distribution<int> dist {1, 20};
 
     levels = new Level*[numLevels];
@@ -24,44 +17,69 @@ void Game::setUp(int numLevels, int numXrooms, int numYrooms, LevelDescritions& 
 
     if (enemies.size() > 0) {
         if (numLevels < enemies.size()) {
-            numOfEnemiesPerLevel = enemies.size() / numLevels ;
+            numOfEnemiesPerLevel = (int)floor((enemies.size() / numLevels)) ;
         }
     } else {
         throw std::invalid_argument( "received empty enemies vector" );
     }
+    //Copy enemies and items to var
+    for (auto it = enemies.begin(); it != enemies.end(); it++) {
+        std::copy(it.operator*().second.begin(), it.operator*().second.end(), back_inserter(allEnemies));
+    }
 
+    std::copy(items.begin(), items.end(), back_inserter(allItems));
+    //randomize items order
+    std::random_shuffle(items.begin(), items.end());
+
+    //distribute over the levels
     for(int i = 0; i<numLevels; i++){
         levels[i] = new Level{dre, numXrooms, numYrooms};
-        vector<Enemy*> levelEnemies;
         //assign level enemies
-        if (numOfEnemiesPerLevel > 0) {
-            int n = i * numOfEnemiesPerLevel;
-            int j = n + numOfEnemiesPerLevel;
-
-            if ((i + 1) == numLevels && j < enemies.size()) {
-                j = enemies.size();
-            }
-
-            for (; n < j; n++) {
-                std::copy(enemies[n].begin(), enemies[n].end(), back_inserter(levelEnemies));
-            }
-        } else if ((i + 1) == numLevels) {
-            for (auto it = enemies.begin(); it != enemies.end(); it++) {
-                std::copy(it.operator*().second.begin(), it.operator*().second.end(), back_inserter(levelEnemies));
-            }
-        }
-
-        levels[i]->init(levelDescritions, levelEnemies);
+        vector<Enemy*> levelEnemies = createEnemiesForLevel(numOfEnemiesPerLevel, i, enemies);
+        vector<Item*> levelItems = distributeItemsForLevel(items);
+        levels[i]->init(levelDescritions, levelEnemies, levelItems);
         if (i > 0) {
             levels[i]->setPrevious(levels[i -1]);
         }
     }
 
-    for (auto it = enemies.begin(); it != enemies.end(); it++) {
-        std::copy(it.operator*().second.begin(), it.operator*().second.end(), back_inserter(allEnemies));
+    currentLevel = levels[0];
+}
+
+vector<Enemy*> Game::createEnemiesForLevel(int numOfEnemiesPerLevel, int level, map<int, vector<Enemy*>>& enemies) {
+    vector<Enemy*> levelEnemies;
+
+    if (numOfEnemiesPerLevel > 0) {
+        int n = level * numOfEnemiesPerLevel;
+        int j = n + numOfEnemiesPerLevel;
+
+        if ((level + 1) == numLevels && j < enemies.size()) {
+            j = enemies.size();
+        }
+
+        for (; n < j; n++) {
+            std::copy(enemies[n].begin(), enemies[n].end(), back_inserter(levelEnemies));
+        }
+    } else if ((level + 1) == numLevels) {
+        for (auto it = enemies.begin(); it != enemies.end(); it++) {
+            std::copy(it.operator*().second.begin(), it.operator*().second.end(), back_inserter(levelEnemies));
+        }
     }
 
-    currentLevel = levels[0];
+    return levelEnemies;
+}
+
+vector<Item*> Game::distributeItemsForLevel(vector<Item*> items){
+    vector<Item*> levelItems;
+    int numItems = (int)floor(items.size() / 2);
+    if (numItems > 0) {
+        std::copy(items.begin(), items.begin() + numItems, back_inserter(levelItems));
+        items.erase(items.begin(), items.begin() + numItems);
+    } else {
+        return items;
+    }
+
+    return levelItems;
 }
 
 void Game::setCurrentLevel(Level *level) {
@@ -101,34 +119,6 @@ Game::~Game(){
     return &allItems;
 }
 
-//TODO generate random objects
-void Game::itemGenerator() {
-    allItems.push_back(new Weapon("Sword", itemType::weapon, 50));
-    allItems.push_back(new Potion("HP", itemType::potion, 100));
-
-    for (auto it = allItems.begin(); it != allItems.end(); it++) {
-        Item *bagItem = it.operator*();
-        hero.addItem(bagItem);
-    }
-
-    string item = "sword";
-    map<string, itemType> types;
-    types["sword"] = itemType::weapon;
-
-    if (types.find(item) != types.end()) {
-        auto type = types[item];
-        auto bag = hero.getBag();
-        for (auto it = bag->begin(); it != bag->end(); it++) {
-            Item *bagItem = it.operator*();
-
-            if (bagItem->getType() == type) {
-                cout <<bagItem->use(getHero()) << endl;
-            }
-        }
-    }
-}
-
-
 Hero *Game::getHero() {
     return  &hero;
 }
@@ -142,21 +132,6 @@ void Game::cleanUpEnemies() {
             allEnemies.erase(it);
         }
     }
-    allEnemies.clear();
-}
-
-
-void Game::cleanUpPotions() {
-    for(auto it = allItems.begin();it!= allItems.end();it++)
-    {
-        Item* item = it.operator*();
-        if(item->isUsed() ){
-            item->~Item();
-            allItems.erase(it);
-        }
-    }
-    allItems.clear();
-
 }
 
 void Game::removeItem(Item *item) {

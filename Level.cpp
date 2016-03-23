@@ -16,7 +16,7 @@ Level::Level (default_random_engine& dre, int x, int y) {
     this->y = y;
 };
 
-void Level::init(LevelDescritions& ld, vector<Enemy*>& enemies) {
+void Level::init(LevelDescritions& ld, vector<Enemy*>& enemies, vector<Item*> items) {
     int num = x * y;
     totalRoomSize = num;
     mst = new Mst{totalRoomSize};
@@ -56,6 +56,7 @@ void Level::init(LevelDescritions& ld, vector<Enemy*>& enemies) {
     startRoom = rooms[startRoomIndex];
 
     assignEnemiesRadomly(enemies, roomdist);
+    assignItemsRadomly(items, roomdist);
 }
 
 void Level::setRoomByIndex(string edgeFrom, int indexFrom, string edgeTo, int indexTo){
@@ -68,6 +69,11 @@ void Level::setRoomByIndex(string edgeFrom, int indexFrom, string edgeTo, int in
 
 string Level::getRandomDescription(vector<string> &item) {
     int size = (item.size() - 1);
+
+    if (size <= 0) {
+        return "";
+    }
+
     uniform_int_distribution<int> randItem{0, size};
 
     return item.at(randItem(dre));
@@ -84,14 +90,26 @@ string Level::createRoomDescription(LevelDescritions &descritions) {
 }
 
 void Level::assignEnemiesRadomly(vector<Enemy*> &enemies, uniform_int_distribution<int>& roomdist) {
-    auto it = enemies.begin();
-    while (it != enemies.end()) {
-        Enemy* enemy = it.operator*();
-        int index = roomdist(dre);
+    if (enemies.size() > 0) {
+        auto it = enemies.begin();
+        while (it != enemies.end()) {
+            Enemy *enemy = it.operator*();
+            int index = roomdist(dre);
 
-        if (rooms[index] != startRoom) {
-            rooms[index]->addEnemy(enemy);
-            it++;
+            if (rooms[index] != startRoom) {
+                rooms[index]->addEnemy(enemy);
+                it++;
+            }
+        }
+    }
+}
+
+void Level::assignItemsRadomly(vector<Item *> &items, uniform_int_distribution<int> &dist) {
+    if (items.size() > 0) {
+        for (auto it = items.begin(); it != items.end(); it++) {
+            Item *item = it.operator*();
+            int index = dist(dre);
+            rooms[index]->addItem(item);
         }
     }
 }

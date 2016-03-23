@@ -3,6 +3,7 @@
 //
 
 #include <math.h>
+#include <random>
 #include "AbstractCharacter.h"
 
 AbstractCharacter::AbstractCharacter(string name,int level, default_random_engine& dre) {

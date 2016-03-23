@@ -1,5 +1,5 @@
-2 spikester
-4 quicksand
-3 boobtrap
-2 babies
-5 salesmen
+3 spikester 6
+3 quicksand 2
+3 boobtrap 3
+3 babies 20
+3 salesmen 8

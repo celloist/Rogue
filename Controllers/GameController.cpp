@@ -18,9 +18,12 @@ default_random_engine def_rand {dev()};
 
 vector<string> readFile (string textfile) {
     ifstream input_file{textfile};
+
+    if (!input_file.is_open()) {
+        throw std::runtime_error("Could not open file: "+ textfile);
+    }
     string line;
     vector<string> list;
-
 
     while (getline(input_file, line)) {
         list.push_back(line);
@@ -61,15 +64,11 @@ map<int, vector<Enemy*>> getEnemiesFromFile (string path) {
 
         auto enemiesDescriptionSetRow = it.operator*();
         if (enemiesDescriptionSetRow.size() == 2) {
-            auto enemiesDescriptionSetRowIt = enemiesDescriptionSetRow.begin();
             //level
-            string mainLevel = enemiesDescriptionSetRowIt.operator*();
-            int level = std::atoi(mainLevel.c_str());
-            //increment
-            enemiesDescriptionSetRowIt++;
+            int level = std::atoi(enemiesDescriptionSetRow.at(0).c_str());
             //Get name
-            string name = enemiesDescriptionSetRowIt.operator*();
-            enemiesDescriptionSetRow.begin().operator*();
+            string name = enemiesDescriptionSetRow.at(1);
+
             Enemy *enemy = new Enemy{name, level,def_rand};
 
             if (enemies.find(enemy->level) == enemies.end()) {
@@ -102,6 +101,8 @@ vector<Item*> getItemsFromFile (string path) {
             items.push_back(new Armor{name, itemType::armor, value});
         } else if (type == itemType::potion) {
             items.push_back(new Potion{name, itemType::potion, value});
+        } else if (type == itemType::trap){
+            items.push_back(new Trap{name, itemType::trap, value});
         }
     }
 
@@ -145,9 +146,10 @@ void GameController::start(bool testing, string pathPrefix, string roomPrefix) {
             readFile(roomPathPrefix + "misc.txt")
     };
 
-    map<int, vector<Enemy*>> enemies = getEnemiesFromFile(roomPathPrefix + "enemies.txt");
-    game.setUp(numLevels, numXRooms, numYRooms, ld, enemies);
-    game.itemGenerator();
+    map<int, vector<Enemy*>> enemies = getEnemiesFromFile(path + "enemies.txt");
+    vector<Item*> items = getItemsFromFile(path + "items.txt");
+    game.setUp(numLevels, numXRooms, numYRooms, ld, enemies, items);
+
     Level* currentLevel = game.getCurrentLevel();
     //TODO make starting room random
     game.getHero()->setRoom(currentLevel->getStartRoom());

@@ -115,10 +115,12 @@ vector<Room*>* Room::getEdges() {
 }
 
 void Room::removeEdge(Room *edge) {
-    for (auto it = edges.begin(); it != edges.end();  it++) {
-        if (it.operator*() == edge) {
-            edges.erase(it);
-            break;
+    if (edges.size() > 0) {
+        for (auto it = edges.begin(); it != edges.end(); it++) {
+            if (it.operator*() == edge) {
+                edges.erase(it);
+                break;
+            }
         }
     }
 }
@@ -176,7 +178,13 @@ map<Room *, pair<int, Room *>> Room::getShortestPathToExit(Room* exitRoom) {
 }
 
 void Room::setTrap(Trap *trap) {
-    this->trap = trap;
+    if (this->trap == nullptr) {
+        this->trap = trap;
+
+        addItem(trap);
+    } else {
+        throw invalid_argument("trap already set");
+    }
 }
 
 bool Room::hasTrap() {
@@ -188,9 +196,11 @@ void Room::addItem(Item* item) {
 }
 
 void Room::removeItem(Item *item) {
-    auto pos = find(itemsInRoom.begin(), itemsInRoom.end(), item);
-    if (pos != itemsInRoom.end()) {
-        itemsInRoom.erase(pos);
+    if (itemsInRoom.size() > 0) {
+        auto pos = find(itemsInRoom.begin(), itemsInRoom.end(), item);
+        if (pos != itemsInRoom.end()) {
+            itemsInRoom.erase(pos);
+        }
     }
 }
 

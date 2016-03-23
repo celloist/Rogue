@@ -129,9 +129,9 @@ void GameController::start(bool testing, string pathPrefix, string roomPrefix) {
         stringstream(io.askInput("Hoe veel kamers over de breedte:")) >> numYRooms;
         stringstream(io.askInput("Hoe veel verdiepingen lengte:")) >> numXRooms;
     } else {
-        numLevels = 2;
-        numXRooms = 10;
-        numYRooms = 10;
+        numLevels = 4;
+        numXRooms = 3;
+        numYRooms = 3;
     }
 
     string roomPathPrefix = pathPrefix + roomPrefix;
@@ -145,15 +145,19 @@ void GameController::start(bool testing, string pathPrefix, string roomPrefix) {
             readFile(roomPathPrefix + "tidyness.txt"),
             readFile(roomPathPrefix + "misc.txt")
     };
-
+    //enemies, items and traps
     map<int, vector<Enemy*>> enemies = getEnemiesFromFile(path + "enemies.txt");
     vector<Item*> items = getItemsFromFile(path + "items.txt");
-    game.setUp(numLevels, numXRooms, numYRooms, ld, enemies, items);
+    vector<Item*> traps = getItemsFromFile(path + "traps.txt");
 
+    //set up with all the users params and above items
+    game.setUp(numLevels, numXRooms, numYRooms, ld, enemies, items, traps);
+    //set the current room
     Level* currentLevel = game.getCurrentLevel();
-    //TODO make starting room random
     game.getHero()->setRoom(currentLevel->getStartRoom());
-    io.display(game.getHero()->getCurrentRoom()->getDescription() + "\n");
+
+    //Display the startroom details
+    displayRoomDetails();
 
     //gameloop
     while (!gameOver){
@@ -213,9 +217,7 @@ void GameController::initCommands() {
     commands["cheat"] = &GameController::cheat;
     commands["save"] = &GameController::save;
     commands["load"] = &GameController::load;
-
 }
-
 
 void GameController::commandReader(string inputCommand) {
 
@@ -301,19 +303,42 @@ void GameController::useItem() {
 
 }
 
-//in room
-//TODO code crashes
+//TODO verbeteren van gebruik
 void GameController::searchRoom() {
     //search room for items and pick them up
-//    for (auto it = allItems.begin(); it != allItems.end(); it++) {
-//        Item *bagItem = it.operator*();
-//        hero.addItem(bagItem);
-    //
-//    }
+    Room* currentRoom = game.getHero()->getCurrentRoom();
+    if (currentRoom) {
+        vector<Item*>* allItems = currentRoom->getItems();
+        if (allItems != nullptr && allItems->size() > 0) {
+
+            for (auto it = allItems->begin(); it != allItems->end(); it++) {
+                Item *bagItem = it.operator*();
+
+                if (bagItem->isAutoUse()) {
+                    string respomse = bagItem->use(hero);
+                    //could be something nasty for the hero!
+                    if (!hero->alive) {
+                        io.display("Je bent dodelijk gewond geraakt na het vinden en gebruiken van: "+ bagItem->getName());
+                        this->gameOver = true;
+                        break;
+                    } else {
+                        io.display(respomse);
+                    }
+                } else {
+                    io.display("Je hebt iets tijdens je zoekttocht iets nieuws aan de kamer ontdekt in de ruimte, namelijk een "+ bagItem->getName() + "\n");
+                }
+
+                hero->addItem(bagItem);
+            }
+        } else {
+            io.display("Geen spullen gevonden in kamer!");
+        }
+    }
 }
 
 void GameController::move() {
     map<string, string> directions;
+    //direction translations
     directions["noord"] = "north";
     directions["zuid"] = "south";
     directions["oost"] = "east";
@@ -326,6 +351,7 @@ void GameController::move() {
     Hero* hero = game.getHero();
     Room* currentRoom = hero->getCurrentRoom();
     string avalibleDirections = "";
+    //check avialible directions by testing each direction
     for (auto it = directions.begin(); it != directions.end(); it++) {
         Room* r = currentRoom->getByEdgeName(it->second);
         if (r != nullptr && currentRoom->isConnectedTo(r)) {
@@ -335,12 +361,12 @@ void GameController::move() {
     }
 
     string direction = io.askInput("Richtingen die je kunt gaan zijn "+ avalibleDirections +". \n Welke richting wil je gaan? \n");
-
-
+    //check if the direction is in the availible directions, otherwise display an error message
     if(find(availibleDirectionsRefrence.begin(), availibleDirectionsRefrence.end(), direction) != availibleDirectionsRefrence.end()) {
         Room* travelToRoom = currentRoom->getByEdgeName(directions[direction]);
         hero->setRoom(travelToRoom);
-        io.display(travelToRoom->getDescription() + "\n\n");
+        //display the current room details
+        displayRoomDetails();
     }
     else{
         io.display("Computer says no. Richtingen bestaat niet of is geblokkeerd!\n");
@@ -437,4 +463,22 @@ void GameController::talisman() {
     Room* currentRoom = game.getHero()->getCurrentRoom();
     int distance = currentRoom->findRoom(currentLevel->getExit());
     io.display("De talisman licht op en fluistert dat de trap  "+ to_string(distance) +" kamers ver weg is.\n");
+}
+
+void GameController::displayRoomDetails() {
+    Room* currentRoom = game.getHero()->getCurrentRoom();
+    if (currentRoom) {
+        io.display(currentRoom->getDescription() + "\n");
+        vector<Enemy*>* enemies = currentRoom->getEnemies();
+        if (enemies != nullptr && enemies->size() > 0) {
+            io.display("\nAanwezig:\n");
+
+            for (auto it = enemies->begin(); it != enemies->end(); it++) {
+                Enemy* e = it.operator*();
+                io.display(" - een " + e->name + " met "+ to_string(e->health) +" levenspunten;\n");
+            }
+
+            io.display("\n");
+        }
+    }
 }

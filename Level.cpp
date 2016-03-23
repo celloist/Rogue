@@ -9,14 +9,14 @@
 
 Level::Level (default_random_engine& dre, int x, int y) {
     if (x * y < 8) {
-        //TODO throw exception
+        throw invalid_argument("not enough rooms: minimum requirement of eight not met");
     }
     this->dre = dre;
     this->x = x;
     this->y = y;
 };
 
-void Level::init(LevelDescritions& ld, vector<Enemy*>& enemies, vector<Item*> items) {
+void Level::init(LevelDescritions& ld, vector<Enemy*>& enemies, vector<Item*> items, vector<Item*> traps) {
     int num = x * y;
     totalRoomSize = num;
     mst = new Mst{totalRoomSize};
@@ -57,6 +57,7 @@ void Level::init(LevelDescritions& ld, vector<Enemy*>& enemies, vector<Item*> it
 
     assignEnemiesRadomly(enemies, roomdist);
     assignItemsRadomly(items, roomdist);
+    assignTraps(traps, roomdist);
 }
 
 void Level::setRoomByIndex(string edgeFrom, int indexFrom, string edgeTo, int indexTo){
@@ -110,6 +111,22 @@ void Level::assignItemsRadomly(vector<Item *> &items, uniform_int_distribution<i
             Item *item = it.operator*();
             int index = dist(dre);
             rooms[index]->addItem(item);
+        }
+    }
+}
+
+void Level::assignTraps(vector<Item *>& traps, uniform_int_distribution<int> &dist) {
+    if (traps.size() > 0) {
+        auto it = traps.begin();
+        while (it != traps.end()) {
+            Trap* trap = dynamic_cast<Trap*>(it.operator*());
+
+            int index = dist(dre);
+
+            if (rooms[index] != startRoom && !rooms[index]->hasTrap()) {
+                rooms[index]->setTrap(trap);
+                it++;
+            }
         }
     }
 }

@@ -11,7 +11,9 @@ using namespace std;
 
 class Trap : public Item  {
 public:
-    Trap(string name,itemType type,int value) : Item(name, type, value) {}
+    Trap(string name,itemType type,int value) : Item(name, type, value) {
+        autoUse = true;
+    }
     virtual string use(Hero* hero);
 };
 

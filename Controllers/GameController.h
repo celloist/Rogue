@@ -36,6 +36,7 @@ private:
     map<string, command> commands;
 
     void initCommands();
+    void displayRoomDetails();
     //commands
     void commandReader(string inputCommand);
     //both

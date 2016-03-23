@@ -35,3 +35,7 @@ bool Item::isUsed() {
 Item::~Item() {
 
 }
+
+bool Item::isAutoUse() {
+    return autoUse;
+}

@@ -15,7 +15,8 @@ using namespace std;
 enum itemType{
     weapon,
     potion,
-    armor
+    armor,
+    trap
 };
 
 using namespace std;

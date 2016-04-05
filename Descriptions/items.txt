@@ -10,7 +10,7 @@
 0 Longsword 110
 1 HP4 150
 2 Gloves 50
-0 Snaketooth160
+0 Snaketooth 160
 1 HP5 200
 2 MageGauntlet 75
 0 Spear 200

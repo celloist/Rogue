@@ -18,9 +18,12 @@ default_random_engine def_rand {dev()};
 
 vector<string> readFile (string textfile) {
     ifstream input_file{textfile};
+
+    if (!input_file.is_open()) {
+        throw std::runtime_error("Could not open file: "+ textfile);
+    }
     string line;
     vector<string> list;
-
 
     while (getline(input_file, line)) {
         list.push_back(line);
@@ -61,15 +64,11 @@ map<int, vector<Enemy*>> getEnemiesFromFile (string path) {
 
         auto enemiesDescriptionSetRow = it.operator*();
         if (enemiesDescriptionSetRow.size() == 2) {
-            auto enemiesDescriptionSetRowIt = enemiesDescriptionSetRow.begin();
             //level
-            string mainLevel = enemiesDescriptionSetRowIt.operator*();
-            int level = std::atoi(mainLevel.c_str());
-            //increment
-            enemiesDescriptionSetRowIt++;
+            int level = std::atoi(enemiesDescriptionSetRow.at(0).c_str());
             //Get name
-            string name = enemiesDescriptionSetRowIt.operator*();
-            enemiesDescriptionSetRow.begin().operator*();
+            string name = enemiesDescriptionSetRow.at(1);
+
             Enemy *enemy = new Enemy{name, level,def_rand};
 
             if (enemies.find(enemy->level) == enemies.end()) {
@@ -102,6 +101,8 @@ vector<Item*> getItemsFromFile (string path) {
             items.push_back(new Armor{name, itemType::armor, value});
         } else if (type == itemType::potion) {
             items.push_back(new Potion{name, itemType::potion, value});
+        } else if (type == itemType::trap){
+            items.push_back(new Trap{name, itemType::trap, value});
         }
     }
 
@@ -129,8 +130,8 @@ void GameController::start(bool testing, string pathPrefix, string roomPrefix) {
         stringstream(io.askInput("Hoe veel verdiepingen lengte:")) >> numXRooms;
     } else {
         numLevels = 2;
-        numXRooms = 2;
-        numYRooms = 2;
+        numXRooms = 10;
+        numYRooms = 10;
     }
 
     string roomPathPrefix = pathPrefix + roomPrefix;
@@ -145,9 +146,10 @@ void GameController::start(bool testing, string pathPrefix, string roomPrefix) {
             readFile(roomPathPrefix + "misc.txt")
     };
 
-    map<int, vector<Enemy*>> enemies = getEnemiesFromFile(roomPathPrefix + "enemies.txt");
-    game.setUp(numLevels, numXRooms, numYRooms, ld, enemies);
-    game.itemGenerator();
+    map<int, vector<Enemy*>> enemies = getEnemiesFromFile(path + "enemies.txt");
+    vector<Item*> items = getItemsFromFile(path + "items.txt");
+    game.setUp(numLevels, numXRooms, numYRooms, ld, enemies, items);
+
     Level* currentLevel = game.getCurrentLevel();
     //TODO make starting room random
     game.getHero()->setRoom(currentLevel->getStartRoom());
@@ -176,15 +178,12 @@ void GameController::engage() {
     while(engaging)
     {
         string input = io.askInput("");
-        if(std::find(attackCommands.begin(),attackCommands.end(),input) != attackCommands.end())
-        {
+        if(std::find(attackCommands.begin(),attackCommands.end(),input) != attackCommands.end()) {
             if(input=="stop")
                 engaging = false;
 
             commandReader(input);
-        }
-        else
-        {
+        } else {
             io.display("Computer says no. Tijdens een gevecht kun je deze commandos gebruiken: \n vlucht, aanval, drink drankje, gebruik object, stop");
         }
     }
@@ -323,24 +322,29 @@ void GameController::move() {
     directions["beneden"] = "down";
     directions["boven"] = "up";
 
-    string direction = io.askInput("Richtingen die je kunt gaan zijn noord, oost, zuid, west en boven of beneden in een exitroom. \n Welke richting wil je gaan? \n");
+    vector<string> availibleDirectionsRefrence;
 
-
-    if(directions.find(direction) != directions.end()) {
-        Hero* hero = game.getHero();
-        Room* currentRoom = hero->getCurrentRoom();
-        Room* travelToRoom = currentRoom->getByEdgeName(directions[direction]);
-
-        if (travelToRoom != nullptr && currentRoom->isConnectedTo(travelToRoom)) {
-            hero->setRoom(travelToRoom);
-            io.display(travelToRoom->getDescription() + "\n\n");
-
-        } else {
-            io.display("Computer says no. De richting is geblokkerd of er bestaat geen kamer in de richting: "+ direction+ ".\n");
+    Hero* hero = game.getHero();
+    Room* currentRoom = hero->getCurrentRoom();
+    string avalibleDirections = "";
+    for (auto it = directions.begin(); it != directions.end(); it++) {
+        Room* r = currentRoom->getByEdgeName(it->second);
+        if (r != nullptr && currentRoom->isConnectedTo(r)) {
+            availibleDirectionsRefrence.push_back(it->first);
+            avalibleDirections+= ((avalibleDirections.length() == 0) ? "" : ", ") + it->first;
         }
     }
+
+    string direction = io.askInput("Richtingen die je kunt gaan zijn "+ avalibleDirections +". \n Welke richting wil je gaan? \n");
+
+
+    if(find(availibleDirectionsRefrence.begin(), availibleDirectionsRefrence.end(), direction) != availibleDirectionsRefrence.end()) {
+        Room* travelToRoom = currentRoom->getByEdgeName(directions[direction]);
+        hero->setRoom(travelToRoom);
+        io.display(travelToRoom->getDescription() + "\n\n");
+    }
     else{
-        io.display("Computer says no. Richtingen die je kunt gaan zijn noord, oost, zuid, west en boven of beneden in een exitroom\n");
+        io.display("Computer says no. Richtingen bestaat niet of is geblokkeerd!\n");
     }
 
 }
@@ -409,7 +413,8 @@ void GameController::save() {
 //TODO test collapse
 void GameController::grenade() {
     Level* currentLevel = game.getCurrentLevel();
-    if (currentLevel->getMst()->collapse(10)){
+    bool collapsed = currentLevel->getMst()->collapse(10);
+    if (collapsed){
         io.display("De kerker schudt op zijn grondvesten, alle tegenstanders in de kamer zijn verslagen! Een donderend geluid maakt duidelijk dat gedeeltes van de kerker zijn ingestort...");
     } else {
         io.display("Je vreest dat een extra handgranaat een cruciale passage zal blokkeren. Het is beter om deze niet meer te gebruiken op deze verdieping.");

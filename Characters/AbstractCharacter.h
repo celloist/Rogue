@@ -6,7 +6,9 @@
 #define ROGUE_ABSTRACTCHARACTER_H
 
 #include <algorithm>
+#include <random>
 #include "iostream"
+
 using namespace std;
 
 class AbstractCharacter {

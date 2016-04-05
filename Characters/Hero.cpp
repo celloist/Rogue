@@ -81,7 +81,6 @@ string Hero::usePotion(string itemName) {
             if(item->getType() == itemType::potion){
                 useInfo = item->use(this);
                 bag.erase(it);
-                bag.clear();
                 return useInfo;
             }
         }
@@ -99,16 +98,19 @@ void Hero::setRoom(Room *room) {
 }
 
 string Hero::levelUp(int exp) {
-    this->exp += exp;
-    int oldLevel = level;
-    level = (this->exp/100/4);
-    string message = "Je hebt "+ exp;
-    message = message  +" erbij verdient. \n";
-    if(level > oldLevel) {
-        message = "Je hebt een nieuwe level erbij gekregen! Je bent nu level:" + level;
-        message = message + ". \n";
-    }
-    return message;
+    if(exp ==0)
+        return "";
+
+        this->exp += exp;
+        int oldLevel = level;
+        level = (this->exp / 400);
+        string message = "Je hebt " + exp;
+        message = message + " erbij verdient. \n";
+        if (level > oldLevel) {
+            message = "Je hebt een nieuwe level erbij gekregen! Je bent nu level:" + level;
+            message = message + ". \n";
+        }
+        return message;
 
 }
 

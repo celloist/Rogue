@@ -1,37 +1,51 @@
 0 Sword 50
 1 HP 100
 2 Harnas 20
-
 0 Club 75
 1 HP2 110
 2 Helm 30
-
 0 Axe 100
 1 HP3 130
 2 Schoenen 40
-
 0 Longsword 110
 1 HP4 150
 2 Gloves 50
-
 0 Snaketooth160
 1 HP5 200
 2 MageGauntlet 75
-
 0 Spear 200
 1 HP6 300
 2 OakShield 100
-
 0 WingedSword 250
 1 HP7 600
 2 SteelShield 150
-
 0 WingedSpear 350
 1 HP8 900
 2 AdamantShield 200
-
-0 
-
+0 Dragontooth 500
+1 HP9 1000
+2 RuneShield 250
+0 Grankar 600
+1 HP10 1500
+2 FrogShield 400
+0 Frostbite 800
+1 HP11 2500
+2 MuricaShield 600
+0 TorHammer 1100
+1 HP12 3000
+2 BroShield 800
+0 DemonAxe 1200
+1 HP13 3100
+2 CrystalShield 900
+0 GiantSword 1500
+1 HP14 3200
+2 TitanShield 1000
+0 GodSword 1600
+1 HP15 3300
+2 GodShield 1200
+0 TitanSword 1800
+1 HP16 3400
+2 CyberArmor 1500
 0 NokiaPhone 10000
 1 MasterPotion 10000
 2 God 10000

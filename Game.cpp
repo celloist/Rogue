@@ -142,7 +142,6 @@ void Game::cleanUpEnemies() {
             allEnemies.erase(it);
         }
     }
-    allEnemies.clear();
 }
 
 
@@ -151,11 +150,10 @@ void Game::cleanUpPotions() {
     {
         Item* item = it.operator*();
         if(item->isUsed() ){
-            item->~Item();
+            delete item;
             allItems.erase(it);
         }
     }
-    allItems.clear();
 
 }
 
@@ -164,7 +162,6 @@ void Game::removeItem(Item *item) {
     if (pos != allItems.end()){
 
         delete item;
-
         allItems.erase(pos);
     }
 }

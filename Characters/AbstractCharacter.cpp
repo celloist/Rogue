@@ -13,6 +13,7 @@ AbstractCharacter::AbstractCharacter(string name,int level, default_random_engin
     this->defence = (int) round(level *1.5);
     this->exp = (level * 100);
     this->alive = true;
+    this->dre = dre;
 }
 
 string AbstractCharacter::receiveDamage(int damage) {
@@ -37,6 +38,7 @@ string AbstractCharacter::receiveDamage(int damage) {
     if(percentage> 95)
         percentage = 95;
     //TODO random between 1 and 100 if it falls in the range then attack else return miss
+
     //TODO defended damage = random ((defence/4),defence);
     damage = damage-defence;
 

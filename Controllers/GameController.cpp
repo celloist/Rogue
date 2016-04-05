@@ -275,7 +275,7 @@ void GameController::attack() {
                 game.cleanUpEnemies();
             }
         }
-        enemies->clear();
+        hero->levelUp(expEarned);
     }
 
 }
@@ -288,6 +288,7 @@ void GameController::usePotion() {
     string potion = io.askInput("Welke drankje? \n");
 
    io.display(hero->usePotion(potion));
+    game.cleanUpPotions();
 
 }
 

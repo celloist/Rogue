@@ -40,13 +40,17 @@ bool Mst::calc() {
                     levels[currentLevel].push_back(from);
                     typeLevels[to] = currentLevel;
                     typeLevels[from] = currentLevel;
+
                 } else if (toLevel == -1 && fromLevel >= 0) {
+
                     typeLevels[to] = fromLevel;
                     levels[fromLevel].push_back(to);
                 } else if (fromLevel == -1 && toLevel >= 0) {
+
                     typeLevels[from] = toLevel;
                     levels[toLevel].push_back(from);
                 } else if (fromLevel >= 0 && toLevel >= 0) {
+
                     int copyFrom;
                     int moveTo;
                     if (fromLevel > toLevel) {
@@ -90,22 +94,24 @@ bool Mst::isInSpanningTree(Room *from, Room *to) {
 }
 
 bool Mst::collapse(int num) {
-    if (num <= excludedSanningTreePaths.size()) {
-        int totalNum = num - 1;
+    if (num > excludedSanningTreePaths.size()) {
+        num = excludedSanningTreePaths.size();
+    }
+
+    if (excludedSanningTreePaths.size() > 0) {
         Room *from = nullptr;
         Room *to = nullptr;
-        for (auto it = excludedSanningTreePaths.begin(); it != excludedSanningTreePaths.end() && num > 0; it++, num--) {
+        auto it = excludedSanningTreePaths.begin();
+
+        for (; it != excludedSanningTreePaths.end() && num > 0; it++, num--) {
             from = it.operator*().first.first;
             to = it.operator*().first.second;
 
             from->removeEdge(to);
             to->removeEdge(from);
         }
-        auto end = excludedSanningTreePaths.find(make_pair(from, to));
 
-        if (end != excludedSanningTreePaths.end()) {
-            excludedSanningTreePaths.erase(excludedSanningTreePaths.begin(), end);
-        }
+        excludedSanningTreePaths.erase(excludedSanningTreePaths.begin(), it);
 
         return true;
     }

@@ -37,6 +37,7 @@ public:
     vector<Item *> * getItems();
     void setTrap(Trap* trap);
     bool hasTrap();
+    Trap* getTrap();
     void addEnemy(Enemy* enemy);
     void removeEnemy(Enemy* enemy);
     vector<Enemy*>* getEnemies();

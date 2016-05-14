@@ -49,7 +49,7 @@ public:
     void cleanUpItems();
     default_random_engine dre;
     virtual ~Game();
-
+    void addEnemy(Enemy * enemy);
     vector<Item*>* getItems();
     vector<Enemy*>* getEnemies();
     Hero* getHero();

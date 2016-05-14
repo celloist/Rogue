@@ -129,9 +129,9 @@ void GameController::start(bool testing, string pathPrefix, string roomPrefix) {
         stringstream(io.askInput("Hoe veel kamers over de breedte:")) >> numYRooms;
         stringstream(io.askInput("Hoe veel verdiepingen lengte:")) >> numXRooms;
     } else {
-        numLevels = 4;
-        numXRooms = 3;
-        numYRooms = 3;
+        numLevels = 5;
+        numXRooms = 4;
+        numYRooms = 4;
     }
 
     string roomPathPrefix = pathPrefix + roomPrefix;
@@ -258,27 +258,35 @@ void GameController::help() {
 
 //TODO delete fixed needs test
 void GameController::attack() {
-    if(!hero->alive) {
-        io.display("Je bent dood, fijne daaaaaaag!");
-        end();
-    }
-    else{
-        auto* enemies = hero->getCurrentRoom()->getEnemies();
-        int expEarned = 0;
-        for (auto it = enemies->begin(); it != enemies->end(); it++) {
-            if(it.operator*()->alive) {
-                io.display(hero->attackTarget(it.operator*()));
-                io.display(it.operator*()->attackTarget(hero));
+
+    auto* enemies = hero->getCurrentRoom()->getEnemies();
+    for (auto it = enemies->begin(); it != enemies->end(); it++) {
+        auto currentEnemy = it.operator*();
+
+        io.display(hero->attackTarget(currentEnemy));
+        //the enemy has been defeated
+        if(!currentEnemy->alive) {
+            hero->exp += currentEnemy->exp;
+
+            int pos = isTopLevelEnemy(currentEnemy);
+            if (pos >= 0) {
+                topLevelEnemies.erase(topLevelEnemies.begin() + pos);
+                if (topLevelEnemies.size() == 0) {
+                    io.display("Je hebt alle eind vijanden verslagen, fijne daaaaaaag!");
+                    end();
+                }
             }
-            else if(!it.operator*()->alive){
-                expEarned += it.operator*()->exp;
-                it = enemies->erase(it);
-                game.cleanUpEnemies();
+            it = enemies->erase(it);
+        } else {
+            //the enemy fights back
+            io.display(currentEnemy->attackTarget(hero));
+
+            if(!hero->alive) {
+                io.display("Je bent dood, fijne daaaaaaag!");
+                end();
             }
         }
-        enemies->clear();
     }
-
 }
 
 void GameController::usePotion() {
@@ -288,8 +296,7 @@ void GameController::usePotion() {
 
     string potion = io.askInput("Welke drankje? \n");
 
-   io.display(hero->usePotion(potion));
-
+    io.display(hero->usePotion(potion));
 }
 
 void GameController::useItem() {
@@ -308,26 +315,25 @@ void GameController::searchRoom() {
     //search room for items and pick them up
     Room* currentRoom = game.getHero()->getCurrentRoom();
     if (currentRoom) {
+
+        if (currentRoom->hasTrap()) {
+            io.display("O jee, een val!");
+            Trap* trap = currentRoom->getTrap();
+            auto message = trap->use(hero);
+            if (hero->alive){
+                io.display("Maar je hebt de val net op tijd ontdenkt!");
+            } else {
+                io.display("Je bent in de val gestapt en helaas dood! Fijne daaag!");
+                end();
+            }
+        }
+
         vector<Item*>* allItems = currentRoom->getItems();
         if (allItems != nullptr && allItems->size() > 0) {
 
             for (auto it = allItems->begin(); it != allItems->end(); it++) {
                 Item *bagItem = it.operator*();
-
-                if (bagItem->isAutoUse()) {
-                    string respomse = bagItem->use(hero);
-                    //could be something nasty for the hero!
-                    if (!hero->alive) {
-                        io.display("Je bent dodelijk gewond geraakt na het vinden en gebruiken van: "+ bagItem->getName());
-                        this->gameOver = true;
-                        break;
-                    } else {
-                        io.display(respomse);
-                    }
-                } else {
-                    io.display("Je hebt iets tijdens je zoekttocht iets nieuws aan de kamer ontdekt in de ruimte, namelijk een "+ bagItem->getName() + "\n");
-                }
-
+                io.display("Je hebt iets tijdens je zoekttocht iets nieuws aan de kamer ontdekt in de ruimte, namelijk een "+ bagItem->getName() + "\n");
                 hero->addItem(bagItem);
             }
         } else {
@@ -462,6 +468,7 @@ void GameController::talisman() {
     Level* currentLevel = game.getCurrentLevel();
     Room* currentRoom = game.getHero()->getCurrentRoom();
     int distance = currentRoom->findRoom(currentLevel->getExit());
+
     io.display("De talisman licht op en fluistert dat de trap  "+ to_string(distance) +" kamers ver weg is.\n");
 }
 
@@ -481,4 +488,26 @@ void GameController::displayRoomDetails() {
             io.display("\n");
         }
     }
+}
+
+int GameController::isTopLevelEnemy(Enemy *enemy) {
+    //Not initialized yet
+    if (topLevelEnemies.size() == 0) {
+        vector<Enemy*>* allEnemies = game.getEnemies();
+
+        for (auto it = allEnemies->begin(); it != allEnemies->end(); it++) {
+            if (it.operator*()->level >= 10){
+                topLevelEnemies.push_back(it.operator*());
+            }
+        }
+
+    }
+
+    for (auto it = topLevelEnemies.begin(), i = 0; it != topLevelEnemies.end(); it++, i++) {
+        if (enemy == it.operator*()) {
+            return i;
+        }
+    }
+
+    return -1;
 }

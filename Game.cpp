@@ -34,8 +34,8 @@ void Game::setUp(int numLevels, int numXrooms, int numYrooms, LevelDescritions& 
         levels[i] = new Level{dre, numXrooms, numYrooms};
         //assign level enemies, dist. items and assign traps
         vector<Enemy*> levelEnemies = distributeEnemiesForLevel(numOfEnemiesPerLevel, i, enemies);
-        vector<Item*> levelItems = distributeItemsForLevel(items);
-        vector<Item*> levelTraps = distributeTrapsForLevel(traps, i);
+        vector<Item*> levelItems    = distributeItemsForLevel(items);
+        vector<Item*> levelTraps    = distributeTrapsForLevel(traps, i);
 
         levels[i]->init(levelDescritions, levelEnemies, levelItems, levelTraps);
         if (i > 0) {
@@ -138,7 +138,7 @@ Game::~Game(){
     delete[] levels;
 }
 
- vector<Item *>* Game::getItems() {
+vector<Item *>* Game::getItems() {
     return &allItems;
 }
 
@@ -169,4 +169,8 @@ void Game::removeItem(Item *item) {
 
 void Game::addItem(Item* item) {
     allItems.push_back(item);
+}
+
+void Game::addEnemy(Enemy *enemy) {
+    allEnemies.push_back(enemy);
 }

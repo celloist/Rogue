@@ -24,7 +24,7 @@ public:
 private:
     Game game;
     ConsoleInputOutput io;
-    //TODO fix the way in which the hero property is added
+    //TODO fix the way in which the hero property is added and initialized
     Hero* hero;
     string path;
 
@@ -34,6 +34,7 @@ private:
     bool gameOver = false;
     bool engaging = false;
     map<string, command> commands;
+    vector<Enemy*> topLevelEnemies;
 
     void initCommands();
     void displayRoomDetails();
@@ -63,6 +64,7 @@ private:
     void cheat();
     void save();
     void load();
+    int isTopLevelEnemy(Enemy*);
 };
 
 

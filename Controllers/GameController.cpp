@@ -6,9 +6,6 @@
 #include "../Views/GameOutput.h"
 #include "../Views/DeafultLevelOutput.h"
 #include "../Views/CheatLevelOutput.h"
-#include <sstream>
-#include <fstream>
-#include "../Items/item.h"
 #include "../Items/Weapon.h"
 #include "../Items/Armor.h"
 #include "../Items/potion.h"
@@ -16,45 +13,6 @@
 random_device dev;
 default_random_engine def_rand {dev()};
 
-vector<string> readFile (string textfile) {
-    ifstream input_file{textfile};
-
-    if (!input_file.is_open()) {
-        throw std::runtime_error("Could not open file: "+ textfile);
-    }
-    string line;
-    vector<string> list;
-
-    while (getline(input_file, line)) {
-        list.push_back(line);
-    }
-
-    input_file.close();
-
-    return list;
-}
-
-vector<string> devideString (const string& input, char divider) {
-    vector<string> divided;
-
-    std::stringstream ss(input);
-    std::string item;
-    while (std::getline(ss, item, divider)) {
-        divided.push_back(item);
-    }
-
-    return divided;
-};
-
-vector<vector<string>> devideSet (const vector<string>& set, char divider) {
-    vector<vector<string>> devidedSet;
-
-    for (auto it = set.begin(); it != set.end(); it++) {
-        devidedSet.push_back(devideString(it.operator*(), divider));
-    }
-
-    return devidedSet;
-}
 
 map<int, vector<Enemy*>> getEnemiesFromFile (string path) {
     vector<vector<string>> devidedSetEnemiesDescriptions = devideSet(readFile(path), ' ');
@@ -129,7 +87,7 @@ void GameController::start(bool testing, string pathPrefix, string roomPrefix) {
         stringstream(io.askInput("Hoe veel kamers over de breedte:")) >> numYRooms;
         stringstream(io.askInput("Hoe veel verdiepingen lengte:")) >> numXRooms;
     } else {
-        numLevels = 5;
+        numLevels = 3;
         numXRooms = 4;
         numYRooms = 4;
     }
@@ -422,6 +380,7 @@ void GameController::load() {
 }
 
 void GameController::save() {
+
     if (hero->getCurrentRoom() == game.getCurrentLevel()->getExit()) {
         vector<Item *> *items = hero->getBag();
         ofstream myfile;
@@ -493,17 +452,17 @@ void GameController::displayRoomDetails() {
 int GameController::isTopLevelEnemy(Enemy *enemy) {
     //Not initialized yet
     if (topLevelEnemies.size() == 0) {
-        vector<Enemy*>* allEnemies = game.getEnemies();
+        auto allEnemies = game.getEnemies();
 
         for (auto it = allEnemies->begin(); it != allEnemies->end(); it++) {
             if (it.operator*()->level >= 10){
                 topLevelEnemies.push_back(it.operator*());
             }
         }
-
     }
 
-    for (auto it = topLevelEnemies.begin(), i = 0; it != topLevelEnemies.end(); it++, i++) {
+    int i = 0;
+    for (auto it = topLevelEnemies.begin(); it != topLevelEnemies.end(); it++, i++) {
         if (enemy == it.operator*()) {
             return i;
         }

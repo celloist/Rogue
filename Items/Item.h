@@ -31,13 +31,11 @@ public:
     int getValue();
     virtual string use(Hero* hero);
     virtual bool isUsed();
-    bool isAutoUse();
 
 protected:
     string name;
     itemType type;
     int value;
-    bool autoUse = false;
 };
 
 #endif //ROGUE_ITEM_H

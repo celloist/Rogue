@@ -174,3 +174,7 @@ void Game::addItem(Item* item) {
 void Game::addEnemy(Enemy *enemy) {
     allEnemies.push_back(enemy);
 }
+
+vector<Enemy *> *Game::getEnemies() {
+    return &allEnemies;
+}

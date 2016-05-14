@@ -18,7 +18,7 @@ void CheatLevelOutput::displayLevel(Level *currentLevel) {
         char letter = 'A';
         while(current != nullptr){
 
-            current->accept(this);
+            //current->accept(this);
             //output = output + " ";
 
             string num;

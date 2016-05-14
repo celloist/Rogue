@@ -32,10 +32,4 @@ bool Item::isUsed() {
     return false;
 }
 
-Item::~Item() {
-
-}
-
-bool Item::isAutoUse() {
-    return autoUse;
-}
+Item::~Item() {}

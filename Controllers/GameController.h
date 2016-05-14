@@ -5,11 +5,10 @@
 #ifndef ROGUE_GAMECONTROLLER_H
 #define ROGUE_GAMECONTROLLER_H
 
-#include "iostream"
 #include "../Game.h"
 #include "../Views/ConsoleInputOutput.h"
-#include <map>
 #include <functional>
+#include "../utils.h"
 
 
 using namespace std;

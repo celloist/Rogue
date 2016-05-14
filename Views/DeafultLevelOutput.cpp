@@ -3,6 +3,7 @@
 //
 
 #include "DeafultLevelOutput.h"
+#include "RoomVisitor.h"
 
 void DeafultLevelOutput::add(string &output) {
     this->output+= output;
@@ -17,10 +18,13 @@ void DeafultLevelOutput::displayLevel(Level *currentLevel) {
 
 
     string bottom;
+    RoomVisitor roomVisitor;
+
     while (firstOfTop != nullptr) {
         while(current != nullptr){
             if (current->hasBeenVisited()) {
-                current->accept(this);
+                current->accept(&roomVisitor);
+                output+= roomVisitor.getOutput();
 
                 if (current->getByEdgeName("south")){
                     if (current->isConnectedTo(current->getByEdgeName("south"))) {
@@ -59,18 +63,4 @@ void DeafultLevelOutput::displayLevel(Level *currentLevel) {
         current = firstOfTop;
     }
     cout << "\n";
-}
-
-void DeafultLevelOutput::visit(Room *room) {
-    output+= "N";
-}
-
-void DeafultLevelOutput::visit(ExitRoom *room) {
-    if (room->isConnectedTo(room->getByEdgeName("down"))) {
-        output += "E";
-    } else if (room->isConnectedTo(room->getByEdgeName("up"))) {
-        output += "U";
-    } else {
-        output += "T";
-    }
 }

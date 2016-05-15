@@ -26,15 +26,18 @@ public:
     int awareness;
     int baseAttack;
     int baseHealth;
+    int maxHealth;
     int baseDefense;
 
     //functions
     string displayInventory(itemType type);
     string displayInventory();
+    string displayStats();
     string useItem(string itemName);
     string usePotion(string itemName);
     string levelUp(int exp);
     bool move(string direction);
+    string rest();
 
     void addItem(Item* item);
     vector<Item*>* getBag();

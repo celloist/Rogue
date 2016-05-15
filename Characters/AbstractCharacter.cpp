@@ -3,7 +3,6 @@
 //
 
 #include <math.h>
-#include <random>
 #include "AbstractCharacter.h"
 
 AbstractCharacter::AbstractCharacter(string name,int level, default_random_engine& dre) {
@@ -39,14 +38,23 @@ string AbstractCharacter::receiveDamage(int damage) {
     if(percentage> 95)
         percentage = 95;
     //TODO random between 1 and 100 if it falls in the range then attack else return miss
+    std::uniform_int_distribution<int> distr(0,100);
+    int attackChance = distr(dre);
 
-    //TODO defended damage = random ((defence/4),defence);
-    damage = damage-defence;
+    if(attackChance<=percentage) {
+        //TODO defended damage = random ((defence/4),defence);
+        int smallDef = (int)round(defence/8);
 
-     return target->receiveDamage(damage);
+        std::uniform_int_distribution<int> attackDis(smallDef,defence);
+        int defended = attackDis(dre);
+        damage = damage-defended;
+
+
+    }
+    return target->receiveDamage(damage);
 }
 
 bool AbstractCharacter::isAlive() {
-    return alive;
+    return this->alive;
 }
 

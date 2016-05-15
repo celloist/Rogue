@@ -49,11 +49,12 @@ public:
     vector<Item*> distributeItemsForLevel(vector<Item*>);
     void cleanUpEnemies();
     void cleanUpItems();
+    void cleanUpPotions();
     default_random_engine dre;
     virtual ~Game();
 
     vector<Item*>* getItems();
-    vector<Enemy*>* getEnemies();
+    vector<Enemy *> getEnemies();
     Hero* getHero();
     void removeItem(Item*);
     void addItem(Item*);
@@ -65,6 +66,8 @@ private:
     int numLevels;
     vector<Item*> allItems;
     vector<Enemy*> allEnemies;
+
+
 };
 
 #endif //ROGUE_GAME_H

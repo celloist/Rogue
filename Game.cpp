@@ -160,3 +160,7 @@ void Game::removeItem(Item *item) {
 void Game::addItem(Item* item) {
     allItems.push_back(item);
 }
+
+vector<Enemy *> Game::getEnemies() {
+    return allEnemies;
+}

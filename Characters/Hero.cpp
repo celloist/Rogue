@@ -42,6 +42,7 @@ string Hero::displayInventory(itemType type) {
             }
         }
     }
+    return items;
 }
 
 //displays all items
@@ -116,4 +117,27 @@ string Hero::levelUp(int exp) {
 
 void Hero::clearItems() {
     bag.clear();
+}
+
+string Hero::displayStats() {
+    string stats = "";
+
+    stats +="Jouw level is: " + this->level;
+    stats +="\n Jouw levens punten zijn: " + this->health;
+    stats +="\n Jouw aanval is: " + this->attack;
+    stats +="\n Jouw verdedeging is: " + this->defence;
+    stats +="\n Jouw experience is: " + this->exp;
+    stats +="\n Jouw opwaakzaamheidis: "+this->awareness;
+    stats +="\n";
+
+    return stats;
+}
+
+string Hero::rest() {
+    int healed = (int)round(baseHealth *0.2);
+    if(baseHealth>health)
+    this->health = health + healed;
+    else
+        health = baseHealth;
+    return "Jou levenspunten is nu "+health;
 }

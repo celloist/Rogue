@@ -181,7 +181,7 @@ void GameController::engage() {
         if(std::find(attackCommands.begin(),attackCommands.end(),input) != attackCommands.end()) {
             if(input=="stop")
                 engaging = false;
-
+            else
             commandReader(input);
         } else {
             io.display("Computer says no. Tijdens een gevecht kun je deze commandos gebruiken: \n vlucht, aanval, drink drankje, gebruik object, stop");
@@ -190,6 +190,7 @@ void GameController::engage() {
 }
 
 void GameController::initCommands() {
+    //global
     commands["stop"] = &GameController::end;
     commands["help"] = &GameController::help;
 
@@ -344,12 +345,24 @@ void GameController::move() {
         io.display(travelToRoom->getDescription() + "\n\n");
     }
     else{
-        io.display("Computer says no. Richtingen bestaat niet of is geblokkeerd!\n");
+        io.display("Computer says no. Richting bestaat niet of is geblokkeerd!\n");
     }
 
 }
+//TODO test each enemy in room has a 20% of attacking you, rest heals 30% of hp
+void GameController::rest() {
+    uniform_int_distribution<int> chance(1,10);
+    int attackChance = chance(def_rand);
+    if(attackChance<3)
+    {
+        io.display("Tijdens het rusten ben je ontdekt door een vijand en moet je nu vechten.\n");
+        this->engage();
+    }
+    else{
+        io.display(hero->rest());
+    }
 
-void GameController::rest() {}
+}
 
 void GameController::checkBag() {
     string inventory = hero->displayInventory();
@@ -367,7 +380,9 @@ void GameController::cheat() {
     clOutput.displayLevel(game.getCurrentLevel());
 }
 
-void GameController::checkStats() {}
+void GameController::checkStats() {
+    io.display(hero->displayStats());
+}
 
 void GameController::load() {
     if (hero->getCurrentRoom() == game.getCurrentLevel()->getStartRoom()) {

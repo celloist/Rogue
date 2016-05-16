@@ -32,6 +32,4 @@ bool Item::isUsed() {
     return false;
 }
 
-Item::~Item() {
-
-}
+Item::~Item() {}

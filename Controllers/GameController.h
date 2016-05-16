@@ -5,11 +5,10 @@
 #ifndef ROGUE_GAMECONTROLLER_H
 #define ROGUE_GAMECONTROLLER_H
 
-#include "iostream"
 #include "../Game.h"
 #include "../Views/ConsoleInputOutput.h"
-#include <map>
 #include <functional>
+#include "../utils.h"
 
 
 using namespace std;
@@ -24,7 +23,7 @@ public:
 private:
     Game game;
     ConsoleInputOutput io;
-    //TODO fix the way in which the hero property is added
+    //TODO fix the way in which the hero property is added and initialized
     Hero* hero;
     string path;
 
@@ -34,8 +33,10 @@ private:
     bool gameOver = false;
     bool engaging = false;
     map<string, command> commands;
+    vector<Enemy*> topLevelEnemies;
 
     void initCommands();
+    void displayRoomDetails();
     //commands
     void commandReader(string inputCommand);
     //both
@@ -62,6 +63,7 @@ private:
     void cheat();
     void save();
     void load();
+    int isTopLevelEnemy(Enemy*);
 };
 
 

@@ -3,11 +3,8 @@
 //
 
 #include "Game.h"
-#include "Items/Weapon.h"
-#include "Items/Potion.h"
-#include "Characters/Hero.h"
 
-void Game::setUp(int numLevels, int numXrooms, int numYrooms, LevelDescritions& levelDescritions, map<int, vector<Enemy*>>& enemies, vector<Item*>& items) {
+void Game::setUp(int numLevels, int numXrooms, int numYrooms, LevelDescritions& levelDescritions, map<int, vector<Enemy*>>& enemies, vector<Item*>& items, vector<Item*>& traps) {
     uniform_int_distribution<int> dist {1, 20};
 
     levels = new Level*[numLevels];
@@ -30,14 +27,17 @@ void Game::setUp(int numLevels, int numXrooms, int numYrooms, LevelDescritions& 
     std::copy(items.begin(), items.end(), back_inserter(allItems));
     //randomize items order
     std::random_shuffle(items.begin(), items.end());
+    std::random_shuffle(traps.begin(), traps.end());
 
     //distribute over the levels
     for(int i = 0; i<numLevels; i++){
         levels[i] = new Level{dre, numXrooms, numYrooms};
-        //assign level enemies
-        vector<Enemy*> levelEnemies = createEnemiesForLevel(numOfEnemiesPerLevel, i, enemies);
-        vector<Item*> levelItems = distributeItemsForLevel(items);
-        levels[i]->init(levelDescritions, levelEnemies, levelItems);
+        //assign level enemies, dist. items and assign traps
+        vector<Enemy*> levelEnemies = distributeEnemiesForLevel(numOfEnemiesPerLevel, i, enemies);
+        vector<Item*> levelItems    = distributeItemsForLevel(items);
+        vector<Item*> levelTraps    = distributeTrapsForLevel(traps, i);
+
+        levels[i]->init(levelDescritions, levelEnemies, levelItems, levelTraps);
         if (i > 0) {
             levels[i]->setPrevious(levels[i -1]);
         }
@@ -46,7 +46,7 @@ void Game::setUp(int numLevels, int numXrooms, int numYrooms, LevelDescritions& 
     currentLevel = levels[0];
 }
 
-vector<Enemy*> Game::createEnemiesForLevel(int numOfEnemiesPerLevel, int level, map<int, vector<Enemy*>>& enemies) {
+vector<Enemy*> Game::distributeEnemiesForLevel(int numOfEnemiesPerLevel, int level, map<int, vector<Enemy*>>& enemies) {
     vector<Enemy*> levelEnemies;
 
     if (numOfEnemiesPerLevel > 0) {
@@ -69,7 +69,7 @@ vector<Enemy*> Game::createEnemiesForLevel(int numOfEnemiesPerLevel, int level, 
     return levelEnemies;
 }
 
-vector<Item*> Game::distributeItemsForLevel(vector<Item*> items){
+vector<Item*> Game::distributeItemsForLevel(vector<Item*>& items){
     vector<Item*> levelItems;
     int numItems = (int)floor(items.size() / 2);
     if (numItems > 0) {
@@ -80,6 +80,29 @@ vector<Item*> Game::distributeItemsForLevel(vector<Item*> items){
     }
 
     return levelItems;
+}
+
+vector<Item *> Game::distributeTrapsForLevel(vector<Item *>& items, int level) {
+    vector<Item *> traps;
+
+    int percentage = (int)(((level +1) / (float)numLevels) * 100);
+    if (items.size() > 0) {
+        if (percentage == 100) {
+            return items;
+        }
+        float subRange = ((items.size() - 1) / 100.00);
+        int maxRange = (int)ceil(subRange * percentage);
+        uniform_int_distribution<int> dist{0, maxRange};
+
+        int range = dist(dre);
+
+        if (range > 0) {
+            std::copy(items.begin(), items.begin() + range, back_inserter(traps));
+            items.erase(items.begin(), items.begin() + range);
+        }
+    }
+
+    return traps;
 }
 
 void Game::setCurrentLevel(Level *level) {
@@ -115,7 +138,7 @@ Game::~Game(){
     delete[] levels;
 }
 
- vector<Item *>* Game::getItems() {
+vector<Item *>* Game::getItems() {
     return &allItems;
 }
 
@@ -160,6 +183,11 @@ void Game::removeItem(Item *item) {
 void Game::addItem(Item* item) {
     allItems.push_back(item);
 }
+
+void Game::addEnemy(Enemy *enemy) {
+    allEnemies.push_back(enemy);
+}
+
 
 vector<Enemy *> Game::getEnemies() {
     return allEnemies;

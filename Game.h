@@ -42,17 +42,15 @@ public:
 class Game {
 public:
     Game(Hero h, default_random_engine &default_rand ) : hero(h), dre(default_rand) {}
-    void setUp(int numLevels, int numXrooms, int numYrooms, LevelDescritions& levelDescritions, map<int, vector<Enemy*>>& enemies, vector<Item*>& items);
+    void setUp(int numLevels, int numXrooms, int numYrooms, LevelDescritions& levelDescritions, map<int, vector<Enemy*>>& enemies, vector<Item*>& items, vector<Item*>& traps);
     void setCurrentLevel (Level* level);
     Level* getCurrentLevel();
-    vector<Enemy*> createEnemiesForLevel(int numOfEnemiesPerLevel, int level, map<int, vector<Enemy*>>& enemies);
-    vector<Item*> distributeItemsForLevel(vector<Item*>);
     void cleanUpEnemies();
     void cleanUpItems();
     void cleanUpPotions();
     default_random_engine dre;
     virtual ~Game();
-
+    void addEnemy(Enemy * enemy);
     vector<Item*>* getItems();
     vector<Enemy *> getEnemies();
     Hero* getHero();
@@ -68,6 +66,10 @@ private:
     vector<Enemy*> allEnemies;
 
 
+
+    vector<Enemy*> distributeEnemiesForLevel(int numOfEnemiesPerLevel, int level, map<int, vector<Enemy*>>& enemies);
+    vector<Item*> distributeItemsForLevel(vector<Item*>&);
+    vector<Item*> distributeTrapsForLevel(vector<Item*>&, int);
 };
 
 #endif //ROGUE_GAME_H

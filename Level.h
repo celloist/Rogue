@@ -23,7 +23,7 @@ class Level {
 
 public:
     Level(default_random_engine& dist, int x, int y);
-    void init(LevelDescritions&, vector<Enemy*>&, vector<Item*>);
+    void init(LevelDescritions&, vector<Enemy*>&, vector<Item*>, vector<Item*>);
     void setPrevious(Level* level);
     void setNext(Level* level);
     Level* getNext();
@@ -59,6 +59,7 @@ private:
     void setRoomByIndex(string edgeFrom, int indexFrom, string edgeTo, int indexTo);
     void assignEnemiesRadomly(vector<Enemy*>&, uniform_int_distribution<int>&);
     void assignItemsRadomly(vector<Item*>&, uniform_int_distribution<int>&);
+    void assignTraps(vector<Item*>& traps, uniform_int_distribution<int>&);
     string getRandomDescription(vector<string>& item);
     string createRoomDescription(LevelDescritions&);
 

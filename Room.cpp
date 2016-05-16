@@ -86,9 +86,9 @@ int Room::findRoom (Room* exit) {
         toSearch.pop_front();
 
         if (currentRoom == exit) {
-            levelToReturn = searchLevels[currentRoom];
-            break;
+            return searchLevels[currentRoom];
         } else {
+            //room is not exit room, proceed to add all rooms to the queue (pushing back the edges according to the breath first search alg.)
             visited.push_back(currentRoom);
             vector<Room*>* edges = currentRoom->getEdges();
             int level = searchLevels[currentRoom];
@@ -96,11 +96,12 @@ int Room::findRoom (Room* exit) {
 
             for (auto it = edges->rbegin(); it != edges->rend(); it++) {
                 Room* roomToAdd = it.operator*();
-
+                //if this room hasn't been visited before, add this room to the queue
                 if (std::find(visited.begin(), visited.end(), roomToAdd) == visited.end()
                     && std::find(toSearch.begin(), toSearch.end(), roomToAdd)  == toSearch.end()) {
 
                     toSearch.push_back(roomToAdd);
+                    //register num steps taken in reaching room
                     searchLevels[roomToAdd] = level + 1;
                 }
             }
@@ -115,10 +116,12 @@ vector<Room*>* Room::getEdges() {
 }
 
 void Room::removeEdge(Room *edge) {
-    for (auto it = edges.begin(); it != edges.end();  it++) {
-        if (it.operator*() == edge) {
-            edges.erase(it);
-            break;
+    if (edges.size() > 0) {
+        for (auto it = edges.begin(); it != edges.end(); it++) {
+            if (it.operator*() == edge) {
+                edges.erase(it);
+                break;
+            }
         }
     }
 }
@@ -132,8 +135,9 @@ map<Room *, pair<int, Room *>> Room::getShortestPathToExit(Room* exitRoom) {
     roomPath[this] = this;
 
     while (!openPriorityQueue.empty()) {
+        //The connecting room
         Room* from = roomPath[openPriorityQueue.begin()->second];
-
+        //the total weight, from the starting point, till this room
         int weight = openPriorityQueue.begin()->first;
         Room* currentRoom = openPriorityQueue.begin()->second;
 
@@ -142,7 +146,7 @@ map<Room *, pair<int, Room *>> Room::getShortestPathToExit(Room* exitRoom) {
         if (currentRoom == exitRoom) {
             break;
         }
-
+        //remove the first, as it processed
         openPriorityQueue.erase(openPriorityQueue.begin());
 
         auto edges = currentRoom->edges;
@@ -150,6 +154,7 @@ map<Room *, pair<int, Room *>> Room::getShortestPathToExit(Room* exitRoom) {
         for (auto it = edges.begin(); it != edges.end(); it++) {
             Room* edge = it.operator*();
             if (closedList.find(edge) == closedList.end()) {
+                //the weight from the connecting room to this edge
                 int relativeWeight = currentRoom->getWeightTo(edge);
 
                 auto position = find_if(openPriorityQueue.begin(), openPriorityQueue.end(), [&edge](std::pair<int, Room*> const& elem) {
@@ -163,6 +168,7 @@ map<Room *, pair<int, Room *>> Room::getShortestPathToExit(Room* exitRoom) {
                         openPriorityQueue.erase(position);
                     }
                 } else {
+                    //push the edge on the priority queue
                     openPriorityQueue.push_back(make_pair(weight + relativeWeight, edge));
                     roomPath[edge] = currentRoom;
                 }
@@ -176,21 +182,33 @@ map<Room *, pair<int, Room *>> Room::getShortestPathToExit(Room* exitRoom) {
 }
 
 void Room::setTrap(Trap *trap) {
-    this->trap = trap;
+    if (this->trap == nullptr) {
+        this->trap = trap;
+    } else {
+        throw invalid_argument("trap already set");
+    }
 }
 
 bool Room::hasTrap() {
-    return this->trap != nullptr;
+    return trap != nullptr;
+}
+
+Trap* Room::getTrap() {
+    return trap;
 }
 
 void Room::addItem(Item* item) {
     itemsInRoom.push_back(item);
 }
 
+
+
 void Room::removeItem(Item *item) {
-    auto pos = find(itemsInRoom.begin(), itemsInRoom.end(), item);
-    if (pos != itemsInRoom.end()) {
-        itemsInRoom.erase(pos);
+    if (itemsInRoom.size() > 0) {
+        auto pos = find(itemsInRoom.begin(), itemsInRoom.end(), item);
+        if (pos != itemsInRoom.end()) {
+            itemsInRoom.erase(pos);
+        }
     }
 }
 

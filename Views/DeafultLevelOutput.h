@@ -11,12 +11,10 @@
 
 using namespace std;
 
-class DeafultLevelOutput : public GameOutput, public Visitor {
+class DeafultLevelOutput : public GameOutput {
 public:
     virtual void displayLevel(Level* level);
     void add(string& output);
-    void visit(Room*);
-    void visit(ExitRoom*);
 protected:
     string output;
 

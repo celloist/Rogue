@@ -25,7 +25,7 @@ public:
     bool isAlive();
 
     string name;
-    int health;
+    int health = 100;
     int level;
     int attack;
     int defence;

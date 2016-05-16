@@ -13,6 +13,7 @@ class Trap : public Item  {
 public:
     Trap(string name,itemType type,int value) : Item(name, type, value) {};
     virtual string use(Hero* hero);
+    virtual string getDescription();
 };
 
 

@@ -9,3 +9,7 @@ string Armor::use(Hero* hero) {
     hero->defence = (hero->baseDefense) + (this->value);
     return "Je verdedeging is nu " + to_string(hero->defence) +" door harnass: "+ this->name;
 }
+
+string Armor::getDescription() {
+    return "harnas " + name;
+}

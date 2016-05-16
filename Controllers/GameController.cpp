@@ -69,7 +69,7 @@ vector<Item*> getItemsFromFile (string path) {
 }
 
 
-GameController::GameController() : game(Hero("Kloes", 500),def_rand) {
+GameController::GameController() : game(Hero("Kloes", 2),def_rand) {
     hero = game.getHero();
     initCommands();
 }
@@ -87,9 +87,9 @@ void GameController::start(bool testing, string pathPrefix, string roomPrefix) {
         stringstream(io.askInput("Hoe veel kamers over de breedte:")) >> numYRooms;
         stringstream(io.askInput("Hoe veel verdiepingen lengte:")) >> numXRooms;
     } else {
-        numLevels = 3;
-        numXRooms = 4;
-        numYRooms = 4;
+        numLevels = 2;
+        numXRooms = 3;
+        numYRooms = 3;
     }
 
     string roomPathPrefix = pathPrefix + roomPrefix;
@@ -218,6 +218,8 @@ void GameController::help() {
 void GameController::attack() {
 
     auto* enemies = hero->getCurrentRoom()->getEnemies();
+
+    int numDefeatedEnemies = 0;
     for (auto it = enemies->begin(); it != enemies->end(); it++) {
         auto currentEnemy = it.operator*();
 
@@ -230,20 +232,40 @@ void GameController::attack() {
             if (pos >= 0) {
                 topLevelEnemies.erase(topLevelEnemies.begin() + pos);
                 if (topLevelEnemies.size() == 0) {
-                    io.display("Je hebt alle eind vijanden verslagen, fijne daaaaaaag!");
+                    io.display("Je hebt alle eind vijanden verslagen, fijne daaaaaaag!\n");
                     end();
+                    break;
                 }
             }
-            it = enemies->erase(it);
+            numDefeatedEnemies++;
         } else {
             //the enemy fights back
             io.display(currentEnemy->attackTarget(hero));
 
             if(!hero->alive) {
-                io.display("Je bent dood, fijne daaaaaaag!");
+                io.display("Je bent dood, fijne daaaaaaag!\n");
                 end();
+                break;
             }
         }
+
+        io.display("\n");
+    }
+
+    if (numDefeatedEnemies > 0 && !gameOver) {
+        while (numDefeatedEnemies > 0) {
+            for (auto it = enemies->begin(); it != enemies->end(); it++) {
+                auto currentEnemy = it.operator*();
+
+                if (!currentEnemy->alive) {
+                    enemies->erase(it);
+                    numDefeatedEnemies--;
+                    break;
+                }
+            }
+        }
+
+        game.cleanUpEnemies();
     }
 }
 
@@ -258,14 +280,29 @@ void GameController::usePotion() {
 }
 
 void GameController::useItem() {
-    string items = hero->displayInventory(itemType::weapon);
+    auto bag = hero->getBag();
+    io.display("Je kunt gebruik maken van");
+    for (auto it = bag->begin(); it != bag->end(); it++) {
+        auto item = it.operator*();
+        io.display("Item: "+ item->getDescription() + "\n");
+    }
+    string item = io.askInput("Welke object? \n");
 
-    io.display("Objecten: "+items + "\n");
+    vector<Item*>::iterator pos = find_if(bag->begin(), bag->end(), [&item] (Item* i) {
+        return i->getName() == item;
+    });
 
-    string item = io.askInput("Welke zwaard of harnass? \n");
+    if (pos != bag->end()) {
+        io.display(pos.operator*()->use(hero));
+        Item* itemToRemove = pos.operator*();
+        bag->erase(pos);
+        game.removeItem(itemToRemove);
 
-    io.display(hero->useItem(item));
+    } else {
+        io.display("Item: "+ item  + " niet gevonden!");
+    }
 
+    io.display("\n");
 }
 
 //TODO verbeteren van gebruik
@@ -276,26 +313,33 @@ void GameController::searchRoom() {
 
         if (currentRoom->hasTrap()) {
             io.display("O jee, een val!");
-            Trap* trap = currentRoom->getTrap();
+            Trap *trap = currentRoom->getTrap();
             auto message = trap->use(hero);
-            if (hero->alive){
-                io.display("Maar je hebt de val net op tijd ontdenkt!");
+            if (hero->alive) {
+                io.display("Maar je hebt de val net op tijd ontdenkt!\n\n");
             } else {
-                io.display("Je bent in de val gestapt en helaas dood! Fijne daaag!");
+                io.display("Je bent in de val gestapt en helaas dood! Fijne daaag!\n");
                 end();
             }
         }
 
-        vector<Item*>* allItems = currentRoom->getItems();
-        if (allItems != nullptr && allItems->size() > 0) {
+        if (!gameOver) {
 
-            for (auto it = allItems->begin(); it != allItems->end(); it++) {
-                Item *bagItem = it.operator*();
-                io.display("Je hebt iets tijdens je zoekttocht iets nieuws aan de kamer ontdekt in de ruimte, namelijk een "+ bagItem->getName() + "\n");
-                hero->addItem(bagItem);
+            vector<Item *> *allItems = currentRoom->getItems();
+            if (allItems != nullptr && allItems->size() > 0) {
+
+                for (auto it = allItems->begin(); it != allItems->end(); it++) {
+                    Item *bagItem = it.operator*();
+                    io.display(
+                            "Je hebt iets tijdens je zoekttocht iets nieuws aan de kamer ontdekt in de ruimte en toegevoegd aan je buidel, namelijk een " +
+                            bagItem->getDescription() + "\n");
+                    hero->addItem(bagItem);
+                }
+
+                allItems->clear();
+            } else {
+                io.display("Geen spullen gevonden in kamer!");
             }
-        } else {
-            io.display("Geen spullen gevonden in kamer!");
         }
     }
 }

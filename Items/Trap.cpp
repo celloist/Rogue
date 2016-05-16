@@ -13,3 +13,7 @@ string Trap::use(Hero *hero) {
     }
     return "trap found: "+ this->name;
 }
+
+string Trap::getDescription() {
+    return "val "+ name;
+}

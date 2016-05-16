@@ -28,6 +28,7 @@ public:
     ~Item();
     string getName();
     itemType getType();
+    virtual string getDescription() = 0;
     int getValue();
     virtual string use(Hero* hero);
     virtual bool isUsed();

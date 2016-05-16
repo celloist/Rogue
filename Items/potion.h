@@ -13,6 +13,7 @@ public:
     ~Potion();
     string use(Hero* hero);
     bool isUsed();
+    virtual string getDescription();
 
 private:
     bool used;

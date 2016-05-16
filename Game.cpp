@@ -5,8 +5,6 @@
 #include "Game.h"
 
 void Game::setUp(int numLevels, int numXrooms, int numYrooms, LevelDescritions& levelDescritions, map<int, vector<Enemy*>>& enemies, vector<Item*>& items, vector<Item*>& traps) {
-    uniform_int_distribution<int> dist {1, 20};
-
     levels = new Level*[numLevels];
     this->numLevels = numLevels;
 
@@ -116,28 +114,6 @@ Level* Game::getCurrentLevel() {
     return currentLevel;
 }
 
-Game::~Game(){
-    for (int i = 0; i<numLevels; i++) {
-        delete levels[i];
-    }
-
-    for(auto it = allEnemies.begin();it!= allEnemies.end();it++) {
-        delete it.operator*();
-    }
-
-    for (auto it = allItems.begin(); it != allItems.end(); it++) {
-        delete it.operator*();
-    }
-
-    currentLevel = nullptr;
-    Hero *hero = nullptr;
-
-    delete currentLevel;
-    delete hero;
-
-    delete[] levels;
-}
-
 vector<Item *>* Game::getItems() {
     return &allItems;
 }
@@ -147,12 +123,20 @@ Hero *Game::getHero() {
 }
 //TODO test
 void Game::cleanUpEnemies() {
-    for(auto it = allEnemies.begin();it!= allEnemies.end();it++)
+    vector<int> positions;
+    int i = 0;
+    for(auto it = allEnemies.begin();it!= allEnemies.end();it++, i++)
     {
         Enemy* enemy = it.operator*();
         if(!enemy->isAlive()){
             delete enemy;
             allEnemies.erase(it);
+        }
+    }
+
+    if (positions.size() > 0) {
+        for (auto pos : positions) {
+            allEnemies.erase(allEnemies.begin() + pos);
         }
     }
 }
@@ -177,4 +161,26 @@ void Game::addEnemy(Enemy *enemy) {
 
 vector<Enemy *> *Game::getEnemies() {
     return &allEnemies;
+}
+
+Game::~Game(){
+    for (int i = 0; i<numLevels; i++) {
+        delete levels[i];
+    }
+
+    for(auto it = allEnemies.begin(); it!= allEnemies.end(); it++) {
+        delete it.operator*();
+    }
+
+    for (auto it = allItems.begin(); it != allItems.end(); it++) {
+        delete it.operator*();
+    }
+
+    currentLevel = nullptr;
+    Hero *hero = nullptr;
+
+    delete currentLevel;
+    delete hero;
+
+    delete[] levels;
 }

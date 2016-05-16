@@ -13,6 +13,7 @@ Hero::Hero(string name, int level) {
     this->exp = 0;
     this->alive = true;
     this->awareness = (int) round(level * 1.4);
+    this->attack = 5;
 }
 
 void Hero::addItem(Item *item) {
@@ -48,7 +49,7 @@ string Hero::displayInventory(itemType type) {
 string Hero::displayInventory() {
     string items = "";
     for (auto it = bag.begin(); it != bag.end(); it++) {
-                items += it.operator*()->getName() + " ,";
+        items += it.operator*()->getName() + " ,";
     }
     return items;
 }

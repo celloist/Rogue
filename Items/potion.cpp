@@ -6,21 +6,22 @@
 #include "../Characters/Hero.h"
 
 string Potion::use(Hero* hero) {
-    if(used)
-        return this->name+" all gebruikt";
+    hero->health = (hero->health) + (this->value);
+    if (hero->health > 100) {
+        hero->health = 100;
+    }
 
-    if(((hero->health)+this->value)> (hero->baseHealth) ) {
-        hero->health = (hero->baseHealth);
-    }
-    else {
-        hero->health = (hero->health) + (this->value);
-    }
     used = true;
+
     return "Je heb je zelf genezen, je hp is nu " + to_string(hero->health) +" door drankje: "+ this->name +"\n";
 }
 
 bool Potion::isUsed() {
     return used;
+}
+
+string Potion::getDescription() {
+    return "drankje " + name;
 }
 
 Potion::~Potion() {

@@ -11,5 +11,6 @@ class Weapon : public  Item{
 public:
     Weapon(string name,itemType type,int value) : Item(name, type, value) {}
     string use(Hero* hero);
+    virtual string getDescription();
 };
 #endif //ROGUE_WEAPON_H

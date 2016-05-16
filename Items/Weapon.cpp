@@ -9,3 +9,7 @@ string Weapon::use(Hero* hero) {
     hero->attack = (hero->baseAttack) + (this->value);
     return "Je doet nu " + to_string(hero->attack) +" meer schade door wapen: "+ this->name +"\n";
 }
+
+string Weapon::getDescription() {
+    return "wapen "+ name;
+}

@@ -65,9 +65,7 @@ vector<Item*> getItemsFromFile (string path) {
     }
 
     return items;
-
 }
-
 
 GameController::GameController() : game(Hero("Kloes", 2),def_rand) {
     hero = game.getHero();
@@ -272,7 +270,7 @@ void GameController::attack() {
 void GameController::usePotion() {
     string items = hero->displayInventory(itemType::potion);
 
-    io.display("Drankjes: "+items + "\n");
+    io.display("Drankjes: "+ items + "\n");
 
     string potion = io.askInput("Welke drankje? \n");
 
@@ -381,8 +379,34 @@ void GameController::move() {
     }
 
 }
+//TODO implement rest and random attack
+void GameController::rest() {
+    if (hero->health < 100) {
+        //add a random amount of between 5 and 25
+        uniform_int_distribution<int> amountHealthAdded{5, 25};
+        int healthBefore = hero->health;
+        int healthToAdd = amountHealthAdded(dev);
+        hero->health = (hero->health + healthToAdd > 100 ? 100 : hero->health + healthToAdd);
+        io.display("Het bijkomen heeft je goed gedaan en je hebt "
+                   + to_string((hero->health - healthBefore))
+                   + "bijgekregen en hebt een totaal van: "
+                   + to_string(hero->health) +"! \n");
 
-void GameController::rest() {}
+        //Random attack if any enemies reside in the current room
+        if (hero->getCurrentRoom()->getEnemies() != nullptr) {
+            uniform_int_distribution<int> dist{1, 6};
+            int attackChance = dist(dev);
+            //attack?
+            if (attackChance == 1) {
+                //auto enemies = hero->getCurrentRoom()->getEnemies();
+                io.display("Je hoort een geluid en draait net op tijd om te zien dat je wordt aangevallen!\n");
+                attack();
+            }
+        }
+    } else {
+        io.display("Je hoeft niet bij te komen!\n");
+    }
+}
 
 void GameController::checkBag() {
     string inventory = hero->displayInventory();
@@ -399,8 +423,15 @@ void GameController::cheat() {
     CheatLevelOutput clOutput;
     clOutput.displayLevel(game.getCurrentLevel());
 }
-
-void GameController::checkStats() {}
+//TODO display user stats
+void GameController::checkStats() {
+    io.display("Onze held: "+ hero->name + "\n");
+    io.display(" - Aanvalskracht: "+ to_string(hero->attack) + "\n");
+    io.display(" - Verdediging: "+ to_string(hero->defence) + "\n");
+    io.display(" - Ervaringspunten: "+ to_string(hero->exp) + "\n");
+    io.display(" - Levenskracht: "+ to_string(hero->health) + " van 100\n");
+    io.display(" - Level: "+ to_string(hero->level) + "\n");
+}
 
 void GameController::load() {
     if (hero->getCurrentRoom() == game.getCurrentLevel()->getStartRoom()) {
@@ -417,6 +448,29 @@ void GameController::load() {
         for (auto it = loadedItems.begin(); it != loadedItems.end(); it++) {
             game.addItem(it.operator*());
             hero->addItem(it.operator*());
+        }
+        //load user attributes
+        vector<vector<string>> heroAttributes = devideSet(readFile(path + "heroAttributes.txt"), ' ');
+        for (auto it = heroAttributes.begin(); it != heroAttributes.end(); it++) {
+            auto heroAttributesRow = it.operator*();
+            if (heroAttributesRow.size() == 2) {
+                //value
+                int value = std::atoi(heroAttributesRow.at(1).c_str());
+                //Get name
+                string name = heroAttributesRow.at(2);
+
+                if (name == "defence") {
+                    hero->defence = value;
+                } else if (name == "attack") {
+                    hero->attack = value;
+                } else if (name == "level") {
+                    hero->level = value;
+                } else if (name == "awareness") {
+                    hero->awareness = value;
+                } else if (name == "exp") {
+                    hero->exp = value;
+                }
+            }
         }
     } else {
         io.display("Je kunt alleen in de startkamer laden!");
@@ -436,15 +490,29 @@ void GameController::save() {
             }
 
             myfile.close();
-            io.display("Opgeslagen");
+            io.display("Items opgeslagen.\n");
         } else {
-            io.display("Fout tijdens het opslaan!");
+            io.display("Fout tijdens het opslaan van de items!\n");
+        }
+
+        myfile.open(path + "heroAttributes.txt");
+        if (myfile.is_open()) {
+            myfile <<  "defence "+      to_string(hero->defence) + "\n";
+            myfile <<  "attack "+       to_string(hero->attack) + "\n";
+            myfile <<  "awareness "+    to_string(hero->awareness) + "\n";
+            myfile <<  "level "+        to_string(hero->level);
+            myfile <<  "exp "+        to_string(hero->exp);
+
+            myfile.close();
+            io.display("Attributen opgeslagen!\n");
+        } else {
+            io.display("Fout tijdens het opslaan van de attributen!\n");
         }
     } else {
-        io.display("Je kunt alleen bij de uitgangen opslaan!");
+        io.display("Je kunt alleen bij de uitgangen opslaan!\n");
     }
 }
-//TODO test collapse
+
 void GameController::grenade() {
     Level* currentLevel = game.getCurrentLevel();
     bool collapsed = currentLevel->getMst()->collapse(10);
@@ -485,7 +553,7 @@ void GameController::displayRoomDetails() {
 
             for (auto it = enemies->begin(); it != enemies->end(); it++) {
                 Enemy* e = it.operator*();
-                io.display(" - een " + e->name + " met "+ to_string(e->health) +" levenspunten;\n");
+                io.display(" - een " + e->name + " met "+ to_string(e->health) +" levenspunten van level "+ to_string(e->level) +";\n");
             }
 
             io.display("\n");

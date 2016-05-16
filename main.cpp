@@ -3,9 +3,16 @@
 using namespace std;
 
 int main() {
-    GameController gc;
+    try {
 
-    gc.start(true, "/Users/markjan/ClionProjects/Rogue/Descriptions/", "/Rooms/");
+        GameController gc;
+
+        gc.start(true, "/Users/markjan/ClionProjects/Rogue/Descriptions/", "/Rooms/");
+    }
+    catch (const exception& e)
+    {
+        cout << e.what() << '\n';
+    }
 
     return 0;
 }

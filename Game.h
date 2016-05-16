@@ -61,6 +61,7 @@ private:
     Level** levels = nullptr;
     Hero hero;
     int numLevels;
+    int numInitializedLevels = 0;
     vector<Item*> allItems;
     vector<Enemy*> allEnemies;
 

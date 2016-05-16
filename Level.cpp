@@ -8,15 +8,15 @@
 #include "Game.h"
 
 Level::Level (default_random_engine& dre, int x, int y) {
-    if (x * y < 8) {
-        throw invalid_argument("not enough rooms: minimum requirement of eight not met");
-    }
     this->dre = dre;
     this->x = x;
     this->y = y;
 };
 
 void Level::init(LevelDescritions& ld, vector<Enemy*>& enemies, vector<Item*> items, vector<Item*> traps) {
+    if (x * y < 8) {
+        throw invalid_argument("not enough rooms: minimum requirement of eight not met");
+    }
     int num = x * y;
     totalRoomSize = num;
     mst = new Mst{totalRoomSize};

@@ -39,6 +39,8 @@ void Game::setUp(int numLevels, int numXrooms, int numYrooms, LevelDescritions& 
         if (i > 0) {
             levels[i]->setPrevious(levels[i -1]);
         }
+
+        numInitializedLevels++;
     }
 
     currentLevel = levels[0];
@@ -164,8 +166,10 @@ vector<Enemy *> *Game::getEnemies() {
 }
 
 Game::~Game(){
-    for (int i = 0; i<numLevels; i++) {
-        delete levels[i];
+    for (int i = 0; i<numInitializedLevels; i++) {
+        if (levels[i] != nullptr) {
+            delete levels[i];
+        }
     }
 
     for(auto it = allEnemies.begin(); it!= allEnemies.end(); it++) {

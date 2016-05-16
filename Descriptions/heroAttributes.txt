@@ -1,0 +1,4 @@
+defence 0
+attack 5
+awareness 3
+level 2

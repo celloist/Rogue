@@ -179,7 +179,7 @@ void GameController::initCommands() {
 }
 
 void GameController::commandReader(string inputCommand) {
-
+//   TODO adds the every typed command to the command list
     bool check = false;
     auto func = commands[inputCommand];
     if (commands.find(inputCommand) != commands.end() && func != NULL){
@@ -219,6 +219,7 @@ void GameController::help() {
 void GameController::attack() {
 
     auto* enemies = hero->getCurrentRoom()->getEnemies();
+
     for (auto it = enemies->begin(); it != enemies->end(); it++) {
         auto currentEnemy = it.operator*();
 
@@ -240,18 +241,20 @@ void GameController::attack() {
             //the enemy fights back
             io.display(currentEnemy->attackTarget(hero));
 
-            if(!hero->alive) {
-                io.display("Je bent dood, fijne daaaaaaag!");
-                end();
-            }
-            else if(!it.operator*()->alive){
-                expEarned += it.operator*()->exp;
-                it = enemies->erase(it);
-                game.cleanUpEnemies();
-            }
+//            if(!hero->alive) {
+//                io.display("Je bent dood, fijne daaaaaaag!");
+//                end();
+//            }
+//            else if(!it.operator*()->alive){
+//                expEarned += it.operator*()->exp;
+//                it = enemies->erase(it);
+//                game.cleanUpEnemies();
+//            }
         }
-        hero->levelUp(expEarned);
+
+        //hero->levelUp(expEarned);
     }
+    game.cleanUpEnemies();
 }
 
 void GameController::usePotion() {
@@ -477,7 +480,7 @@ int GameController::isTopLevelEnemy(Enemy *enemy) {
     if (topLevelEnemies.size() == 0) {
         auto allEnemies = game.getEnemies();
 
-        for (auto it = allEnemies->begin(); it != allEnemies->end(); it++) {
+        for (auto it = allEnemies.begin(); it != allEnemies.end(); it++) {
             if (it.operator*()->level >= 10){
                 topLevelEnemies.push_back(it.operator*());
             }

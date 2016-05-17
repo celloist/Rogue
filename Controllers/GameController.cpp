@@ -333,8 +333,16 @@ void GameController::rest() {
 }
 
 void GameController::checkBag() {
+    ItemDescriptorVisitor descriptor;
+    auto bag = *hero->getBag();
+    io.display("Buidel bevat: \n");
+    for (auto item : bag) {
+        item->accept(&descriptor);
+        io.display("- "+ descriptor.getOutput() +" \n");
+
+    }
     string inventory = hero->displayInventory();
-    io.display("Buidel: "+ inventory +"\n");
+
 }
 
 void GameController::checkMap() {
@@ -378,21 +386,25 @@ void GameController::load() {
         for (auto it = heroAttributes.begin(); it != heroAttributes.end(); it++) {
             auto heroAttributesRow = it.operator*();
             if (heroAttributesRow.size() == 2) {
-                //value
-                int value = std::atoi(heroAttributesRow.at(1).c_str());
                 //Get name
-                string name = heroAttributesRow.at(2);
+                string name = heroAttributesRow.at(0);
+                if (name == "name") {
+                    hero->name = heroAttributesRow.at(1);
+                } else {
+                    //value
+                    int value = std::atoi(heroAttributesRow.at(1).c_str());
 
-                if (name == "defence") {
-                    hero->defence = value;
-                } else if (name == "attack") {
-                    hero->attack = value;
-                } else if (name == "level") {
-                    hero->level = value;
-                } else if (name == "awareness") {
-                    hero->awareness = value;
-                } else if (name == "exp") {
-                    hero->exp = value;
+                    if (name == "defence") {
+                        hero->defence = value;
+                    } else if (name == "attack") {
+                        hero->attack = value;
+                    } else if (name == "level") {
+                        hero->level = value;
+                    } else if (name == "awareness") {
+                        hero->awareness = value;
+                    } else if (name == "exp") {
+                        hero->exp = value;
+                    }
                 }
             }
         }
@@ -424,8 +436,9 @@ void GameController::save() {
             myfile <<  "defence "+      to_string(hero->defence) + "\n";
             myfile <<  "attack "+       to_string(hero->attack) + "\n";
             myfile <<  "awareness "+    to_string(hero->awareness) + "\n";
-            myfile <<  "level "+        to_string(hero->level);
-            myfile <<  "exp "+        to_string(hero->exp);
+            myfile <<  "level "+        to_string(hero->level) + "\n";
+            myfile <<  "exp "+          to_string(hero->exp) + "\n";
+            myfile <<  "name "+         hero->name;
 
             myfile.close();
             io.display("Attributen opgeslagen!\n");
@@ -435,6 +448,21 @@ void GameController::save() {
     } else {
         io.display("Je kunt alleen bij de uitgangen opslaan!\n");
     }
+}
+
+void GameController::resetUserFiles() {
+    ofstream myfile;
+    myfile.open(path + "heroAttributes.txt");
+    if (myfile.is_open()) {
+        myfile << "";
+        myfile.close();
+    }
+
+    myfile.open(path + "heroItems.txt");
+    if (myfile.is_open()) {
+        myfile << "";
+    }
+    myfile.close();
 }
 
 void GameController::grenade() {

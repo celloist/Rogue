@@ -26,6 +26,7 @@ private:
     //TODO fix the way in which the hero property is added and initialized
     Hero* hero;
     string path;
+    bool loadedFiles = false;
 
 
     typedef void (GameController::*command)();
@@ -64,6 +65,7 @@ private:
     void save();
     void load();
     int isTopLevelEnemy(Enemy*);
+    void resetUserFiles();
 };
 
 

@@ -1,0 +1,4 @@
+0 Spear 20
+2 Schoenen 40
+1 HP 40
+0 WingedSpear 35

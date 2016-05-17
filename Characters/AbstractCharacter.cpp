@@ -9,9 +9,9 @@
 AbstractCharacter::AbstractCharacter(string name,int level, default_random_engine& dre) {
     this->name = name;
     this->level = level;
-    this->attack = (level *20);
-    this->defence = (level * 10);
-    this->exp = (level * 100);
+    this->attack = (level *15);
+    this->defence = (level * 8);
+    this->exp = (level * 80);
     this->alive = true;
 }
 
@@ -33,7 +33,7 @@ int AbstractCharacter::receiveDamage(int damage) {
 int AbstractCharacter::attackTarget(AbstractCharacter* target) {
     int damage = 0;
 
-    uniform_int_distribution<int> dist {1, 5};
+    uniform_int_distribution<int> dist {1, 8};
 
     int hitChance = dist(dre);
 

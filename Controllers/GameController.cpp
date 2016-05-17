@@ -169,6 +169,7 @@ void GameController::attack() {
     }
 
     if (!gameOver) {
+        int numEnemies = enemies.size();
         if (numDefeatedEnemies > 0) {
             game.cleanUpEnemies(enemies);
         }
@@ -179,7 +180,7 @@ void GameController::attack() {
                 "vlucht"
         };
 
-        while (true) {
+        while (numDefeatedEnemies != numEnemies) {
             string command = io.askInput("Wil je verder vechten, vluchten of stoppen?");
             if (std::find(allowedCommands.begin(), allowedCommands.end(), command) != allowedCommands.end()) {
                 commandReader(command);

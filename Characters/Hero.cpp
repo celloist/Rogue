@@ -13,7 +13,7 @@ Hero::Hero(string name, int level) {
     this->exp = 0;
     this->alive = true;
     this->awareness = (int) round(level * 1.4);
-    this->attack = 5;
+    this->attack = 30;
 }
 
 void Hero::addItem(Item *item) {

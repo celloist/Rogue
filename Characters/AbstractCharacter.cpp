@@ -9,8 +9,8 @@
 AbstractCharacter::AbstractCharacter(string name,int level, default_random_engine& dre) {
     this->name = name;
     this->level = level;
-    this->attack = (level *15);
-    this->defence = (level * 8);
+    this->attack = (level *10);
+    this->defence = (level * 4);
     this->exp = (level * 80);
     this->alive = true;
 }
@@ -22,7 +22,7 @@ int AbstractCharacter::receiveDamage(int damage) {
         damageReceived = 0;
     }
 
-    health = health - damage;
+    health = health - damageReceived;
     if(health <= 0) {
         alive = false;
     }

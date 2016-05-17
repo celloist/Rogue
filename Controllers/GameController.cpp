@@ -131,10 +131,11 @@ void GameController::help() {
 
 //TODO delete fixed needs test
 void GameController::attack() {
-    auto enemies = *hero->getCurrentRoom()->getEnemies();
+    auto enemies = hero->getCurrentRoom()->getEnemies();
 
     int numDefeatedEnemies = 0;
-    for (auto currentEnemy : enemies) {
+    for (auto it = enemies->begin(); it != enemies->end(); it++) {
+        auto currentEnemy = it.operator*();
         int damageInflicted = hero->attackTarget(currentEnemy);
 
         //the enemy has been defeated
@@ -169,7 +170,6 @@ void GameController::attack() {
     }
 
     if (!gameOver) {
-        int numEnemies = enemies.size();
         if (numDefeatedEnemies > 0) {
             game.cleanUpEnemies(enemies);
         }
@@ -180,7 +180,7 @@ void GameController::attack() {
                 "vlucht"
         };
 
-        while (numDefeatedEnemies != numEnemies) {
+        while (enemies->size() > 0) {
             string command = io.askInput("Wil je verder vechten, vluchten of stoppen?");
             if (std::find(allowedCommands.begin(), allowedCommands.end(), command) != allowedCommands.end()) {
                 commandReader(command);

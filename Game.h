@@ -49,7 +49,7 @@ public:
     void setUp(int numLevels, int numXrooms, int numYrooms, LevelDescritions& levelDescritions);
     void setCurrentLevel (Level* level);
     Level* getCurrentLevel();
-    void cleanUpEnemies(vector<Enemy*>&);
+    void cleanUpEnemies(vector<Enemy*>*);
     default_random_engine dre;
     virtual ~Game();
     void addEnemy(Enemy * enemy);

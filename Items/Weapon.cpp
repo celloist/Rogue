@@ -6,7 +6,7 @@
 #include "../Characters/Hero.h"
 
 string Weapon::use(Hero* hero) {
-    hero->attack = (hero->baseAttack) + (this->value);
+    hero->attack = (hero->attack) + (this->value);
     return "Je doet nu " + to_string(hero->attack) +" meer schade door wapen: "+ this->name +"\n";
 }
 

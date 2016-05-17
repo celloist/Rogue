@@ -134,9 +134,10 @@ Hero *Game::getHero() {
     return  &hero;
 }
 //TODO test
-void Game::cleanUpEnemies(vector<Enemy*>& enemies) {
+void Game::cleanUpEnemies(vector<Enemy*>* enemies) {
     vector<Enemy* > tmp;
-    for(auto enemy : enemies) {
+    for(auto it = enemies->begin(); it != enemies->end(); it++) {
+        auto enemy = it.operator*();
         if(!enemy->isAlive()){
             auto pos = std::find(allEnemies.begin(), allEnemies.end(), enemy);
             if (pos != allEnemies.end()) {
@@ -148,9 +149,9 @@ void Game::cleanUpEnemies(vector<Enemy*>& enemies) {
     }
 
     for (auto enemy : tmp) {
-        auto pos = std::find(enemies.begin(), enemies.end(), enemy);
-        if (pos != enemies.end()) {
-            enemies.erase(pos);
+        auto pos = std::find(enemies->begin(), enemies->end(), enemy);
+        if (pos != enemies->end()) {
+            enemies->erase(pos);
             delete enemy;
         }
     }

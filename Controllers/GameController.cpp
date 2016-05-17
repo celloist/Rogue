@@ -248,12 +248,13 @@ void GameController::searchRoom() {
         if (!gameOver) {
             vector<Item *> *allItems = currentRoom->getItems();
             if (allItems != nullptr && allItems->size() > 0) {
-
+                ItemDescriptorVisitor descriptor;
                 for (auto it = allItems->begin(); it != allItems->end(); it++) {
                     Item *bagItem = it.operator*();
+                    bagItem->accept(&descriptor);
                     io.display(
                             "Je hebt iets tijdens je zoekttocht iets nieuws aan de kamer ontdekt in de ruimte en toegevoegd aan je buidel, namelijk een " +
-                            bagItem->getDescription() + "\n");
+                                    descriptor.getOutput() + "\n");
                     hero->addItem(bagItem);
                 }
 

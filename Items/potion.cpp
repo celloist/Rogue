@@ -27,3 +27,7 @@ string Potion::getDescription() {
 Potion::~Potion() {
 
 }
+
+void Potion::accept(BaseItemVisitor *visitor) {
+    visitor->visit(this);
+}

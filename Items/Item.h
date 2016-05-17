@@ -6,6 +6,7 @@
 #define ROGUE_ITEM_H
 
 #include "iostream"
+#include "../BaseItemVisitable.h"
 
 
 class Hero;
@@ -21,7 +22,7 @@ enum itemType{
 
 using namespace std;
 
-class Item {
+class Item, public BaseItemVisitable {
 
 public:
     Item(string name,itemType type,int value);
@@ -32,6 +33,7 @@ public:
     int getValue();
     virtual string use(Hero* hero);
     virtual bool isUsed();
+    virtual void accept(BaseItemVisitor*);
 
 protected:
     string name;

@@ -13,3 +13,7 @@ string Armor::use(Hero* hero) {
 string Armor::getDescription() {
     return "harnas " + name;
 }
+
+void Armor::accept(BaseItemVisitor *visitor) {
+    visitor->visit(this);
+}

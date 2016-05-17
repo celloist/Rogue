@@ -173,17 +173,6 @@ Room* Level::getExit() {
     return exitRoom;
 }
 
-Level::~Level() {
-    if (rooms != nullptr) {
-        for (int i = totalRoomSize - 1; i > 0; i--) {
-            delete rooms[i];
-        }
-
-        delete[] rooms;
-        delete mst;
-    }
-}
-
 Mst *Level::getMst() {
     if (!mst->isCalculated()) {
         mst->calc();
@@ -197,4 +186,15 @@ Room *Level::getStairsUpRoom() {
 
 Room *Level::getStartRoom() {
     return startRoom;
+}
+
+Level::~Level() {
+    if (rooms != nullptr) {
+        for (int i = totalRoomSize - 1; i >= 0; i--) {
+            delete rooms[i];
+        }
+
+        delete[] rooms;
+        delete mst;
+    }
 }

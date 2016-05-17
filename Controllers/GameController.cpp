@@ -6,68 +6,12 @@
 #include "../Views/GameOutput.h"
 #include "../Views/DeafultLevelOutput.h"
 #include "../Views/CheatLevelOutput.h"
-#include "../Items/Weapon.h"
-#include "../Items/Armor.h"
-#include "../Items/potion.h"
+#include "../Views/ItemVisitor.h"
 
 random_device dev;
 default_random_engine def_rand {dev()};
 
-
-map<int, vector<Enemy*>> getEnemiesFromFile (string path) {
-    vector<vector<string>> devidedSetEnemiesDescriptions = devideSet(readFile(path), ' ');
-    //Random enemies
-    map<int, vector<Enemy*>> enemies;
-    for (auto it = devidedSetEnemiesDescriptions.begin(); it != devidedSetEnemiesDescriptions.end(); it++) {
-
-        auto enemiesDescriptionSetRow = it.operator*();
-        if (enemiesDescriptionSetRow.size() == 2) {
-            //level
-            int level = std::atoi(enemiesDescriptionSetRow.at(0).c_str());
-            //Get name
-            string name = enemiesDescriptionSetRow.at(1);
-
-            Enemy *enemy = new Enemy{name, level,def_rand};
-
-            if (enemies.find(enemy->level) == enemies.end()) {
-                enemies[enemy->level] = vector<Enemy*>{};
-            }
-
-            enemies[enemy->level].push_back(enemy);
-
-        }
-    }
-
-    return enemies;
-}
-
-vector<Item*> getItemsFromFile (string path) {
-    vector<Item*> items;
-    vector<vector<string>> devidedSetItemsDescriptions = devideSet(readFile(path), ' ');
-
-    for (auto it = devidedSetItemsDescriptions.begin(); it != devidedSetItemsDescriptions.end(); it++) {
-        auto values = it.operator*();
-
-        int type = atoi(values.at(0).c_str());
-
-        string name = values.at(1);
-        int value = atoi(values.at(2).c_str());
-
-        if (type == itemType::weapon) {
-            items.push_back(new Weapon{name, itemType::weapon, value});
-        } else if (type == itemType::armor) {
-            items.push_back(new Armor{name, itemType::armor, value});
-        } else if (type == itemType::potion) {
-            items.push_back(new Potion{name, itemType::potion, value});
-        } else if (type == itemType::trap){
-            items.push_back(new Trap{name, itemType::trap, value});
-        }
-    }
-
-    return items;
-}
-
-GameController::GameController() : game(Hero("Kloes", 2),def_rand) {
+GameController::GameController() : game(Hero("Klaas", 2),def_rand) {
     hero = game.getHero();
     initCommands();
 }
@@ -102,12 +46,17 @@ void GameController::start(bool testing, string pathPrefix, string roomPrefix) {
             readFile(roomPathPrefix + "misc.txt")
     };
     //enemies, items and traps
-    map<int, vector<Enemy*>> enemies = getEnemiesFromFile(path + "enemies.txt");
-    vector<Item*> items = getItemsFromFile(path + "items.txt");
-    vector<Item*> traps = getItemsFromFile(path + "traps.txt");
+    auto enemiesSet = devideSet(readFile(path + "enemies.txt"), ' ');
+    game.createEnemiesFromSet(enemiesSet);
+    //Items
+    auto itemsSet = devideSet(readFile(path + "items.txt"), ' ');
+    game.createItemsFromSet(itemsSet);
+    //
+    auto trapsSet = devideSet(readFile(path + "traps.txt"), ' ');
+    game.createTrapsFromSet(trapsSet);
 
     //set up with all the users params and above items
-    game.setUp(numLevels, numXRooms, numYRooms, ld, enemies, items, traps);
+    game.setUp(numLevels, numXRooms, numYRooms, ld);
     //set the current room
     Level* currentLevel = game.getCurrentLevel();
     game.getHero()->setRoom(currentLevel->getStartRoom());
@@ -119,33 +68,6 @@ void GameController::start(bool testing, string pathPrefix, string roomPrefix) {
     while (!gameOver){
         string command = io.askInput("Wat wil je doen? (type help voor suggesties)");
         commandReader(command);
-    }
-}
-
-//engage while loop
-void GameController::engage() {
-    engaging = true;
-    vector<string> attackCommands;
-
-    attackCommands.push_back("vlucht");//set engaging to false
-    attackCommands.push_back("aanval");
-    attackCommands.push_back("drink drankje");
-    attackCommands.push_back("gebruik object");
-    attackCommands.push_back("stop");
-
-    io.display("Tijdens een gevecht kun je deze commandos gebruiken: \n vlucht, aanval, drink drankje, gebruik object, stop");
-
-    while(engaging)
-    {
-        string input = io.askInput("");
-        if(std::find(attackCommands.begin(),attackCommands.end(),input) != attackCommands.end()) {
-            if(input=="stop")
-                engaging = false;
-
-            commandReader(input);
-        } else {
-            io.display("Computer says no. Tijdens een gevecht kun je deze commandos gebruiken: \n vlucht, aanval, drink drankje, gebruik object, stop");
-        }
     }
 }
 
@@ -161,7 +83,6 @@ void GameController::initCommands() {
 
     //while in room
     commands["verplaats"] = &GameController::move;
-    commands["aanvallen"] = &GameController::engage;
     commands["zoek kamer"] = &GameController::searchRoom;
     commands["rust"] = &GameController::rest;
     commands["bekijk spullen"] = &GameController::checkBag;
@@ -176,28 +97,24 @@ void GameController::initCommands() {
 }
 
 void GameController::commandReader(string inputCommand) {
-
-    bool check = false;
     auto func = commands[inputCommand];
-    if (commands.find(inputCommand) != commands.end() && func != NULL){
-        check = true;
-    (this->*func)();
-   }
-
-    if(!check)
+    if (commands.find(inputCommand) != commands.end() && func != NULL) {
+        (this->*func)();
+    } else {
         io.display("Computer says no. Type help voor commando's \n");
+    }
 }
 
 
 //add random
 void GameController::escape() {
     io.display("Je heb het gevecht verlaten \n");
-    engaging = false;
+    move();
 }
 
 //ends the game loop
 void GameController::end() {
-    io.display("I'll be back");
+    io.display("I'll be back \n");
     gameOver = true;
 
 }
@@ -214,17 +131,16 @@ void GameController::help() {
 
 //TODO delete fixed needs test
 void GameController::attack() {
-
-    auto* enemies = hero->getCurrentRoom()->getEnemies();
+    auto enemies = *hero->getCurrentRoom()->getEnemies();
 
     int numDefeatedEnemies = 0;
-    for (auto it = enemies->begin(); it != enemies->end(); it++) {
-        auto currentEnemy = it.operator*();
+    for (auto currentEnemy : enemies) {
+        int damageInflicted = hero->attackTarget(currentEnemy);
 
-        io.display(hero->attackTarget(currentEnemy));
         //the enemy has been defeated
         if(!currentEnemy->alive) {
-            hero->exp += currentEnemy->exp;
+            io.display("Je hebt vijand "+ currentEnemy->name + " verslagen!\n");
+            hero->exp += currentEnemy->exp * currentEnemy->level;
 
             int pos = isTopLevelEnemy(currentEnemy);
             if (pos >= 0) {
@@ -237,9 +153,11 @@ void GameController::attack() {
             }
             numDefeatedEnemies++;
         } else {
+            io.display(((damageInflicted > 0) ? "Je hebt "+ currentEnemy->name + " "+ to_string(damageInflicted) + " schade aangericht die houdt nog "+ to_string(currentEnemy->health) +" levenspunten over!"  : "Je hebt "+ currentEnemy->name + " gemist") + "\n" );
             //the enemy fights back
-            io.display(currentEnemy->attackTarget(hero));
+            int damageReceived = currentEnemy->attackTarget(hero);
 
+            io.display( currentEnemy->name + " " + ((damageReceived > 0) ? "heeft jouw "+ to_string(damageReceived) +" schade aangericht" : "heeft jou gemist!") + "\n" );
             if(!hero->alive) {
                 io.display("Je bent dood, fijne daaaaaaag!\n");
                 end();
@@ -250,20 +168,30 @@ void GameController::attack() {
         io.display("\n");
     }
 
-    if (numDefeatedEnemies > 0 && !gameOver) {
-        while (numDefeatedEnemies > 0) {
-            for (auto it = enemies->begin(); it != enemies->end(); it++) {
-                auto currentEnemy = it.operator*();
+    if (!gameOver) {
+        if (numDefeatedEnemies > 0) {
+            game.cleanUpEnemies(enemies);
+        }
+        vector<string> allowedCommands {
+                "help",
+                "stop",
+                "aanval",
+                "vlucht"
+        };
 
-                if (!currentEnemy->alive) {
-                    enemies->erase(it);
-                    numDefeatedEnemies--;
-                    break;
+        while (true) {
+            string command = io.askInput("Wil je verder vechten, vluchten of stoppen?");
+            if (std::find(allowedCommands.begin(), allowedCommands.end(), command) != allowedCommands.end()) {
+                commandReader(command);
+                break;
+            } else {
+                io.display("Commando niet herkend! Toegestane commands zijn:\n");
+                for (auto item : allowedCommands) {
+                    io.display("- " + item + "\n");
                 }
+                io.display("\n");
             }
         }
-
-        game.cleanUpEnemies();
     }
 }
 
@@ -279,6 +207,7 @@ void GameController::usePotion() {
 
 void GameController::useItem() {
     auto bag = hero->getBag();
+    ItemVisitor itemVisitor;
     io.display("Je kunt gebruik maken van");
     for (auto it = bag->begin(); it != bag->end(); it++) {
         auto item = it.operator*();
@@ -291,7 +220,9 @@ void GameController::useItem() {
     });
 
     if (pos != bag->end()) {
-        io.display(pos.operator*()->use(hero));
+        auto itemVisitable = pos.operator*();
+        itemVisitable->use(hero);
+        item
         Item* itemToRemove = pos.operator*();
         bag->erase(pos);
         game.removeItem(itemToRemove);
@@ -322,7 +253,6 @@ void GameController::searchRoom() {
         }
 
         if (!gameOver) {
-
             vector<Item *> *allItems = currentRoom->getItems();
             if (allItems != nullptr && allItems->size() > 0) {
 
@@ -443,11 +373,11 @@ void GameController::load() {
 
         hero->clearItems();
 
-        vector<Item *> loadedItems = getItemsFromFile(path + "heroItems.txt");
+        auto loadedItems = devideSet(readFile(path + "heroItems.txt"), ' ');
+        auto createdItems = game.createItemsFromSet(loadedItems);
 
-        for (auto it = loadedItems.begin(); it != loadedItems.end(); it++) {
-            game.addItem(it.operator*());
-            hero->addItem(it.operator*());
+        for (auto item : createdItems) {
+            hero->addItem(item);
         }
         //load user attributes
         vector<vector<string>> heroAttributes = devideSet(readFile(path + "heroAttributes.txt"), ' ');

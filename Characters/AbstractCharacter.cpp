@@ -15,7 +15,7 @@ AbstractCharacter::AbstractCharacter(string name,int level, default_random_engin
     this->alive = true;
 }
 
-string AbstractCharacter::receiveDamage(int damage) {
+int AbstractCharacter::receiveDamage(int damage) {
     int damageReceived = damage - defence;
 
     if (damageReceived < 0) {
@@ -25,16 +25,12 @@ string AbstractCharacter::receiveDamage(int damage) {
     health = health - damage;
     if(health <= 0) {
         alive = false;
-
-        return "Dood is alleen maar het begin. "+this->name+" is dood.";
     }
 
-    return name + " heeft "+to_string(damage)+" schade gekregen, "+name+" heeft nog "+to_string(health)+" leven over.";
+    return damageReceived;
 }
 
-// random succesfull attack based on attack and defence points rand (a/0.7
-// starts out with 50% chance and builds up with the attack. 50+attack and peaks at 95% for chance pick a number between 1 to 100
- string AbstractCharacter::attackTarget(AbstractCharacter* target) {
+int AbstractCharacter::attackTarget(AbstractCharacter* target) {
     int damage = 0;
 
     uniform_int_distribution<int> dist {1, 5};

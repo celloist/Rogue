@@ -9,6 +9,10 @@
 #include "Level.h"
 #include "Characters/Hero.h"
 #include "Items/Item.h"
+#include "Items/Weapon.h"
+#include "Items/Trap.h"
+#include "Items/Armor.h"
+#include "Items/potion.h"
 
 struct LevelDescritions {
 public:
@@ -42,11 +46,10 @@ public:
 class Game {
 public:
     Game(Hero h, default_random_engine &default_rand ) : hero(h), dre(default_rand) {}
-    void setUp(int numLevels, int numXrooms, int numYrooms, LevelDescritions& levelDescritions, map<int, vector<Enemy*>>& enemies, vector<Item*>& items, vector<Item*>& traps);
+    void setUp(int numLevels, int numXrooms, int numYrooms, LevelDescritions& levelDescritions);
     void setCurrentLevel (Level* level);
     Level* getCurrentLevel();
-    void cleanUpEnemies();
-    void cleanUpItems();
+    void cleanUpEnemies(vector<Enemy*>&);
     default_random_engine dre;
     virtual ~Game();
     void addEnemy(Enemy * enemy);
@@ -55,6 +58,9 @@ public:
     Hero* getHero();
     void removeItem(Item*);
     void addItem(Item*);
+    void createEnemiesFromSet(vector<vector<string>>&);
+    vector<Item*> createItemsFromSet(vector<vector<string>>&);
+    void createTrapsFromSet(vector<vector<string>>&);
 
 private:
     Level* currentLevel = nullptr;
@@ -64,10 +70,13 @@ private:
     int numInitializedLevels = 0;
     vector<Item*> allItems;
     vector<Enemy*> allEnemies;
+    map<int, vector<Enemy*>> enemyPerLevel;
+    vector<Trap*> allTraps;
 
-    vector<Enemy*> distributeEnemiesForLevel(int numOfEnemiesPerLevel, int level, map<int, vector<Enemy*>>& enemies);
+    vector<Enemy*> distributeEnemiesForLevel(int numOfEnemiesPerLevel, int level);
     vector<Item*> distributeItemsForLevel(vector<Item*>&);
-    vector<Item*> distributeTrapsForLevel(vector<Item*>&, int);
+    vector<Item*> distributeTrapsForLevel(vector<Trap*>&, int);
+
 };
 
 #endif //ROGUE_GAME_H

@@ -4,36 +4,46 @@
 
 #include "Game.h"
 
-void Game::setUp(int numLevels, int numXrooms, int numYrooms, LevelDescritions& levelDescritions, map<int, vector<Enemy*>>& enemies, vector<Item*>& items, vector<Item*>& traps) {
+void Game::setUp(int numLevels, int numXrooms, int numYrooms, LevelDescritions& levelDescritions) {
     levels = new Level*[numLevels];
     this->numLevels = numLevels;
 
     int numOfEnemiesPerLevel = 0;
 
-    if (enemies.size() > 0) {
-        if (numLevels < enemies.size()) {
-            numOfEnemiesPerLevel = (int)floor((enemies.size() / numLevels)) ;
+    if (enemyPerLevel.size() > 0) {
+        if (numLevels < enemyPerLevel.size()) {
+            numOfEnemiesPerLevel = (int)floor((enemyPerLevel.size() / numLevels)) ;
         }
     } else {
-        throw std::invalid_argument( "received empty enemies vector" );
+        throw std::invalid_argument( "empty enemies set" );
+    }
+
+    if (allItems.size() == 0) {
+        throw std::invalid_argument( "empty items set" );
+    }
+
+    if (allTraps.size() == 0) {
+        throw std::invalid_argument( "empty traps set" );
     }
     //Copy enemies and items to var
-    for (auto it = enemies.begin(); it != enemies.end(); it++) {
+    for (auto it = enemyPerLevel.begin(); it != enemyPerLevel.end(); it++) {
         std::copy(it.operator*().second.begin(), it.operator*().second.end(), back_inserter(allEnemies));
     }
 
-    std::copy(items.begin(), items.end(), back_inserter(allItems));
     //randomize items order
-    std::random_shuffle(items.begin(), items.end());
-    std::random_shuffle(traps.begin(), traps.end());
+    auto toDistItems = allItems;
+    auto toDistTraps = allTraps;
+
+    std::random_shuffle(toDistItems.begin(), toDistItems.end());
+    std::random_shuffle(toDistTraps.begin(), toDistTraps.end());
 
     //distribute over the levels
     for(int i = 0; i<numLevels; i++){
         levels[i] = new Level{dre, numXrooms, numYrooms};
         //assign level enemies, dist. items and assign traps
-        vector<Enemy*> levelEnemies = distributeEnemiesForLevel(numOfEnemiesPerLevel, i, enemies);
-        vector<Item*> levelItems    = distributeItemsForLevel(items);
-        vector<Item*> levelTraps    = distributeTrapsForLevel(traps, i);
+        vector<Enemy*> levelEnemies = distributeEnemiesForLevel(numOfEnemiesPerLevel, i);
+        vector<Item*> levelItems    = distributeItemsForLevel(toDistItems);
+        vector<Item*> levelTraps    = distributeTrapsForLevel(toDistTraps, i);
 
         levels[i]->init(levelDescritions, levelEnemies, levelItems, levelTraps);
         if (i > 0) {
@@ -46,23 +56,23 @@ void Game::setUp(int numLevels, int numXrooms, int numYrooms, LevelDescritions& 
     currentLevel = levels[0];
 }
 
-vector<Enemy*> Game::distributeEnemiesForLevel(int numOfEnemiesPerLevel, int level, map<int, vector<Enemy*>>& enemies) {
+vector<Enemy*> Game::distributeEnemiesForLevel(int numOfEnemiesPerLevel, int level) {
     vector<Enemy*> levelEnemies;
 
     if (numOfEnemiesPerLevel > 0) {
         int n = level * numOfEnemiesPerLevel;
         int j = n + numOfEnemiesPerLevel;
 
-        if ((level + 1) == numLevels && j < enemies.size()) {
-            j = enemies.size();
+        if ((level + 1) == numLevels && j < enemyPerLevel.size()) {
+            j = enemyPerLevel.size();
         }
 
         for (; n < j; n++) {
-            std::copy(enemies[n].begin(), enemies[n].end(), back_inserter(levelEnemies));
+            std::copy(enemyPerLevel[n].begin(), enemyPerLevel[n].end(), back_inserter(levelEnemies));
         }
     } else if ((level + 1) == numLevels) {
-        for (auto it = enemies.begin(); it != enemies.end(); it++) {
-            std::copy(it.operator*().second.begin(), it.operator*().second.end(), back_inserter(levelEnemies));
+        for (auto enemies : enemyPerLevel) {
+            std::copy(enemies.second.begin(), enemies.second.end(), back_inserter(levelEnemies));
         }
     }
 
@@ -82,13 +92,13 @@ vector<Item*> Game::distributeItemsForLevel(vector<Item*>& items){
     return levelItems;
 }
 
-vector<Item *> Game::distributeTrapsForLevel(vector<Item *>& items, int level) {
+vector<Item *> Game::distributeTrapsForLevel(vector<Trap *>& items, int level) {
     vector<Item *> traps;
 
     int percentage = (int)(((level +1) / (float)numLevels) * 100);
     if (items.size() > 0) {
         if (percentage == 100) {
-            return items;
+            return traps;
         }
         float subRange = ((items.size() - 1) / 100.00);
         int maxRange = (int)ceil(subRange * percentage);
@@ -124,21 +134,24 @@ Hero *Game::getHero() {
     return  &hero;
 }
 //TODO test
-void Game::cleanUpEnemies() {
-    vector<int> positions;
-    int i = 0;
-    for(auto it = allEnemies.begin();it!= allEnemies.end();it++, i++)
-    {
-        Enemy* enemy = it.operator*();
+void Game::cleanUpEnemies(vector<Enemy*>& enemies) {
+    vector<Enemy* > tmp;
+    for(auto enemy : enemies) {
         if(!enemy->isAlive()){
-            delete enemy;
-            allEnemies.erase(it);
+            auto pos = std::find(allEnemies.begin(), allEnemies.end(), enemy);
+            if (pos != allEnemies.end()) {
+                allEnemies.erase(pos);
+            }
+
+            tmp.push_back(enemy);
         }
     }
 
-    if (positions.size() > 0) {
-        for (auto pos : positions) {
-            allEnemies.erase(allEnemies.begin() + pos);
+    for (auto enemy : tmp) {
+        auto pos = std::find(enemies.begin(), enemies.end(), enemy);
+        if (pos != enemies.end()) {
+            enemies.erase(pos);
+            delete enemy;
         }
     }
 }
@@ -165,6 +178,59 @@ vector<Enemy *> *Game::getEnemies() {
     return &allEnemies;
 }
 
+void Game::createEnemiesFromSet(vector<vector<string>> &devidedSetEnemiesDescriptions) {
+    for (auto it = devidedSetEnemiesDescriptions.begin(); it != devidedSetEnemiesDescriptions.end(); it++) {
+        auto enemiesDescriptionSetRow = it.operator*();
+        if (enemiesDescriptionSetRow.size() == 2) {
+            //level
+            int level = std::atoi(enemiesDescriptionSetRow.at(0).c_str());
+            //Get name
+            string name = enemiesDescriptionSetRow.at(1);
+
+            Enemy *enemy = new Enemy{name, level, dre};
+
+            if (enemyPerLevel.find(enemy->level) == enemyPerLevel.end()) {
+                enemyPerLevel[enemy->level] = vector<Enemy*>{};
+            }
+
+            enemyPerLevel[enemy->level].push_back(enemy);
+        }
+    }
+}
+
+vector<Item*> Game::createItemsFromSet(vector<vector<string>> &devidedSetItemsDescriptions) {
+    vector<Item*> set;
+    for (auto values : devidedSetItemsDescriptions) {
+        int type = atoi(values.at(0).c_str());
+
+        string name = values.at(1);
+        int value = atoi(values.at(2).c_str());
+        Item* item = nullptr;
+        if (type == itemType::weapon) {
+            item = new Weapon{name, itemType::weapon, value};
+        } else if (type == itemType::armor) {
+            item = new Armor{name, itemType::armor, value};
+        } else if (type == itemType::potion) {
+            item = new Potion{name, itemType::potion, value};
+        }
+
+        allItems.push_back(item);
+        set.push_back(item);
+    }
+
+    return set;
+}
+
+void Game::createTrapsFromSet(vector<vector<string>> &devidedSetItemsDescriptions) {
+    for (auto values : devidedSetItemsDescriptions) {
+        int type = atoi(values.at(0).c_str());
+        string name = values.at(1);
+        int value = atoi(values.at(2).c_str());
+
+        allTraps.push_back(new Trap{name, itemType::trap, value});
+    }
+}
+
 Game::~Game(){
     for (int i = 0; i<numInitializedLevels; i++) {
         if (levels[i] != nullptr) {
@@ -172,19 +238,18 @@ Game::~Game(){
         }
     }
 
-    for(auto it = allEnemies.begin(); it!= allEnemies.end(); it++) {
-        delete it.operator*();
+    for(auto item : allEnemies) {
+        delete item;
     }
 
-    for (auto it = allItems.begin(); it != allItems.end(); it++) {
-        delete it.operator*();
+    for (auto item : allItems) {
+        delete item;
     }
 
-    currentLevel = nullptr;
-    Hero *hero = nullptr;
-
-    delete currentLevel;
-    delete hero;
+    for (auto item : allTraps) {
+        delete item;
+    }
+    //delete hero;
 
     delete[] levels;
 }

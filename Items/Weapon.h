@@ -5,12 +5,14 @@
 #ifndef ROGUE_WEAPON_H
 #define ROGUE_WEAPON_H
 #include "Item.h"
+#include "../BaseItemVisitable.h"
 
-class Weapon : public  Item{
+class Weapon : public  Item, public BaseItemVisitable{
 
 public:
     Weapon(string name,itemType type,int value) : Item(name, type, value) {}
     string use(Hero* hero);
     virtual string getDescription();
+    virtual void accept(BaseItemVisitor*);
 };
 #endif //ROGUE_WEAPON_H

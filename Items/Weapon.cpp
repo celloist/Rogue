@@ -13,3 +13,7 @@ string Weapon::use(Hero* hero) {
 string Weapon::getDescription() {
     return "wapen "+ name;
 }
+
+void Weapon::accept(BaseItemVisitor *visitor) {
+    visitor->visit(this);
+}

@@ -20,7 +20,7 @@ public:
 
 
     //functions
-    virtual string attackTarget(AbstractCharacter* target);
+    virtual int attackTarget(AbstractCharacter* target);
 
     bool isAlive();
 
@@ -34,7 +34,7 @@ public:
     default_random_engine dre;
 
 protected:
-    virtual string receiveDamage(int damage);
+    virtual int receiveDamage(int damage);
 
 };
 #endif //ROGUE_ABSTRACTCHARACTER_H

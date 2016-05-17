@@ -1,33 +1,32 @@
 //
-// Created by Mark Jan Kamminga on 16-05-16.
+// Created by Mark Jan Kamminga on 17-05-16.
 //
 
-#ifndef ROGUE_ITEMVISITOR_H_H
-#define ROGUE_ITEMVISITOR_H_H
+#ifndef ROGUE_BASEITEMVISITOR_H
+#define ROGUE_BASEITEMVISITOR_H
+class Armor;
+class Potion;
+class Weapon;
+class Trap;
 
-#include "Items/Weapon.h"
-#include "Items/potion.h"
-#include "Items/Armor.h"
+#include <string>
 
-using namespace std;
-
-class BaseItemVisitor {
+class BaseItemVisitor  {
 protected:
-    string output;
-    string type;
+    std::string output;
+    std::string type;
 public:
     virtual void visit (Armor*) = 0;
     virtual void visit (Potion*) = 0;
     virtual void visit (Weapon* ) = 0;
+    virtual void visit (Trap* ) = 0;
 
-    string getOutput () {
+    std::string getOutput() {
         return output;
     }
 
-    string getType () {
+    std::string getType () {
         return type;
     }
-
 };
-
-#endif //ROGUE_ITEMVISITOR_H_H
+#endif //ROGUE_BASEITEMVISITOR_H

@@ -20,9 +20,7 @@ enum itemType{
     trap
 };
 
-using namespace std;
-
-class Item, public BaseItemVisitable {
+class Item {
 
 public:
     Item(string name,itemType type,int value);
@@ -33,7 +31,7 @@ public:
     int getValue();
     virtual string use(Hero* hero);
     virtual bool isUsed();
-    virtual void accept(BaseItemVisitor*);
+    virtual void accept(BaseItemVisitor*) = 0;
 
 protected:
     string name;

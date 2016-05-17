@@ -13,6 +13,7 @@ public:
     virtual void visit (Armor*);
     virtual void visit (Potion*);
     virtual void visit (Weapon* );
+    virtual void visit (Trap*);
 };
 
 

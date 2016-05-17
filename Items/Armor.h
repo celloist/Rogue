@@ -7,7 +7,6 @@
 
 
 #include "Item.h"
-#include "../BaseItemVisitable.h"
 
 class Armor : public Item{
 

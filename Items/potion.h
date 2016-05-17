@@ -5,9 +5,8 @@
 #ifndef ROGUE_POTION_H
 #define ROGUE_POTION_H
 #include "Item.h"
-#include "../BaseItemVisitor.h"
 
-class Potion : public Item, public BaseItemVisitable{
+class Potion : public Item {
 
 public:
     Potion(string name,itemType type,int value) : Item(name, type, value) {}
@@ -15,7 +14,7 @@ public:
     string use(Hero* hero);
     bool isUsed();
     virtual string getDescription();
-    virtual void accept(BaseItemVisitor*);
+    virtual void accept(BaseItemVisitor* b);
 
 private:
     bool used;

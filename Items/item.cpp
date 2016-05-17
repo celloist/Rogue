@@ -32,4 +32,8 @@ bool Item::isUsed() {
     return false;
 }
 
+/*void Item::accept(BaseItemVisitor * b) {
+
+}*/
+
 Item::~Item() {}

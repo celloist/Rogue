@@ -7,6 +7,7 @@
 #include "../Views/DeafultLevelOutput.h"
 #include "../Views/CheatLevelOutput.h"
 #include "../Views/ItemVisitor.h"
+#include "../Views/ItemDescriptorVisitor.h"
 
 random_device dev;
 default_random_engine def_rand {dev()};
@@ -78,7 +79,6 @@ void GameController::initCommands() {
     //while attacking
     commands["vlucht"] = &GameController::escape;
     commands["aanval"] = &GameController::attack;
-    commands["drink drankje"] = &GameController::usePotion;
     commands["gebruik object"] = &GameController::useItem;
 
     //while in room
@@ -195,23 +195,15 @@ void GameController::attack() {
     }
 }
 
-void GameController::usePotion() {
-    string items = hero->displayInventory(itemType::potion);
-
-    io.display("Drankjes: "+ items + "\n");
-
-    string potion = io.askInput("Welke drankje? \n");
-
-    io.display(hero->usePotion(potion));
-}
-
 void GameController::useItem() {
     auto bag = hero->getBag();
     ItemVisitor itemVisitor;
-    io.display("Je kunt gebruik maken van");
+    ItemDescriptorVisitor descriptor;
+    io.display("Je kunt gebruik maken van:\n");
     for (auto it = bag->begin(); it != bag->end(); it++) {
         auto item = it.operator*();
-        io.display("Item: "+ item->getDescription() + "\n");
+        item->accept(&descriptor);
+        io.display("- "+ descriptor.getOutput() + "\n");
     }
     string item = io.askInput("Welke object? \n");
 
@@ -222,10 +214,11 @@ void GameController::useItem() {
     if (pos != bag->end()) {
         auto itemVisitable = pos.operator*();
         itemVisitable->use(hero);
-        item
-        Item* itemToRemove = pos.operator*();
+        itemVisitable->accept(&itemVisitor);
+        io.display(itemVisitor.getOutput() + "\n");
+
         bag->erase(pos);
-        game.removeItem(itemToRemove);
+        game.removeItem(itemVisitable);
 
     } else {
         io.display("Item: "+ item  + " niet gevonden!");

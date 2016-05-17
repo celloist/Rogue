@@ -5,9 +5,10 @@
 #ifndef ROGUE_WEAPON_H
 #define ROGUE_WEAPON_H
 #include "Item.h"
-#include "../BaseItemVisitable.h"
 
-class Weapon : public  Item, public BaseItemVisitable{
+using namespace std;
+
+class Weapon : public Item{
 
 public:
     Weapon(string name,itemType type,int value) : Item(name, type, value) {}

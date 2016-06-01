@@ -97,8 +97,9 @@ void GameController::initCommands() {
 }
 
 void GameController::commandReader(string inputCommand) {
-    auto func = commands[inputCommand];
-    if (commands.find(inputCommand) != commands.end() && func != NULL) {
+
+    if (commands.find(inputCommand) != commands.end()) {
+        auto func = commands[inputCommand];
         (this->*func)();
     } else {
         io.display("Computer says no. Type help voor commando's \n");
